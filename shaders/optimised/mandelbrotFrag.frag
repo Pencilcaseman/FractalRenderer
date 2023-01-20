@@ -26,7 +26,7 @@ void main ()
       tmpvar_11.y = float(m_9);
       p_10 = (uv_5 + (tmpvar_11 / u_resolution));
       z_3 = vec2(0.0, 0.0);
-      for (float i_2 = 0.0; i_2 < 1000.0; i_2 += 1.0) {
+      for (float i_2 = 0.0; i_2 < 100.0; i_2 += 1.0) {
         vec2 tmpvar_12;
         tmpvar_12.x = ((z_3.x * z_3.x) - (z_3.y * z_3.y));
         tmpvar_12.y = ((2.0 * z_3.x) * z_3.y);
@@ -38,49 +38,49 @@ void main ()
         };
       };
       float tmpvar_14;
+      tmpvar_14 = (-(log(
+        log(dot (z_3, z_3))
+      )) / 0.6931472);
       float tmpvar_15;
-      tmpvar_15 = (min (abs(
+      float tmpvar_16;
+      tmpvar_16 = (min (abs(
         (z_3.y / z_3.x)
       ), 1.0) / max (abs(
         (z_3.y / z_3.x)
       ), 1.0));
-      float tmpvar_16;
-      tmpvar_16 = (tmpvar_15 * tmpvar_15);
-      tmpvar_16 = (((
+      float tmpvar_17;
+      tmpvar_17 = (tmpvar_16 * tmpvar_16);
+      tmpvar_17 = (((
         ((((
-          ((((-0.01213232 * tmpvar_16) + 0.05368138) * tmpvar_16) - 0.1173503)
-         * tmpvar_16) + 0.1938925) * tmpvar_16) - 0.3326756)
-       * tmpvar_16) + 0.9999793) * tmpvar_15);
-      tmpvar_16 = (tmpvar_16 + (float(
+          ((((-0.01213232 * tmpvar_17) + 0.05368138) * tmpvar_17) - 0.1173503)
+         * tmpvar_17) + 0.1938925) * tmpvar_17) - 0.3326756)
+       * tmpvar_17) + 0.9999793) * tmpvar_16);
+      tmpvar_17 = (tmpvar_17 + (float(
         (abs((z_3.y / z_3.x)) > 1.0)
       ) * (
-        (tmpvar_16 * -2.0)
+        (tmpvar_17 * -2.0)
        + 1.570796)));
-      tmpvar_14 = (tmpvar_16 * sign((z_3.y / z_3.x)));
+      tmpvar_15 = (tmpvar_17 * sign((z_3.y / z_3.x)));
       if ((abs(z_3.x) > (1e-8 * abs(z_3.y)))) {
         if ((z_3.x < 0.0)) {
           if ((z_3.y >= 0.0)) {
-            tmpvar_14 += 3.141593;
+            tmpvar_15 += 3.141593;
           } else {
-            tmpvar_14 = (tmpvar_14 - 3.141593);
+            tmpvar_15 = (tmpvar_15 - 3.141593);
           };
         };
       } else {
-        tmpvar_14 = (sign(z_3.y) * 1.570796);
+        tmpvar_15 = (sign(z_3.y) * 1.570796);
       };
-      col_4 = (col_4 + ((vec3(0.1, 0.6, 0.8) * 
-        (((tmpvar_14 / 3.1415) * 0.5) + 0.5)
-      ) + (vec3(0.8, 0.1, 0.6) * 
-        ((-(log(
-          log(dot (z_3, z_3))
-        )) / 0.6931472) / 4.0)
+      col_4 = (col_4 + (0.5 + (0.5 * 
+        cos((((tmpvar_14 * 0.1) + tmpvar_15) + vec3(0.0, 1.57075, 3.1415)))
       )));
     };
   };
   col_4 = (col_4 / 16.0);
-  vec4 tmpvar_17;
-  tmpvar_17.w = 1.0;
-  tmpvar_17.xyz = col_4;
-  o_color = tmpvar_17;
+  vec4 tmpvar_18;
+  tmpvar_18.w = 1.0;
+  tmpvar_18.xyz = col_4;
+  o_color = tmpvar_18;
 }
 

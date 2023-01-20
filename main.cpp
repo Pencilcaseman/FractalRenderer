@@ -72,13 +72,17 @@ public:
 		addAssetDirectory(FRACTAL_RENDERER_ROOT_DIR "/shaders");
 
 		// optimise shaders
+		compileShader(FRACTAL_RENDERER_ROOT_DIR "/shaders/optimised/genericVertex.vert",
+					  FRACTAL_RENDERER_ROOT_DIR "/shaders/genericVertex.vert",
+					  true);
+
 		compileShader(FRACTAL_RENDERER_ROOT_DIR "/shaders/optimised/mandelbrotFrag.frag",
 					  FRACTAL_RENDERER_ROOT_DIR "/shaders/mandelbrotFrag.frag",
 					  false);
 
 		try {
-			m_glsl = ci::gl::GlslProg::create(loadAsset("genericVertex.vert"),
-											  loadAsset("mandelbrotFrag.frag"));
+			m_glsl = ci::gl::GlslProg::create(loadAsset("optimised/genericVertex.vert"),
+											  loadAsset("optimised/mandelbrotFrag.frag"));
 		} catch (std::exception &e) {
 			FRAC_ERROR(fmt::format("Failed to load common textures and shaders: {}", e.what()));
 			quit();
@@ -93,21 +97,26 @@ public:
 	// Run on shutdown
 	void cleanup() override { shutdown(); }
 
-	void draw() override {
-		FRAC_LOG("Hello, World");
+	void mouseMove(ci::app::MouseEvent event) override { m_mousePos = event.getPos(); }
 
+	void draw() override {
 		ci::gl::clear(ci::Color(0.2f, 0.2f, 0.2f));
 
 		ci::gl::setMatrices(m_cam);
 
-		ci::vec2 mousePos(getMousePos().x, getMousePos().y);
-		mousePos -= getWindowPos();
+		constexpr int64_t resolutionScale = 1; // 8;
+
+		ci::vec2 mousePos = static_cast<ci::ivec2>(m_mousePos);
+		// mousePos -= getWindowPos();
 		mousePos /= getWindowSize();
 		mousePos -= ci::vec2(0.5, 0.5);
 		mousePos.y *= -1; // Make y positive up
 
 		// Set resolution uniform
-		m_glsl->uniform("u_resolution", ci::vec2 {getWindowWidth(), getWindowHeight()});
+
+		m_glsl->uniform(
+		  "u_resolution",
+		  ci::vec2(getWindowWidth() / resolutionScale, getWindowHeight() / resolutionScale));
 		m_glsl->uniform("u_mouse", mousePos);
 
 		// GLint mousePos = glGetUniformLocation(m_glsl->getHandle(), "mousePos");
@@ -119,7 +128,7 @@ public:
 		std::string frameString = "Frame Rate: " + std::to_string(getAverageFps());
 		ci::gl::drawStringCentered(
 		  frameString, ci::vec2(getWindowWidth() / 2, 50), ci::ColorA(0.5, 0.5, 0.5, 1), m_font);
-		ci::gl::drawStringCentered(fmt::format("Mouse: {:.3f} {:.3f}\n", mousePos.x, mousePos.y),
+		ci::gl::drawStringCentered(fmt::format("Mouse: {} {}\n", mousePos.x, mousePos.y),
 								   ci::vec2(getWindowWidth() / 2, 100),
 								   ci::ColorA(0.5, 0.5, 0.5, 1),
 								   m_font);
@@ -129,6 +138,7 @@ public:
 	ci::gl::BatchRef m_cube;
 	ci::gl::GlslProgRef m_glsl;
 	ci::Font m_font = ci::Font("Arial", 24);
+	lrc::Vec2i m_mousePos;
 };
 
 CINDER_APP(MainWindow, ci::app::RendererGl(ci::app::RendererGl::Options().msaa(4)))

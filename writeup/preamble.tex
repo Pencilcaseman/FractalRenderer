@@ -6,7 +6,10 @@
 \usepackage{physics}
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
-\usepackage{listings}
+\usepackage{listings}     
+\usepackage{lstautogobble}  % Fix relative indenting
+\usepackage{color}          % Code coloring
+\usepackage{zi4}            % Nice font
 \usepackage{hyperref}
 \usepackage{yfonts}
 \usepackage{hyperref}
@@ -28,6 +31,7 @@
 			kerning=true,
 			spacing=true,
 			factor=1100]{microtype}
+\usepackage{fontawesome}
 
 \usetikzlibrary{shapes, decorations, calc, arrows}
 \usetikzlibrary{3d,fit,backgrounds, decorations.text}
@@ -49,7 +53,7 @@
 	urlcolor={blue!80!black}
 }
 
-\lstdefinestyle{paperStyle}{
+\lstdefinestyle{paperStyle1}{
 	backgroundcolor=\color{backcolour},   
 	commentstyle=\color{codegreen},
 	keywordstyle=\color{magenta},
@@ -68,9 +72,36 @@
 	tabsize=2
 }
 
+\lstdefinestyle{paperStyle2}{
+	autogobble,
+	columns=fullflexible,
+	showspaces=false,
+	showtabs=false,
+	breaklines=true,
+	showstringspaces=false,
+	breakatwhitespace=true,
+	escapeinside={(*@}{@*)},
+	commentstyle=\color{greencomments},
+	keywordstyle=\color{bluekeywords},
+	stringstyle=\color{redstrings},
+	numberstyle=\color{graynumbers},
+	basicstyle=\ttfamily\footnotesize,
+	frame=l,
+	numbers=left,
+	framesep=22pt,
+	xleftmargin=22pt,
+	tabsize=2,
+	captionpos=b
+}
+
+\definecolor{bluekeywords}{rgb}{0.13, 0.13, 1}
+\definecolor{greencomments}{rgb}{0, 0.5, 0}
+\definecolor{redstrings}{rgb}{0.9, 0, 0}
+\definecolor{graynumbers}{rgb}{0.5, 0.5, 0.5}
+
 \setlength\columnsep{30pt} % This is the default columnsep for all pages
 
-\lstset{style=paperStyle}
+\lstset{style=paperStyle2}
 \sisetup{load-configurations = abbreviations, binary-units = true}
 \DeclareSIUnit\px{px}
 
@@ -95,5 +126,8 @@
 
 % Green box
 \newtcolorbox{greenbox}[1]{colback=green!5!white,colframe=green!50!black,title={#1}}
+
+% Code box
+\newtcolorbox{codebox}[1]{colback=blue!15!black,colframe=white!50!black,title={\faCode \quad #1}}
 
 \usepackage{subfiles} % Best loaded last in the preamble

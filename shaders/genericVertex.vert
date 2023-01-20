@@ -1,4 +1,4 @@
-#version 150
+#version 150 core
 
 uniform mat4 ciModelViewProjection;
 in vec4 ciPosition;

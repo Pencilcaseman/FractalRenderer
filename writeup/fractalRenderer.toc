@@ -2,5 +2,9 @@
 \contentsline {subsection}{\numberline {1.1}A Brief Introduction to Fractals}{3}{subsection.1.1}%
 \contentsline {subsection}{\numberline {1.2}Defining the Problem}{4}{subsection.1.2}%
 \contentsline {paragraph}{Technological Limitations}{5}{section*.5}%
-\contentsline {subsection}{\numberline {1.3}The End User}{7}{subsection.1.3}%
-\contentsline {subsection}{\numberline {1.4}Researching Existing Projects and User Requirements}{8}{subsection.1.4}%
+\contentsline {paragraph}{Program Limitations}{5}{section*.6}%
+\contentsline {paragraph}{Precision vs Performance}{6}{section*.7}%
+\contentsline {subsection}{\numberline {1.3}The End User}{6}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}Researching Existing Projects and User Requirements}{7}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}The End User}{9}{subsection.1.5}%
+\contentsline {subsection}{\numberline {1.6}Researching Existing Projects and User Requirements}{10}{subsection.1.6}%

@@ -52,14 +52,52 @@ With the power of modern computers, it is possible to render some fractals in re
 Many fractal rendering program exist online, however the majority of these are incomplete, inefficient applications that are not designed for high-performance and high zoom factors. While there are high-quality applications out there, the best ones are often quite expensive, making them inaccessible to the majority of potential-users. For example, some extremely advanced software costs almost \(\pounds 80\)\cite{slijkerman_2022}.
 
 \begin{multicols}{2}
-	\paragraph{Technological Limitations} The further you zoom into a fractal, smaller the numbers you have to deal with. At lower zoom levels, this doesn't pose much of an issue, as \SI{64}{\bit} or even \SI{32}{\bit} floating point numbers often have the required precision to accurately render an image. At higher zoom levels, however, the precision of the numbers used starts to affect the image quality.
 	
-	When zoomed in far enough, floating point rounding errors start to cause certain pixel positions to merge into one, causing unattractive ``blocky'' patterns in the image. Eventually, these blocks will consume the entire image and no more detail can be seen.
-	
-	To get around this, it is possible to use high-precision floating point data types, though, since these are processed in software, not hardware, they are orders of magnitude slower than normal number types, and this can make the rendering process impractically slow.
-	
-	Certain approaches can be taken to optimise the performance of high-performance number types. For example, it can be proven that \(Z_n\) will diverge to infinity if \(|Z_n|>2\) at any point. Additionally, advanced algorithms can mix fixed and multi-precision arithmetic to decrease the number of arithmetic operations that take place in software.
+\paragraph{Technological Limitations} The further you zoom into a fractal, smaller the numbers you have to deal with. At lower zoom levels, this doesn't pose much of an issue, as \SI{64}{\bit} or even \SI{32}{\bit} floating point numbers often have the required precision to accurately render an image. At higher zoom levels, however, the precision of the numbers used starts to affect the image quality.
+
+When zoomed in far enough, floating point rounding errors start to cause certain pixel positions to merge into one, causing unattractive ``blocky'' patterns in the image. Eventually, these blocks will consume the entire image and no more detail can be seen.
+
+To get around this, it is possible to use high-precision floating point data types, though, since these are processed in software, not hardware, they are orders of magnitude slower than normal number types, and this can make the rendering process impractically slow.
+
+Certain approaches can be taken to optimise the performance of high-performance number types. For example, it can be proven that \(Z_n\) will diverge to infinity if \(|Z_n|>2\) at any point. Additionally, advanced algorithms can mix fixed and multi-precision arithmetic to decrease the number of arithmetic operations that take place in software.
+
+\paragraph{Program Limitations} Many fractal renderers do just that; render fractals. They don't support any kind of render export and do not allow for saving or reloading render configurations. 
+
+Some programs have methods to save the rendered fractals as image files, but often have limiting export settings and don't support many resolutions. A wider range of programs allow the current position and zoom level, among other information, to be exported in a file. This allows the configuration to be reloaded and interesting locations in fractals to be shared easily.
+
+\paragraph{Precision vs Performance} To increase rendering performance, most implementations of fractal renderers use strictly 32- or 64-bit floating point numbers. Since these data types are operated on directly by the hardware, they are extremely efficient. Unfortunately, 64-bit floating point values can only represent around 15 decimal places accurately, so zooming in far enough will exceed this precision and cause visual glitches.
+
+To circumvent this issue, it is possible to use multi-precision floating point types that are capable of representing hundreds, thousands or even millions of bits, allowing for near-infinite zooms. These numbers, however, are implemented in software and are many orders of magnitude slower than standard floating point types.
+
+For sufficiently optimised programs, it is possible, to a point, to use multi-precision floating point arithmetic, though the performance will be very poor.
+
+Furthermore, some areas of different fractals require an immensely large number of iterations before a reasonable amount of detail can be obtained. A direct implication of this is that potentially millions of calculations must be done to determine the colour for a single pixel.
+
+The two main issues above become even more extreme when combined with the goal of near-infinite zooming. Due to the nature of many fractals, the number of iterations required to get high levels of detail in areas close to the border of the fractal increases with zoom. Additionally, deeper zooms require higher precision numbers to accurately represent all the points. Combine these, and the result is an extremely slow, inefficient program which is not usable, in many cases.
+
 \end{multicols}
+
+\subsection{The End User}
+
+A fast, fully-featured fractal viewer could be used by a wide range of people for a variety of different purposes.
+
+Firstly, maths teachers could use the program to assist in their lessons, as well as providing students with an interactive resource to help with homework and to further their understanding.
+
+Secondly, if the renderer is fast and precise, even at extremely high zoom levels, then it could be used by people researching fractals and examining their properties.
+
+Finally, such a program could also be used by anyone who enjoys looking at fractals, which, most likely, provides a larger audience than the other users combined.
+
+Combining these different user-bases, an efficient, intuitive fractal renderer could be used by a significant number of people for a broad spectrum of different purposes.
+
+\vspace{0.5cm}
+
+\begin{greenbox}{User Requirements}
+	Unfortunately, each of the identified user groups will have a different set of specific requirements to be met. These will be covered later in the project, but it is likely that only a limited set of features can realistically be implemented.
+\end{greenbox}
+
+\subsection{Researching Existing Projects and User Requirements}
+
+\pagebreak
 
 There are many fractal viewers freely available online already, though almost all of them suffer from at least one very significant flaw:
 
@@ -143,6 +181,17 @@ Talk to family
 
 Identify the overarching requirements
 Identify things that would be nice to have, but not necessarily required
+
+\begin{codebox}{Test Box}
+	\begin{lstlisting}[language=c++]
+		#include<iostream>
+		
+		int main() {
+			std::cout << "Hello, World\n";
+			return 0;
+		}
+	\end{lstlisting}	
+\end{codebox}
 
 \begin{redbox}{Details Gathered -- TEMPORARY}
 	Online Renderer

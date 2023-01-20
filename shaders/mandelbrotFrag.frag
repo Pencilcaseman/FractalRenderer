@@ -1,4 +1,4 @@
-#version 150
+#version 150 core
 
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
@@ -43,9 +43,9 @@ void main(void) {
             // col += 0.5 + 0.5 * cos(v + vec3(0.0, 0.5, 1.0) * 3.1415);
 
             // This one is awesome hehe
-            // float v = -log(log(dot(z, z))) / log(2.0);
-            // float a = atan(z.y, z.x);
-            // col += 0.5 + 0.5 * cos(v * 0.1 + a + vec3(0.0, 0.5, 1.0) * 3.1415);
+            float v = -log(log(dot(z, z))) / log(2.0);
+            float a = atan(z.y, z.x);
+            col += 0.5 + 0.5 * cos(v * 0.1 + a + vec3(0.0, 0.5, 1.0) * 3.1415);
 
             // Weird orange thing
             // float a = sin(i / max_iter * 3.1415) * 0.5 + 0.5 + 0.5 * sin(i / max_iter * 3.1415 * 2.0) * 0.5 + 0.5 + 0.25 * sin(i / max_iter * 3.1415 * 4.0) * 0.5 + 0.5;
@@ -54,9 +54,9 @@ void main(void) {
             // col += vec3(a, b, c);
 
             // Darker colourings
-            float a = atan(z.y, z.x) / 3.1415 * 0.5 + 0.5;
-            float b = -log(log(dot(z, z))) / log(2.0) / 4.0;
-            col += vec3(0.1, 0.6, 0.8) * a + vec3(0.8, 0.1, 0.6) * b;
+            // float a = atan(z.y, z.x) / 3.1415 * 0.5 + 0.5;
+            // float b = -log(log(dot(z, z))) / log(2.0) / 4.0;
+            // col += vec3(0.1, 0.6, 0.8) * a + vec3(0.8, 0.1, 0.6) * b;
         }
     }
 
