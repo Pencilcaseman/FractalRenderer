@@ -1,4 +1,4 @@
-#include <fractal/debug.hpp>
+#include <fractal/fractal.hpp>
 
 namespace frac {
 	DebugLogger::DebugLogger(const std::string &filename, Priority priority) {

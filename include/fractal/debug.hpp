@@ -1,7 +1,4 @@
-#ifndef FRACTAL_RENDERER_DEBUG
-#define FRACTAL_RENDERER_DEBUG
-
-#include "fractal.hpp"
+#pragma once
 
 #define FRAC_LOG(message)                                                                          \
 	::frac::debugLogger.write(message, ::frac::Priority::Info, FILENAME, __LINE__)
@@ -53,5 +50,3 @@ namespace frac {
 
 	extern DebugLogger debugLogger;
 } // namespace frac
-
-#endif // FRACTAL_RENDERER_DEBUG
