@@ -1,0 +1,99 @@
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{subfig}
+\usepackage{physics}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{yfonts}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{lipsum}
+\usepackage{adjustbox}
+\usepackage{flushend}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{blindtext}
+\usepackage{multicol}
+\usepackage[breakable,
+			skins]{tcolorbox}
+\usepackage[protrusion=true,
+			activate={true,nocompatibility},
+			final,
+			tracking=true,
+			kerning=true,
+			spacing=true,
+			factor=1100]{microtype}
+
+\usetikzlibrary{shapes, decorations, calc, arrows}
+\usetikzlibrary{3d,fit,backgrounds, decorations.text}
+\usetikzlibrary{positioning, shapes.symbols}
+\usetikzlibrary{decorations.pathreplacing, calligraphy}
+
+\pgfplotsset{width=10cm,compat=1.18}
+\usepgfplotslibrary{external}
+
+\tikzexternalize[prefix=cache/tikz]
+\tikzset{>=latex}
+
+\SetTracking{encoding={*}, shape=sc}{40}
+
+\hypersetup{
+	colorlinks,
+	linkcolor={red!50!black},
+	citecolor={blue!50!black},
+	urlcolor={blue!80!black}
+}
+
+\lstdefinestyle{paperStyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\setlength\columnsep{30pt} % This is the default columnsep for all pages
+
+\lstset{style=paperStyle}
+\sisetup{load-configurations = abbreviations, binary-units = true}
+\DeclareSIUnit\px{px}
+
+% Rename "Contents" to "Summary"
+\renewcommand*\contentsname{Summary}
+
+% Register codeword as a command
+\NewDocumentCommand{\codeword}{v}{%
+	\texttt{\textcolor{darkgray}{#1}}%
+}
+
+\graphicspath{{images/}}
+
+% Nice grey box
+\newtcolorbox{greybox}[1]{colback=black!5!white,colframe=white!25!black,title={#1}}
+
+% Red box
+\newtcolorbox{redbox}[1]{colback=red!5!white,colframe=red!50!black,title={#1}}
+
+% Blue box
+\newtcolorbox{bluebox}[1]{colback=blue!5!white,colframe=blue!50!black,title={#1}}
+
+% Green box
+\newtcolorbox{greenbox}[1]{colback=green!5!white,colframe=green!50!black,title={#1}}
+
+\usepackage{subfiles} % Best loaded last in the preamble
