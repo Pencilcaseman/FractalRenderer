@@ -50,7 +50,6 @@ namespace frac {
 	void MainWindow::drawImGui() {
 		// Fractal Information Window
 		json fractalInfo = m_settings["menus"]["fractalInfo"];
-		FRAC_LOG(fractalInfo.dump(4));
 		ImGui::SetNextWindowPos({(float)fractalInfo["posX"], (float)fractalInfo["posY"]},
 								ImGuiCond_Once);
 		ImGui::SetNextWindowSize({(float)fractalInfo["width"], (float)fractalInfo["height"]},
