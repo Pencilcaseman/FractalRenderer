@@ -9,8 +9,14 @@
 namespace lrc = librapid;
 
 using ThreadPool = BS::thread_pool;
-using json = nlohmann::json;
+using json		 = nlohmann::json;
+
+namespace frac {
+	using HighPrecision = double;
+	using LowPrecision	= double;
+} // namespace frac
 
 #include <fractal/debug.hpp>
 #include <fractal/mainWindow.hpp>
-
+#include <fractal/genericFractal.hpp>
+#include <fractal/mandelbrot.hpp>

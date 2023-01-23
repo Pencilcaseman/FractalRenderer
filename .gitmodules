@@ -1,6 +1,3 @@
-[submodule "cinderbox"]
-	path = cinderbox
-	url = https://github.com/Pencilcaseman/cinderbox.git
 [submodule "thread-pool"]
 	path = thread-pool
 	url = https://github.com/bshoshany/thread-pool.git
