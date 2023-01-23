@@ -3,18 +3,17 @@
 namespace frac {
 	class Fractal {
 	public:
-		Fractal()							= default;
+		/// Constructor taking a RenderConfig object
+		/// \param config
+		explicit Fractal(const RenderConfig &config);
 		Fractal(const Fractal &)			= delete;
 		Fractal(Fractal &&)					= delete;
 		Fractal &operator=(const Fractal &) = delete;
 		Fractal &operator=(Fractal &&)		= delete;
 
-		virtual lrc::Complex<HighPrecision>
-		iterPixelRaw(const lrc::Complex<HighPrecision> &c) const = 0;
+		virtual int64_t iterCoord(const lrc::Complex<HighPrecision> &coord) const = 0;
 
-		virtual int64_t
-		iterPixel(const lrc::Complex<HighPrecision> &c) const = 0;
-
-	private:
+	protected:
+		RenderConfig m_renderConfig;
 	};
 } // namespace frac
