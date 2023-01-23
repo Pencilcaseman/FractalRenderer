@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.4.27)  20 JAN 2023 12:55
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.4.27)  23 JAN 2023 14:15
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1573,13 +1573,13 @@ Package rerunfilecheck Info: File `fractalRenderer.out' has not changed.
 (rerunfilecheck)             Checksum: B17CAF7FAFB5066C35761F8B4B903D13;1418.
  ) 
 Here is how much of TeX's memory you used:
- 51689 strings out of 478582
- 1220325 string characters out of 2844344
- 257855344 words of memory out of 259000000
- 68880 multiletter control sequences out of 15000+600000
+ 51690 strings out of 478582
+ 1220347 string characters out of 2844344
+ 257855543 words of memory out of 259000000
+ 68881 multiletter control sequences out of 15000+600000
  485449 words of font info for 143 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 105i,7n,115p,1014b,1642s stack positions out of 10000i,1000n,20000p,200000b,80000s
+ 105i,7n,115p,1014b,1638s stack positions out of 10000i,1000n,20000p,200000b,80000s
 {C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/inconsolata/i4-
 ot1-0.enc}{C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/fontawe
 some/fontawesometwo.enc}<C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/typ
@@ -1597,7 +1597,7 @@ iKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/penci/AppData/Local/Pro
 grams/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/penci/AppData/
 Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Users/penci
 /AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on fractalRenderer.pdf (12 pages, 1904555 bytes).
+Output written on fractalRenderer.pdf (12 pages, 1904577 bytes).
 PDF statistics:
  223 PDF objects out of 1000 (max. 8388607)
  52 named destinations out of 1000 (max. 500000)
