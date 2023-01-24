@@ -4,14 +4,28 @@ namespace frac {
 	Fractal::Fractal(const RenderConfig &config) : m_renderConfig(config) {}
 
 	ci::ColorA Fractal::getColor(const lrc::Complex<HighPrecision> &coord, int64_t iters) const {
-		// Return a pixel color from a given coordinate and number of iterations
-		float red = lrc::abs(coord);
-		float green = lrc::abs(coord);
-		float blue = lrc::abs(coord);
+		using Col = ColorPalette::ColorType;
 
-		lrc::Vec<float, 3> col(red, green, blue);
-		col = col.norm();
+		float logZN =
+		  lrc::log(coord.real() * coord.real() + coord.imag() * coord.imag()) / 2;
+		float nu = lrc::log(logZN / lrc::LN2) / lrc::LN2;
+		float iteration = static_cast<float>(iters) + 1 - nu;
+		const auto &palette = m_renderConfig.palette;
+		Col color1 = palette[static_cast<size_t>(iteration) % palette.size()];
+		Col color2 = palette[(static_cast<size_t>(iteration) + 1) % palette.size()];
+		Col merged = ColorPalette::merge(color1, color2, lrc::mod(iteration, 1.0f));
+		return {merged.x(), merged.y(), merged.z(), 1};
+		// return {color1.x(), color1.y(), color1.z(), 1};
 
-		return ci::ColorA(col.x(), col.y(), col.z(), 1);
+		// Nice gradient
+		// double s1 =
+		//   (double)iters -
+		//   lrc::log2(lrc::log2(coord.real() * coord.real() + coord.imag() * coord.imag())) + 4;
+		// Col color = 0.5 + 0.5 * lrc::cos(3.0 + s1 * 0.15 + lrc::Vec3d(0.0, 0.6, 1.0));
+		// return {(float)color.x(), (float)color.y(), (float)color.z(), 1};
+
+		// Cool stepped gradients
+		// return {(iters % 10) / 10.f, 0, 0, 1};
+		// return {(iters % 11) / 11.f, (iters % 23) / 23.f, (iters % 31) / 31.f, 1};
 	}
 } // namespace frac

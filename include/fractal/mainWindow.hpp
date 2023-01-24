@@ -13,6 +13,8 @@ namespace frac {
 		/// Set up the window, configure ImGui and initialize the fractal rendering surfaces
 		void setup() override;
 
+		void closeWindow();
+
 		// Run on shutdown
 		// void cleanup() override {  }
 
@@ -45,5 +47,8 @@ namespace frac {
 		lrc::Vec2i m_mousePos;					 // The current position of the mouse in the window
 		json m_settings;						 // The settings for the fractal
 		std::unique_ptr<Fractal> m_fractal;		 // The fractal to render
+		BS::thread_pool m_threadPool;			 // Pool for render threads
+
+		bool m_haltRender; // Used to gracefully stop the render threads
 	};
 } // namespace frac

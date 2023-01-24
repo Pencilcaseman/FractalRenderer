@@ -3,7 +3,8 @@
 namespace frac {
 	Mandelbrot::Mandelbrot(const RenderConfig &config) : Fractal(config) {}
 
-	int64_t Mandelbrot::iterCoord(const lrc::Complex<HighPrecision> &coord) const {
+	std::pair<int64_t, lrc::Complex<HighPrecision>>
+	Mandelbrot::iterCoord(const lrc::Complex<HighPrecision> &coord) const {
 		HighPrecision re_0 = lrc::real(coord); // Real component (initial)
 		HighPrecision im_0 = lrc::imag(coord); // Imaginary component (initial)
 		HighPrecision re = 0, im = 0;
@@ -20,6 +21,6 @@ namespace frac {
 			++iteration;
 		}
 
-		return iteration;
+		return {iteration, lrc::Complex<HighPrecision>(re, im)};
 	}
 } // namespace frac

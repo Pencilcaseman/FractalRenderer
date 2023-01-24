@@ -43,22 +43,33 @@ namespace frac {
 			quit();
 		}
 
-		m_renderConfig = {1,
-						  1000,
-						  1,
-						  10000,
+		m_renderConfig = {4,
+						  100,
+						  1 << 16,
+						  4,
 
-						  lrc::Vec2i(700, 400),
-						  lrc::Vec2i(700, 400),
+						  lrc::Vec2i(600, 500),
+						  lrc::Vec2i(100, 100),
 
 						  lrc::Vec<HighPrecision, 2>(-2.2, -1.4),
-						  lrc::Vec<HighPrecision, 2>(3.2, 2.8333)};
+						  lrc::Vec<HighPrecision, 2>(3.2, 2.6666666)};
+
+		m_renderConfig.palette.addColor(ColorPalette::ColorType(142, 59, 70, 1) / 255.0f);
+		m_renderConfig.palette.addColor(ColorPalette::ColorType(225, 221, 143, 1) / 255.0f);
+		m_renderConfig.palette.addColor(ColorPalette::ColorType(224, 119, 125, 1) / 255.0f);
+		m_renderConfig.palette.addColor(ColorPalette::ColorType(76, 134, 168, 1) / 255.0f);
+		m_renderConfig.palette.addColor(ColorPalette::ColorType(71, 120, 144, 1) / 255.0f);
 
 		m_fractal = std::make_unique<Mandelbrot>(m_renderConfig);
 
 		regenerateSurfaces();
 		m_fractalTexture = ci::gl::Texture2d::create(m_fractalSurface);
 		renderFractal();
+	}
+
+	void MainWindow::closeWindow() {
+		m_haltRender = true;
+		quit();
 	}
 
 	void MainWindow::draw() {
@@ -72,8 +83,6 @@ namespace frac {
 		ci::gl::draw(
 		  m_fractalTexture,
 		  ci::Rectf(drawPos, lrc::Vec2f(drawPos) + lrc::Vec2f(m_renderConfig.imageSize)));
-
-		// ci::gl::draw(m_fractalTexture, ci::Rectf({0, 0}, {300, 300}));
 	}
 
 	void MainWindow::drawImGui() {
@@ -101,35 +110,74 @@ namespace frac {
 
 	void MainWindow::renderFractal() {
 		FRAC_LOG("Rendering Fractal...");
-		renderBox({lrc::Vec2i {0, 0}, m_renderConfig.imageSize});
+
+		m_threadPool.reset(m_renderConfig.numThreads);
+
+		// Split the render into boxes to be rendered in parallel
+		auto imageSize = m_renderConfig.imageSize;
+		auto boxSize   = m_renderConfig.boxSize;
+
+		// Round number of boxes up so the full image is covered
+		auto numBoxes = lrc::Vec2i(lrc::ceil(lrc::Vec2f(imageSize) / lrc::Vec2f(boxSize)));
+
+		for (int64_t i = 0; i < numBoxes.y(); ++i) {
+			for (int64_t j = 0; j < numBoxes.x(); ++j) {
+				lrc::Vec2i adjustedBoxSize(lrc::min(boxSize.x(), imageSize.x() - j * boxSize.x()),
+										   lrc::min(boxSize.y(), imageSize.y() - i * boxSize.y()));
+				RenderBox box {lrc::Vec2i(j, i) * boxSize, adjustedBoxSize};
+
+				// renderBox(box);
+				m_threadPool.push_task([this, box]() { renderBox(box); });
+			}
+		}
+
 		FRAC_LOG("Fractal Complete...");
 	}
 
 	void MainWindow::renderBox(const RenderBox &box) {
 		using HighVec2 = lrc::Vec<HighPrecision, 2>;
 
-		HighVec2 fractalOrigin = lrc::map(static_cast<HighVec2>(box.topLeft),
-										  lrc::Vec<HighPrecision, 2>({0, 0}),
-										  static_cast<HighVec2>(m_renderConfig.imageSize),
-										  m_renderConfig.fracTopLeft,
-										  static_cast<HighVec2>(m_renderConfig.fracSize));
-		HighVec2 step		   = m_renderConfig.fracSize / static_cast<HighVec2>(box.dimensions);
+		HighVec2 fractalOrigin =
+		  lrc::map(static_cast<HighVec2>(box.topLeft),
+				   lrc::Vec<HighPrecision, 2>({0, 0}),
+				   static_cast<HighVec2>(m_renderConfig.imageSize),
+				   m_renderConfig.fracTopLeft,
+				   m_renderConfig.fracTopLeft + static_cast<HighVec2>(m_renderConfig.fracSize));
+
+		HighVec2 step = m_renderConfig.fracSize / static_cast<HighVec2>(m_renderConfig.imageSize);
+
+		int64_t aliasFactor		  = m_renderConfig.antiAlias;
+		HighVec2 aliasStepCorrect = 1 / static_cast<HighPrecision>(aliasFactor);
 
 		// Make the primary axis of iteration the x-axis to improve cache efficiency and
-		// increase
-		for (int64_t py = box.topLeft.y(); py < box.dimensions.y(); ++py) {
-			for (int64_t px = box.topLeft.x(); px < box.dimensions.x(); ++px) {
-				auto pos = fractalOrigin + step * lrc::Vec<HighPrecision, 2>(px, py);
+		// increase performance.
+		for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y(); ++py) {
+			if (m_haltRender) return;
 
-				// m_fractalSurface.setPixel(lrc::Vec2i(px, py), ci::ColorA(1, 0, 0, 1));
+			for (int64_t px = box.topLeft.x(); px < box.topLeft.x() + box.dimensions.x(); ++px) {
+				// Anti-aliasing
+				auto pixPos =
+				  fractalOrigin + step * HighVec2(px - box.topLeft.x(), py - box.topLeft.y());
 
-				auto iters = m_fractal->iterCoord(lrc::Complex<HighPrecision>(pos.x(), pos.y()));
-				if (iters == m_renderConfig.maxIters) {
-					m_fractalSurface.setPixel(lrc::Vec2i(px, py), ci::ColorA(0, 0, 0, 1));
-				} else {
-					m_fractalSurface.setPixel(lrc::Vec2i(px, py),
-											  m_fractal->getColor({pos.x(), pos.y()}, iters));
+				ci::ColorA pix(0, 0, 0, 1);
+
+				for (int64_t aliasY = 0; aliasY < aliasFactor; ++aliasY) {
+					for (int64_t aliasX = 0; aliasX < aliasFactor; ++aliasX) {
+						auto pos = pixPos + step * HighVec2(aliasX, aliasY) * aliasStepCorrect;
+
+						auto [iters, endPoint] =
+						  m_fractal->iterCoord(lrc::Complex<HighPrecision>(pos.x(), pos.y()));
+						if (endPoint.real() * endPoint.real() + endPoint.imag() * endPoint.imag() <
+							4) {
+							pix += ci::ColorA(0, 0, 0, 1); // Probably in the set
+						} else {
+							pix += m_fractal->getColor(endPoint, iters); // Probably not in the set
+						}
+					}
 				}
+
+				m_fractalSurface.setPixel(lrc::Vec2i(px, py),
+										  pix / static_cast<float>(aliasFactor * aliasFactor));
 			}
 		}
 	}
