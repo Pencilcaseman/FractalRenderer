@@ -48,11 +48,11 @@ namespace frac {
 						  1,
 						  10000,
 
-						  lrc::Vec2i(300, 300),
-						  lrc::Vec2i(300, 300),
+						  lrc::Vec2i(600, 500),
+						  lrc::Vec2i(600, 500),
 
-						  lrc::Vec<HighPrecision, 2>(-2.0, -1.0),
-						  lrc::Vec<HighPrecision, 2>(3.0, 2.0)};
+						  lrc::Vec<HighPrecision, 2>(-2.2, -1.4),
+						  lrc::Vec<HighPrecision, 2>(3.2, 2.8333)};
 
 		m_fractal = std::make_unique<Mandelbrot>(m_renderConfig);
 
@@ -127,7 +127,8 @@ namespace frac {
 				if (iters == m_renderConfig.maxIters) {
 					m_fractalSurface.setPixel(lrc::Vec2i(px, py), ci::ColorA(0, 0, 0, 1));
 				} else {
-					m_fractalSurface.setPixel(lrc::Vec2i(px, py), ci::ColorA(1, 1, 1, 1));
+					m_fractalSurface.setPixel(lrc::Vec2i(px, py),
+											  m_fractal->getColor({pos.x(), pos.y()}, iters));
 				}
 			}
 		}
