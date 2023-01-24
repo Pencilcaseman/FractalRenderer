@@ -46,10 +46,11 @@ namespace frac {
 		m_renderConfig = {4,
 						  100,
 						  1 << 16,
-						  4,
+						  3,
 
 						  lrc::Vec2i(600, 500),
-						  lrc::Vec2i(100, 100),
+						  lrc::Vec2i(600, 500),
+						  // lrc::Vec2i(25, 25),
 
 						  lrc::Vec<HighPrecision, 2>(-2.2, -1.4),
 						  lrc::Vec<HighPrecision, 2>(3.2, 2.6666666)};
