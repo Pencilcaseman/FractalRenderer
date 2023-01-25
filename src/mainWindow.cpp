@@ -22,8 +22,8 @@ namespace frac {
 		ci::gl::enableDepthRead();
 
 		// Load the settings file
-		FRAC_LOG(fmt::format("Loading settings from {}", FRACTAL_SETTINGS_PATH));
-		std::fstream settingsFile(FRACTAL_SETTINGS_PATH, std::ios::in);
+		FRAC_LOG(fmt::format("Loading settings from {}", FRACTAL_UI_SETTINGS_PATH));
+		std::fstream settingsFile(FRACTAL_UI_SETTINGS_PATH, std::ios::in);
 		if (settingsFile.is_open()) {
 			settingsFile >> m_settings;
 			settingsFile.close();
@@ -43,14 +43,13 @@ namespace frac {
 			quit();
 		}
 
-		m_renderConfig = {4,
-						  100,
+		m_renderConfig = {20,
+						  10000000,
 						  1 << 16,
-						  3,
+						  4,
 
 						  lrc::Vec2i(600, 500),
-						  lrc::Vec2i(600, 500),
-						  // lrc::Vec2i(25, 25),
+						  lrc::Vec2i(25, 25),
 
 						  lrc::Vec<HighPrecision, 2>(-2.2, -1.4),
 						  lrc::Vec<HighPrecision, 2>(3.2, 2.6666666)};

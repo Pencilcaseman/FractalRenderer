@@ -6,6 +6,10 @@
 #include <nlohmann/json.hpp>
 #include <BS_thread_pool.hpp>
 
+#ifndef FRACTAL_SETTINGS_PATH
+#	define FRACTAL_UI_SETTINGS_PATH FRACTAL_RENDERER_ROOT_DIR "/settings/uiSettings.json"
+#endif
+
 namespace lrc = librapid;
 
 using ThreadPool = BS::thread_pool;

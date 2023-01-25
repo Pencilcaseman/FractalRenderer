@@ -8,3 +8,4 @@
 \contentsline {subsection}{\numberline {1.4}Researching Existing Projects and User Requirements}{7}{subsection.1.4}%
 \contentsline {subsection}{\numberline {1.5}The End User}{9}{subsection.1.5}%
 \contentsline {subsection}{\numberline {1.6}Researching Existing Projects and User Requirements}{10}{subsection.1.6}%
+\contentsline {section}{\numberline {2}Design Phase}{12}{section.2}%

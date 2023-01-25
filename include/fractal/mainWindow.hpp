@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef FRACTAL_SETTINGS_PATH
-#	define FRACTAL_SETTINGS_PATH FRACTAL_RENDERER_ROOT_DIR "/settings/settings.json"
-#endif
-
 namespace frac {
 	class MainWindow : public ci::app::App {
 	public:
