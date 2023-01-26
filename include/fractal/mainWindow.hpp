@@ -12,7 +12,7 @@ namespace frac {
 		void closeWindow();
 
 		// Run on shutdown
-		// void cleanup() override {  }
+		void cleanup() override;
 
 		/// Called every frame to render the frame
 		void draw() override;
@@ -36,6 +36,18 @@ namespace frac {
 		/// \param event The mouse event
 		void mouseMove(ci::app::MouseEvent event) override;
 
+		/// Callback for mouse clicks
+		/// \param event The mouse event
+		void mouseDown(ci::app::MouseEvent event) override;
+
+		/// Callback for mouse drags
+		/// \param event The mouse event
+		void mouseDrag(ci::app::MouseEvent event) override;
+
+		/// Callback for mouse releases
+		/// \param event The mouse event
+		void mouseUp(ci::app::MouseEvent event) override;
+
 		RenderConfig m_renderConfig;			 // The settings for the fractal renderer
 		ci::Surface m_fractalSurface;			 // The surface that the fractal is rendered to
 		ci::gl::Texture2dRef m_fractalTexture;	 // The image to be rendered to the screen
@@ -45,6 +57,9 @@ namespace frac {
 		std::unique_ptr<Fractal> m_fractal;		 // The fractal to render
 		BS::thread_pool m_threadPool;			 // Pool for render threads
 
-		bool m_haltRender; // Used to gracefully stop the render threads
+		bool m_haltRender = false; // Used to gracefully stop the render threads
+
+		lrc::Vec2i m_mouseDownPos;
+		bool m_mouseDown = false;
 	};
 } // namespace frac

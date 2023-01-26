@@ -9,7 +9,7 @@ namespace frac {
 		ci::gl::enableVerticalSync(true);
 
 		// Set the initial window size
-		setWindowSize(800, 600);
+		setWindowSize(1000, 800);
 
 		// Setup ImGui
 		ImGui::Initialize();
@@ -43,12 +43,12 @@ namespace frac {
 			quit();
 		}
 
-		m_renderConfig = {20,
-						  10000000,
+		m_renderConfig = {10,
+						  100000,
 						  1 << 16,
-						  4,
+						  2,
 
-						  lrc::Vec2i(600, 500),
+						  lrc::Vec2i(800, 700),
 						  lrc::Vec2i(25, 25),
 
 						  lrc::Vec<HighPrecision, 2>(-2.2, -1.4),
@@ -67,9 +67,9 @@ namespace frac {
 		renderFractal();
 	}
 
-	void MainWindow::closeWindow() {
+	void MainWindow::cleanup() {
 		m_haltRender = true;
-		quit();
+		m_threadPool.wait_for_tasks();
 	}
 
 	void MainWindow::draw() {
@@ -80,9 +80,25 @@ namespace frac {
 		m_fractalTexture = ci::gl::Texture2d::create(m_fractalSurface);
 		lrc::Vec2f drawPos(0, getWindowHeight() - m_renderConfig.imageSize.y());
 
+		ci::gl::color(ci::ColorA(1, 1, 1, 1));
 		ci::gl::draw(
 		  m_fractalTexture,
 		  ci::Rectf(drawPos, lrc::Vec2f(drawPos) + lrc::Vec2f(m_renderConfig.imageSize)));
+
+		// Draw a rectangle if dragging mouse
+		if (m_mouseDown) {
+			// Draw over the fractal
+			glDepthFunc(GL_ALWAYS);
+
+			ci::gl::color(ci::ColorA(1, 0, 0, 1));
+			ci::gl::drawSolidRect(ci::Rectf({m_mouseDownPos.x(), m_mouseDownPos.y()},
+											{m_mousePos.x(), m_mousePos.y()}));
+
+			// ci::gl::drawStrokedRect(ci::Rectf({m_mouseDownPos.x(), m_mouseDownPos.y()},
+			// 								  {m_mousePos.x(), m_mousePos.y()}));
+
+			glDepthFunc(GL_LESS);
+		}
 	}
 
 	void MainWindow::drawImGui() {
@@ -152,6 +168,9 @@ namespace frac {
 		// Make the primary axis of iteration the x-axis to improve cache efficiency and
 		// increase performance.
 		for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y(); ++py) {
+			// Quick return if required. Without this, the
+			// render threads will continue running after the
+			// application is closed, leading to weird behaviour.
 			if (m_haltRender) return;
 
 			for (int64_t px = box.topLeft.x(); px < box.topLeft.x() + box.dimensions.x(); ++px) {
@@ -183,4 +202,13 @@ namespace frac {
 	}
 
 	void MainWindow::mouseMove(ci::app::MouseEvent event) { m_mousePos = event.getPos(); }
+
+	void MainWindow::mouseDown(ci::app::MouseEvent event) {
+		m_mouseDown	   = true;
+		m_mouseDownPos = event.getPos();
+	}
+
+	void MainWindow::mouseDrag(ci::app::MouseEvent event) { m_mousePos = event.getPos(); }
+
+	void MainWindow::mouseUp(ci::app::MouseEvent event) { m_mouseDown = false; }
 } // namespace frac

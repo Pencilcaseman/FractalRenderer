@@ -7,7 +7,7 @@ namespace frac {
 		using Col = ColorPalette::ColorType;
 
 		float logZN =
-		  lrc::log(coord.real() * coord.real() + coord.imag() * coord.imag()) / 2;
+		  lrc::log(lrc::abs(coord)) / 2;
 		float nu = lrc::log(logZN / lrc::LN2) / lrc::LN2;
 		float iteration = static_cast<float>(iters) + 1 - nu;
 		const auto &palette = m_renderConfig.palette;
@@ -15,7 +15,6 @@ namespace frac {
 		Col color2 = palette[(static_cast<size_t>(iteration) + 1) % palette.size()];
 		Col merged = ColorPalette::merge(color1, color2, lrc::mod(iteration, 1.0f));
 		return {merged.x(), merged.y(), merged.z(), 1};
-		// return {color1.x(), color1.y(), color1.z(), 1};
 
 		// Nice gradient
 		// double s1 =
@@ -27,5 +26,6 @@ namespace frac {
 		// Cool stepped gradients
 		// return {(iters % 10) / 10.f, 0, 0, 1};
 		// return {(iters % 11) / 11.f, (iters % 23) / 23.f, (iters % 31) / 31.f, 1};
+		// return {(iters % 2) / 2.f, (iters % 3) / 3.f, (iters % 7) / 7.f, 1};
 	}
 } // namespace frac
