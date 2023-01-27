@@ -1,16 +1,34 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{5}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem{bourke_2002}
+\bibitem[Soanes and Hawker(2013)]{soanes_hawker_2013}
+Catherine Soanes and Sara Hawker.
+\newblock \emph{Compact Oxford English Dictionary of current English}.
+\newblock Oxford University Press, 2013.
+
+\bibitem[Bourke(2002)]{bourke_2002}
 Paul Bourke, Nov 2002.
+\newblock URL \url{http://paulbourke.net/fractals/mandelbrot/}.
 
-\bibitem{slijkerman_2022}
+\bibitem[Slijkerman(2022)]{slijkerman_2022}
 Frederik Slijkerman.
 \newblock Ultra fractal: Advanced fractal software for windows and macos, Jul
   2022.
+\newblock URL \url{https://www.ultrafractal.com/}.
 
-\bibitem{soanes_hawker_2013}
-Catherine Soanes and Sara Hawker.
-\newblock {\em Compact Oxford English Dictionary of current English}.
-\newblock Oxford University Press, 2013.
+\bibitem[Developers and Davis()]{developers_davis}
+Cinder Developers and Toby Davis.
+\newblock Pencilcaseman/cinderbox: A modified version of cinder with extra
+  libraries for improved functionality.
+\newblock URL \url{https://github.com/Pencilcaseman/cinderbox}.
+
+\bibitem[Davis(2023)]{Davis_LibRapid_Optimised_Mathematics_2023}
+Toby Davis.
+\newblock {LibRapid: Optimised Mathematics for C++}, 1 2023.
+\newblock URL \url{https://github.com/LibRapid/librapid}.
 
 \end{thebibliography}

@@ -12,6 +12,7 @@
 \usepackage{zi4}            % Nice font
 \usepackage{hyperref}
 \usepackage{yfonts}
+\usepackage{relsize}
 \usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{graphicx}
@@ -32,6 +33,8 @@
 			spacing=true,
 			factor=1100]{microtype}
 \usepackage{fontawesome}
+\usepackage{notoccite}
+\usepackage[numbers,sort&compress]{natbib}
 
 \usetikzlibrary{shapes, decorations, calc, arrows}
 \usetikzlibrary{3d,fit,backgrounds, decorations.text}
@@ -137,5 +140,8 @@
 
 % Code box
 \newtcolorbox{codebox}[1]{colback=blue!15!black,colframe=white!50!black,title={\faCode \quad #1}}
+
+% Define a nice C++ typesetting
+\newcommand\CC{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\relsize{-3}{\textbf{++}}}}
 
 \usepackage{subfiles} % Best loaded last in the preamble

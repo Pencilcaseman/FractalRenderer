@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2023.1.25)  25 JAN 2023 19:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2023.1.25)  26 JAN 2023 23:30
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -723,6 +723,9 @@ Now handling font encoding LYG ...
 ... no UTF-8 mapping file for font encoding LYG
 LaTeX Info: Composite with undeclared \" in encoding LYG on input line 58.
 )
+(C:\opt\MiKTeX\tex/latex/relsize\relsize.sty
+Package: relsize 2013/03/29 ver 4.1
+)
 (C:\opt\MiKTeX\tex/latex/lipsum\lipsum.sty
 (C:\opt\MiKTeX\tex/latex/l3packages/l3keys2e\l3keys2e.sty
 Package: l3keys2e 2022-01-12 LaTeX2e option processing using LaTeX3 keys
@@ -1035,6 +1038,16 @@ Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
 )
 (C:\opt\MiKTeX\tex/latex/fontawesome\fontawesomesymbols-generic.tex)
 (C:\opt\MiKTeX\tex/latex/fontawesome\fontawesomesymbols-pdftex.tex))
+(C:\opt\MiKTeX\tex/latex/notoccite\notoccite.sty
+Package: notoccite 2000/07/20
+)
+(C:\opt\MiKTeX\tex/latex/natbib\natbib.sty
+Package: natbib 2010/09/13 8.31b (PWD, AO)
+\bibhang=\skip68
+\bibsep=\skip69
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count393
+)
 (C:\opt\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibraryshapes.c
 ode.tex
 File: tikzlibraryshapes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
@@ -1141,21 +1154,21 @@ File: tikzlibrarypositioning.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 ) (C:\opt\MiKTeX\tex/latex/spath3\tikzlibrarycalligraphy.code.tex
 (C:\opt\MiKTeX\tex/latex/spath3\spath3.sty
 Package: spath3 2022/08/24 v2.7 Functions for manipulating PGF soft paths
-\g__spath_output_int=\count393
+\g__spath_output_int=\count394
 \l__spath_tmpa_dim=\dimen337
 \l__spath_tmpb_dim=\dimen338
-\l__spath_tmpa_int=\count394
-\l__spath_tmpb_int=\count395
+\l__spath_tmpa_int=\count395
+\l__spath_tmpb_int=\count396
 \l__spath_move_x_dim=\dimen339
 \l__spath_move_y_dim=\dimen340
 \l__spath_rectx_dim=\dimen341
 \l__spath_recty_dim=\dimen342
-\g__spath_anon_int=\count396
+\g__spath_anon_int=\count397
 )
-\l__cal_tmpa_int=\count397
-\l__cal_tmpb_int=\count398
-\g__cal_path_component_int=\count399
-\g__cal_label_int=\count400
+\l__cal_tmpa_int=\count398
+\l__cal_tmpb_int=\count399
+\g__cal_path_component_int=\count400
+\g__cal_label_int=\count401
 \l__cal_tmpa_dim=\dimen343
 \l__cal_tmpb_dim=\dimen344
 \l__cal_tmpc_dim=\dimen345
@@ -1174,7 +1187,7 @@ ex
 code.tex)))
 \openout3 = `fractalRenderer.auxlock'.
 
-Package hyperref Info: Option `colorlinks' set `true' on input line 54.
+Package hyperref Info: Option `colorlinks' set `true' on input line 57.
 
 
 Package siunitx Warning: Option "load-configurations" has been removed in this
@@ -1220,16 +1233,16 @@ LaTeX Font Info:    ... okay on input line 19.
 
 (C:\opt\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count401
+\scratchcounter=\count402
 \scratchdimen=\dimen353
 \scratchbox=\box168
-\nofMPsegments=\count402
-\nofMParguments=\count403
+\nofMPsegments=\count403
+\nofMParguments=\count404
 \everyMPshowfont=\toks47
-\MPscratchCnt=\count404
+\MPscratchCnt=\count405
 \MPscratchDim=\dimen354
-\MPnumerator=\count405
-\makeMPintoPDFobject=\count406
+\MPnumerator=\count406
+\makeMPintoPDFobject=\count407
 \everyMPtoPDFconversion=\toks48
 ) (C:\opt\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -1247,7 +1260,7 @@ Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
-\c@lstlisting=\count407
+\c@lstlisting=\count408
 (C:\opt\MiKTeX\tex/latex/upquote\upquote.sty
 Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
 tim
@@ -1263,7 +1276,7 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 (C:\opt\MiKTeX\tex/generic/gettitlestring\gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count408
+\c@section@level=\count409
 )
 LaTeX Info: Redefining \ref on input line 19.
 LaTeX Info: Redefining \pageref on input line 19.
@@ -1346,39 +1359,39 @@ erer.toc)
 
  [2])
 (projectAnalysis.tex
-<images//mandelbrot.jpg, id=62, 702.625pt x 562.1pt>
+<images//mandelbrot.jpg, id=67, 702.625pt x 562.1pt>
 File: images//mandelbrot.jpg Graphic file (type jpg)
 <use images//mandelbrot.jpg>
 Package pdftex.def Info: images//mandelbrot.jpg  used on input line 18.
 (pdftex.def)             Requested size: 316.17833pt x 252.94266pt.
  [3 <./images//mandelbrot.jpg>]
-<images//MsetOrder3.jpg, id=77, 642.4pt x 481.8pt>
+<images//MsetOrder3.jpg, id=82, 642.4pt x 481.8pt>
 File: images//MsetOrder3.jpg Graphic file (type jpg)
 <use images//MsetOrder3.jpg>
 Package pdftex.def Info: images//MsetOrder3.jpg  used on input line 26.
 (pdftex.def)             Requested size: 117.00119pt x 87.74948pt.
-<images//MsetOrder4.jpg, id=78, 642.4pt x 481.8pt>
+<images//MsetOrder4.jpg, id=83, 642.4pt x 481.8pt>
 File: images//MsetOrder4.jpg Graphic file (type jpg)
 <use images//MsetOrder4.jpg>
 Package pdftex.def Info: images//MsetOrder4.jpg  used on input line 27.
 (pdftex.def)             Requested size: 117.00119pt x 87.74948pt.
-<images//MsetOrder20.jpg, id=79, 642.4pt x 481.8pt>
+<images//MsetOrder20.jpg, id=84, 642.4pt x 481.8pt>
 File: images//MsetOrder20.jpg Graphic file (type jpg)
 <use images//MsetOrder20.jpg>
 Package pdftex.def Info: images//MsetOrder20.jpg  used on input line 28.
 (pdftex.def)             Requested size: 117.00119pt x 87.74948pt.
-<images//sierpinski-triangle.png, id=80, 1204.5pt x 1042.89626pt>
+<images//sierpinski-triangle.png, id=85, 1204.5pt x 1042.89626pt>
 File: images//sierpinski-triangle.png Graphic file (type png)
 <use images//sierpinski-triangle.png>
 Package pdftex.def Info: images//sierpinski-triangle.png  used on input line 37
 .
 (pdftex.def)             Requested size: 117.00119pt x 101.28812pt.
-<images//mandelbrot-zoom.png, id=82, 803.0pt x 803.0pt>
+<images//mandelbrot-zoom.png, id=87, 803.0pt x 803.0pt>
 File: images//mandelbrot-zoom.png Graphic file (type png)
 <use images//mandelbrot-zoom.png>
 Package pdftex.def Info: images//mandelbrot-zoom.png  used on input line 38.
 (pdftex.def)             Requested size: 117.00119pt x 117.00177pt.
-<images//hilbert-curve.png, id=83, 496.85625pt x 496.85625pt>
+<images//hilbert-curve.png, id=88, 496.85625pt x 496.85625pt>
 File: images//hilbert-curve.png Graphic file (type png)
 <use images//hilbert-curve.png>
 Package pdftex.def Info: images//hilbert-curve.png  used on input line 39.
@@ -1429,53 +1442,58 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
 (Font)              scaled to size 10.0pt on input line 186.
-) (design.tex [10]
-<images//CinderboxLibraries.png, id=140, 1508.63625pt x 691.83469pt>
+) (design.tex [10] [11]
+<images//CinderboxLibraries.png, id=160, 1508.63625pt x 691.83469pt>
 File: images//CinderboxLibraries.png Graphic file (type png)
 <use images//CinderboxLibraries.png>
-Package pdftex.def Info: images//CinderboxLibraries.png  used on input line 5.
+Package pdftex.def Info: images//CinderboxLibraries.png  used on input line 19.
+
 (pdftex.def)             Requested size: 390.0pt x 178.83823pt.
- [11]
-<images//LibRapidLibraries.png, id=154, 1794.705pt x 749.04843pt>
+<images//LibRapidLibraries.png, id=161, 1794.705pt x 749.04843pt>
 File: images//LibRapidLibraries.png Graphic file (type png)
 <use images//LibRapidLibraries.png>
-Package pdftex.def Info: images//LibRapidLibraries.png  used on input line 11.
+Package pdftex.def Info: images//LibRapidLibraries.png  used on input line 25.
 (pdftex.def)             Requested size: 390.0pt x 162.76813pt.
-<images//CinderLibraries.png, id=155, 1517.67pt x 774.64406pt>
+<images//CinderLibraries.png, id=162, 1517.67pt x 774.64406pt>
 File: images//CinderLibraries.png Graphic file (type png)
 <use images//CinderLibraries.png>
-Package pdftex.def Info: images//CinderLibraries.png  used on input line 17.
+Package pdftex.def Info: images//CinderLibraries.png  used on input line 31.
 (pdftex.def)             Requested size: 390.0pt x 199.06232pt.
 )
-[12 <./images//CinderboxLibraries.png> <./images//LibRapidLibraries.png>]
-(fractalRenderer.bbl) [13 <./images//CinderLibraries.png>] (fractalRenderer.aux
-)
+[12] [13 <./images//CinderboxLibraries.png> <./images//LibRapidLibraries.png>]
+(fractalRenderer.bbl
+Underfull \hbox (badness 1132) in paragraph at lines 14--16
+[]\OT1/cmr/m/n/12 (+20) Paul Bourke, Nov 2002.  URL [][]$\OT1/zi4/m/n/12 http :
+ / / paulbourke . net / fractals /
+ []
+
+) [14 <./images//CinderLibraries.png>] (fractalRenderer.aux)
 Package rerunfilecheck Info: File `fractalRenderer.out' has not changed.
-(rerunfilecheck)             Checksum: 16512EE21B104F4B991BE5A529B908BD;1524.
+(rerunfilecheck)             Checksum: BD94FA0317F30C86E178F17553F6E039;1692.
  ) 
 Here is how much of TeX's memory you used:
- 51727 strings out of 478582
- 1202961 string characters out of 2858883
- 257855572 words of memory out of 259000000
- 68907 multiletter control sequences out of 15000+600000
- 485449 words of font info for 143 fonts, out of 8000000 for 9000
+ 52199 strings out of 478582
+ 1209694 string characters out of 2858883
+ 257862178 words of memory out of 259000000
+ 69343 multiletter control sequences out of 15000+600000
+ 486323 words of font info for 152 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 105i,7n,115p,1014b,1638s stack positions out of 10000i,1000n,20000p,200000b,80000s
+ 105i,7n,115p,1014b,1635s stack positions out of 10000i,1000n,20000p,200000b,80000s
 {C:/opt/MiKTeX/fonts/enc/dvips/inconsolata/i4-ot1-0.enc}{C:/opt/MiKTeX/fonts/
 enc/dvips/fontawesome/fontawesometwo.enc}<C:/opt/MiKTeX/fonts/type1/public/font
 awesome/FontAwesome.pfb><C:/opt/MiKTeX/fonts/type1/public/inconsolata/Inconsola
 ta-zi4r.pfb><C:/opt/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/opt/Mi
 KTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/opt/MiKTeX/fonts/type1/publi
-c/amsfonts/cm/cmcsc10.pfb><C:/opt/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.
-pfb><C:/opt/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/opt/MiKTeX/font
-s/type1/public/amsfonts/cm/cmr10.pfb><C:/opt/MiKTeX/fonts/type1/public/amsfonts
-/cm/cmr12.pfb><C:/opt/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/opt/Mi
-KTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/opt/MiKTeX/fonts/type1/publi
-c/amsfonts/cm/cmti12.pfb><C:/opt/MiKTeX/fonts/type1/public/amsfonts/symbols/msb
-m10.pfb>
-Output written on fractalRenderer.pdf (13 pages, 3137344 bytes).
+c/amsfonts/cm/cmbx6.pfb><C:/opt/MiKTeX/fonts/type1/public/amsfonts/cm/cmcsc10.p
+fb><C:/opt/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/opt/MiKTeX/font
+s/type1/public/amsfonts/cm/cmmi8.pfb><C:/opt/MiKTeX/fonts/type1/public/amsfonts
+/cm/cmr10.pfb><C:/opt/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/opt/M
+iKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/opt/MiKTeX/fonts/type1/public
+/amsfonts/cm/cmsy10.pfb><C:/opt/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pf
+b><C:/opt/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on fractalRenderer.pdf (14 pages, 3155479 bytes).
 PDF statistics:
- 243 PDF objects out of 1000 (max. 8388607)
- 57 named destinations out of 1000 (max. 500000)
- 40063 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 270 PDF objects out of 1000 (max. 8388607)
+ 64 named destinations out of 1000 (max. 500000)
+ 42119 words of extra memory for PDF output out of 42996 (max. 10000000)
 

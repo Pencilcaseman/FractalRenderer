@@ -1,48 +1,58 @@
 This is BibTeX, Version 0.99d
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: fractalRenderer.aux
+Reallocating 'name_of_file' (item size: 1) to 9 items.
+The style file: unsrtnat.bst
 Reallocating 'name_of_file' (item size: 1) to 13 items.
-Reallocating 'name_of_file' (item size: 1) to 6 items.
-The style file: plain.bst
 Database file #1: bibliography.bib
-You've used 3 entries,
-            2118 wiz_defined-function locations,
-            513 strings with 4368 characters,
-and the built_in function-call counts, 657 in all, are:
-= -- 53
-> -- 27
-< -- 0
-+ -- 11
-- -- 8
-* -- 30
-:= -- 114
-add.period$ -- 6
-call.type$ -- 3
-change.case$ -- 11
-chr.to.int$ -- 0
-cite$ -- 3
-duplicate$ -- 26
-empty$ -- 67
-format.name$ -- 8
-if$ -- 137
-int.to.chr$ -- 0
-int.to.str$ -- 3
+Warning--entry type for "bourke_2002" isn't style-file defined
+--line 5 of file bibliography.bib
+Warning--entry type for "slijkerman_2022" isn't style-file defined
+--line 9 of file bibliography.bib
+Warning--entry type for "developers_davis" isn't style-file defined
+--line 13 of file bibliography.bib
+Warning--entry type for "Davis_LibRapid_Optimised_Mathematics_2023" isn't style-file defined
+--line 17 of file bibliography.bib
+Warning--empty year in developers_davis
+You've used 5 entries,
+            2481 wiz_defined-function locations,
+            580 strings with 5243 characters,
+and the built_in function-call counts, 1395 in all, are:
+= -- 110
+> -- 51
+< -- 5
++ -- 24
+- -- 14
+* -- 75
+:= -- 217
+add.period$ -- 14
+call.type$ -- 5
+change.case$ -- 8
+chr.to.int$ -- 5
+cite$ -- 6
+duplicate$ -- 75
+empty$ -- 151
+format.name$ -- 23
+if$ -- 299
+int.to.chr$ -- 1
+int.to.str$ -- 6
 missing$ -- 2
-newline$ -- 15
-num.names$ -- 6
-pop$ -- 28
+newline$ -- 32
+num.names$ -- 15
+pop$ -- 60
 preamble$ -- 1
-purify$ -- 10
+purify$ -- 5
 quote$ -- 0
-skip$ -- 24
+skip$ -- 61
 stack$ -- 0
-substring$ -- 15
-swap$ -- 3
+substring$ -- 10
+swap$ -- 13
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 10
-warning$ -- 0
-while$ -- 6
-width$ -- 4
-write$ -- 26
+type$ -- 32
+warning$ -- 1
+while$ -- 10
+width$ -- 0
+write$ -- 64
+(There were 5 warnings)

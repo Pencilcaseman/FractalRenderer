@@ -22,6 +22,7 @@ namespace frac {
 
 #include <fractal/debug.hpp>
 #include <fractal/colorPalette.hpp>
+#include <fractal/openglUtils.hpp>
 #include <fractal/renderConfig.hpp>
 #include <fractal/genericFractal.hpp>
 #include <fractal/mandelbrot.hpp>

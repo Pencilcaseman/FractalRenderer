@@ -20,6 +20,7 @@ namespace frac {
 		// Set up rendering settings
 		ci::gl::enableDepthWrite();
 		ci::gl::enableDepthRead();
+		glDepthFunc(GL_ALWAYS);
 
 		// Load the settings file
 		FRAC_LOG(fmt::format("Loading settings from {}", FRACTAL_UI_SETTINGS_PATH));
@@ -43,10 +44,10 @@ namespace frac {
 			quit();
 		}
 
-		m_renderConfig = {10,
-						  100000,
+		m_renderConfig = {1,
+						  100,
 						  1 << 16,
-						  2,
+						  4,
 
 						  lrc::Vec2i(800, 700),
 						  lrc::Vec2i(25, 25),
@@ -87,17 +88,8 @@ namespace frac {
 
 		// Draw a rectangle if dragging mouse
 		if (m_mouseDown) {
-			// Draw over the fractal
-			glDepthFunc(GL_ALWAYS);
-
 			ci::gl::color(ci::ColorA(1, 0, 0, 1));
-			ci::gl::drawSolidRect(ci::Rectf({m_mouseDownPos.x(), m_mouseDownPos.y()},
-											{m_mousePos.x(), m_mousePos.y()}));
-
-			// ci::gl::drawStrokedRect(ci::Rectf({m_mouseDownPos.x(), m_mouseDownPos.y()},
-			// 								  {m_mousePos.x(), m_mousePos.y()}));
-
-			glDepthFunc(GL_LESS);
+			glu::drawStrokedRectangle(m_mouseDownPos, m_mousePos, 5);
 		}
 	}
 
