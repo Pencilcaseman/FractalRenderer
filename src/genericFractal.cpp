@@ -6,14 +6,13 @@ namespace frac {
 	ci::ColorA Fractal::getColor(const lrc::Complex<HighPrecision> &coord, int64_t iters) const {
 		using Col = ColorPalette::ColorType;
 
-		float logZN =
-		  lrc::log(lrc::abs(coord)) / 2;
-		float nu = lrc::log(logZN / lrc::LN2) / lrc::LN2;
-		float iteration = static_cast<float>(iters) + 1 - nu;
+		float logZN			= lrc::log(lrc::abs(lrc::Complex<float>(coord.real(), coord.imag()))) / 2;
+		float nu			= lrc::log(logZN / lrc::LN2) / lrc::LN2;
+		float iteration		= static_cast<float>(iters) + 1 - nu;
 		const auto &palette = m_renderConfig.palette;
-		Col color1 = palette[static_cast<size_t>(iteration) % palette.size()];
-		Col color2 = palette[(static_cast<size_t>(iteration) + 1) % palette.size()];
-		Col merged = ColorPalette::merge(color1, color2, lrc::mod(iteration, 1.0f));
+		Col color1			= palette[static_cast<size_t>(iteration) % palette.size()];
+		Col color2			= palette[(static_cast<size_t>(iteration) + 1) % palette.size()];
+		Col merged			= ColorPalette::merge(color1, color2, lrc::mod(iteration, 1.0f));
 		return {merged.x(), merged.y(), merged.z(), 1};
 
 		// Nice gradient

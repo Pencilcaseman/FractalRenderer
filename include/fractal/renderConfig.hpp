@@ -17,7 +17,7 @@ namespace frac {
 		lrc::Vec2i boxSize;	  // Size of sub-regions to render (see RenderBox)
 
 		lrc::Vec<HighPrecision, 2> fracTopLeft; // The fractal-space center of the image
-		lrc::Vec<LowPrecision, 2> fracSize;		// The width and height of the fractal space
+		lrc::Vec<HighPrecision, 2> fracSize;		// The width and height of the fractal space
 
 		ColorPalette palette; // The palette to use for rendering the fractal
 	};

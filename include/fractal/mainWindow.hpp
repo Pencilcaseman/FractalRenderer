@@ -9,8 +9,6 @@ namespace frac {
 		/// Set up the window, configure ImGui and initialize the fractal rendering surfaces
 		void setup() override;
 
-		void closeWindow();
-
 		// Run on shutdown
 		void cleanup() override;
 
@@ -59,7 +57,8 @@ namespace frac {
 
 		bool m_haltRender = false; // Used to gracefully stop the render threads
 
-		lrc::Vec2i m_mouseDownPos;
-		bool m_mouseDown = false;
+		lrc::Vec2i m_mouseDownPos;	 // The position of the mouse when it was clicked
+		lrc::Vec2i m_newViewBoxSize; // The size of the new view box (used for zooming)
+		bool m_mouseDown = false;	 // Whether the mouse is currently down
 	};
 } // namespace frac

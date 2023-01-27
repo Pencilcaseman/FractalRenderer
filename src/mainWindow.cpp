@@ -44,10 +44,10 @@ namespace frac {
 			quit();
 		}
 
-		m_renderConfig = {1,
-						  100,
+		m_renderConfig = {8,
+						  1000,
 						  1 << 16,
-						  4,
+						  1,
 
 						  lrc::Vec2i(800, 700),
 						  lrc::Vec2i(25, 25),
@@ -66,6 +66,8 @@ namespace frac {
 		regenerateSurfaces();
 		m_fractalTexture = ci::gl::Texture2d::create(m_fractalSurface);
 		renderFractal();
+
+		lrc::prec2(512);
 	}
 
 	void MainWindow::cleanup() {
@@ -117,6 +119,14 @@ namespace frac {
 	}
 
 	void MainWindow::renderFractal() {
+		if (m_threadPool.get_tasks_queued() > 0) {
+			FRAC_WARN("Render already in progress. Halting...");
+			m_haltRender = true;
+			m_threadPool.wait_for_tasks();
+			m_haltRender = false;
+			FRAC_LOG("Render halted");
+		}
+
 		FRAC_LOG("Rendering Fractal...");
 
 		m_threadPool.reset(m_renderConfig.numThreads);
@@ -155,7 +165,8 @@ namespace frac {
 		HighVec2 step = m_renderConfig.fracSize / static_cast<HighVec2>(m_renderConfig.imageSize);
 
 		int64_t aliasFactor		  = m_renderConfig.antiAlias;
-		HighVec2 aliasStepCorrect = 1 / static_cast<HighPrecision>(aliasFactor);
+		HighPrecision scaleFactor = HighPrecision(1) / static_cast<HighPrecision>(aliasFactor);
+		HighVec2 aliasStepCorrect(scaleFactor, scaleFactor);
 
 		// Make the primary axis of iteration the x-axis to improve cache efficiency and
 		// increase performance.
@@ -202,5 +213,66 @@ namespace frac {
 
 	void MainWindow::mouseDrag(ci::app::MouseEvent event) { m_mousePos = event.getPos(); }
 
-	void MainWindow::mouseUp(ci::app::MouseEvent event) { m_mouseDown = false; }
+	void MainWindow::mouseUp(ci::app::MouseEvent event) {
+		m_mouseDown = false;
+
+		// Resize the fractal area
+		using HighVec2			   = lrc::Vec<HighPrecision, 2>;
+		HighVec2 imageSize		   = m_renderConfig.imageSize;
+		HighVec2 imageOrigin	   = {0, getWindowHeight() - imageSize.y()};
+		HighVec2 mouseStartInImage = HighVec2(m_mouseDownPos) - imageOrigin;
+
+		HighVec2 mouseDelta = HighVec2(m_mousePos) - HighVec2(m_mouseDownPos);
+		HighVec2 newFracPos = lrc::map(mouseStartInImage,
+									   HighVec2(0, 0),
+									   imageSize,
+									   m_renderConfig.fracTopLeft,
+									   m_renderConfig.fracTopLeft + m_renderConfig.fracSize);
+
+		HighVec2 newFracSize =
+		  lrc::map(mouseDelta, HighVec2(0, 0), imageSize, HighVec2(0, 0), m_renderConfig.fracSize);
+
+		// Copy the pixels from the selected region to the new region
+		int64_t imgWidth  = m_renderConfig.imageSize.x();
+		int64_t imgHeight = m_renderConfig.imageSize.y();
+		int64_t index	  = 0;
+		std::vector<ci::ColorA> newPixels(imgWidth * imgHeight);
+		auto mouseStartInImageLow =
+		  m_mouseDownPos - lrc::Vec2i {0, getWindowHeight() - m_renderConfig.imageSize.y()};
+		for (int64_t y = 0; y < imgHeight; ++y) {
+			for (int64_t x = 0; x < imgWidth; ++x) {
+				int64_t pixX = lrc::map(x,
+										0.f,
+										imgWidth,
+										mouseStartInImageLow.x(),
+										mouseStartInImageLow.x() + (float)mouseDelta.x());
+				int64_t pixY = lrc::map(y,
+										0.f,
+										imgHeight,
+										mouseStartInImageLow.y(),
+										mouseStartInImageLow.y() + (float)mouseDelta.y());
+
+				newPixels[index++] = m_fractalSurface.getPixel({pixX, pixY});
+			}
+		}
+
+		// Write the new pixels to the surface
+		index = 0;
+		for (int64_t y = 0; y < imgHeight; ++y) {
+			for (int64_t x = 0; x < imgWidth; ++x) {
+				m_fractalSurface.setPixel({y, x}, newPixels[index++]);
+			}
+		}
+
+		m_renderConfig.fracTopLeft = newFracPos;
+		m_renderConfig.fracSize	   = newFracSize;
+
+		FRAC_LOG(fmt::format("ImageOrigin: {}", imageOrigin));
+		FRAC_LOG(fmt::format("MouseStartInImage: {}", mouseStartInImage));
+		FRAC_LOG(fmt::format("MouseDelta: {}", mouseDelta));
+		FRAC_LOG(fmt::format("NewFracPos: {}", newFracPos));
+		FRAC_LOG(fmt::format("NewFracSize: {}", newFracSize));
+
+		renderFractal();
+	}
 } // namespace frac
