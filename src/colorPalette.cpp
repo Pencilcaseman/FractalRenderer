@@ -1,7 +1,10 @@
 #include <fractal/fractal.hpp>
 
 namespace frac {
-	void ColorPalette::addColor(const ColorType &color) { m_colors.push_back(color); }
+	void ColorPalette::addColor(const ColorType &color) {
+		m_colors.push_back(color);
+		FRAC_LOG(fmt::format("Adding Color: {} {} {} {}", color.x(), color.y(), color.z(), color.w()));
+	}
 
 	size_t ColorPalette::size() const { return m_colors.size(); }
 

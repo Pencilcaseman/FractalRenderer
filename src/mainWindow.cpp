@@ -1,29 +1,10 @@
 #include <fractal/fractal.hpp>
 
 namespace frac {
-	void MainWindow::setup() {
-		FRAC_LOG("Setup Called");
-
-		// Set framerate
-		setFrameRate(-1);
-		ci::gl::enableVerticalSync(true);
-
-		// Set the initial window size
-		setWindowSize(1000, 800);
-
-		// Setup ImGui
-		ImGui::Initialize();
-		ImGui::StyleColorsDark();
-		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		ImGui::GetIO().FontGlobalScale = 1.0f;
-
-		// Set up rendering settings
-		ci::gl::enableDepthWrite();
-		ci::gl::enableDepthRead();
-		glDepthFunc(GL_ALWAYS);
-
+	void MainWindow::configureSettings() {
 		// Load the settings file
 		FRAC_LOG(fmt::format("Loading settings from {}", FRACTAL_UI_SETTINGS_PATH));
+
 		std::fstream settingsFile(FRACTAL_UI_SETTINGS_PATH, std::ios::in);
 		if (settingsFile.is_open()) {
 			settingsFile >> m_settings;
@@ -33,41 +14,68 @@ namespace frac {
 			quit();
 		}
 
-		// Validate settings
-		if (m_settings["menus"].is_null()) {
-			FRAC_ERROR("Settings file does not contain a \"menus\" object");
-			quit();
+		// Load settings from settings JSON object
+		m_renderConfig = {
+		  m_settings["renderConfig"]["numThreads"].get<int64_t>(),
+		  m_settings["renderConfig"]["maxIters"].get<int64_t>(),
+		  m_settings["renderConfig"]["bail"].get<LowPrecision>(),
+		  m_settings["renderConfig"]["antiAlias"].get<int>(),
+
+		  lrc::Vec2i(m_settings["renderConfig"]["imageSize"]["width"].get<int64_t>(),
+					 m_settings["renderConfig"]["imageSize"]["height"].get<int64_t>()),
+		  lrc::Vec2i(m_settings["renderConfig"]["boxSize"]["width"].get<int64_t>(),
+					 m_settings["renderConfig"]["boxSize"]["height"].get<int64_t>()),
+
+		  lrc::Vec<HighPrecision, 2>(m_settings["renderConfig"]["fracTopLeft"]["Re"].get<float>(),
+									 m_settings["renderConfig"]["fracTopLeft"]["Im"].get<float>()),
+		  lrc::Vec<HighPrecision, 2>(m_settings["renderConfig"]["fracSize"]["Re"].get<float>(),
+									 m_settings["renderConfig"]["fracSize"]["Im"].get<float>()),
+		  lrc::Vec<HighPrecision, 2>(0, 0)};
+
+		m_renderConfig.originalFracSize = m_renderConfig.fracSize;
+
+		lrc::prec2(m_settings["renderConfig"]["precision"].get<int64_t>());
+
+		for (const auto &color : m_settings["renderConfig"]["colorPalette"]) {
+			m_renderConfig.palette.addColor(ColorPalette::ColorType(color["red"].get<float>(),
+																	color["green"].get<float>(),
+																	color["blue"].get<float>(),
+																	color["alpha"].get<float>()));
 		}
-
-		if (m_settings["menus"]["fractalInfo"].is_null()) {
-			FRAC_ERROR("Settings file does not contain a \"menus.fractalInfo\" object");
-			quit();
-		}
-
-		m_renderConfig = {8,
-						  1000,
-						  1 << 16,
-						  1,
-
-						  lrc::Vec2i(800, 700),
-						  lrc::Vec2i(25, 25),
-
-						  lrc::Vec<HighPrecision, 2>(-2.2, -1.4),
-						  lrc::Vec<HighPrecision, 2>(3.2, 2.6666666)};
-
-		m_renderConfig.palette.addColor(ColorPalette::ColorType(142, 59, 70, 1) / 255.0f);
-		m_renderConfig.palette.addColor(ColorPalette::ColorType(225, 221, 143, 1) / 255.0f);
-		m_renderConfig.palette.addColor(ColorPalette::ColorType(224, 119, 125, 1) / 255.0f);
-		m_renderConfig.palette.addColor(ColorPalette::ColorType(76, 134, 168, 1) / 255.0f);
-		m_renderConfig.palette.addColor(ColorPalette::ColorType(71, 120, 144, 1) / 255.0f);
 
 		m_fractal = std::make_unique<Mandelbrot>(m_renderConfig);
+	}
+
+	void MainWindow::configureWindow() {
+		setFrameRate(-1);				  // Unlimited framerate
+		ci::gl::enableVerticalSync(true); // Enable vertical sync to avoid tearing
+		setWindowSize(1000, 800);		  // Set the initial window size
+
+		// Set up rendering settings
+		ci::gl::enableDepthWrite();
+		ci::gl::enableDepthRead();
+		glDepthFunc(GL_ALWAYS);
+	}
+
+	void MainWindow::configureImGui() {
+		ImGui::Initialize();
+		ImGui::StyleColorsDark();
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		ImGui::GetIO().FontGlobalScale = 1.0f;
+
+		// Enable window docking
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	}
+
+	void MainWindow::setup() {
+		FRAC_LOG("Setup Called");
+
+		configureSettings();
+		configureWindow();
+		configureImGui();
 
 		regenerateSurfaces();
-		m_fractalTexture = ci::gl::Texture2d::create(m_fractalSurface);
 		renderFractal();
-
-		lrc::prec2(512);
 	}
 
 	void MainWindow::cleanup() {
@@ -75,11 +83,7 @@ namespace frac {
 		m_threadPool.wait_for_tasks();
 	}
 
-	void MainWindow::draw() {
-		ci::gl::clear(ci::Color(0.2f, 0.2f, 0.2f));
-
-		drawImGui();
-
+	void MainWindow::drawFractal() {
 		m_fractalTexture = ci::gl::Texture2d::create(m_fractalSurface);
 		lrc::Vec2f drawPos(0, getWindowHeight() - m_renderConfig.imageSize.y());
 
@@ -87,6 +91,30 @@ namespace frac {
 		ci::gl::draw(
 		  m_fractalTexture,
 		  ci::Rectf(drawPos, lrc::Vec2f(drawPos) + lrc::Vec2f(m_renderConfig.imageSize)));
+	}
+
+	void MainWindow::outlineRenderBoxes() {
+		for (const auto &box : m_renderBoxes) {
+			switch (box.state) {
+				case RenderBoxState::None:
+				case RenderBoxState::Rendered: continue;
+				case RenderBoxState::Queued: ci::gl::color(ci::ColorA(0, 1, 0, 0.2)); break;
+				case RenderBoxState::Rendering: ci::gl::color(ci::ColorA(1, 1, 0, 0.2)); break;
+			}
+
+			ci::ivec2 boxPos  = box.topLeft;
+			ci::ivec2 boxSize = box.dimensions;
+			boxPos.y += getWindowHeight() - m_renderConfig.imageSize.y();
+			ci::gl::drawStrokedRect(ci::Rectf(boxPos, boxPos + boxSize), 1);
+		}
+	}
+
+	void MainWindow::draw() {
+		ci::gl::clear(ci::Color(0.2f, 0.2f, 0.2f));
+
+		drawImGui();
+		drawFractal();
+		outlineRenderBoxes();
 
 		// Draw a rectangle if dragging mouse
 		if (m_mouseDown) {
@@ -105,17 +133,62 @@ namespace frac {
 		ImGui::Begin("Fractal Info", nullptr);
 		{
 			ImGui::Text("Fractal Type: Mandelbrot");
-			ImGui::Text("%s", fmt::format("Re:   {}", 0).c_str());
-			ImGui::Text("%s", fmt::format("Im:   {}", 0).c_str());
-			ImGui::Text("%s", fmt::format("Zoom: {}x", 1).c_str());
+
+			HighPrecision re   = m_renderConfig.fracTopLeft.x() + m_renderConfig.fracSize.x() / 2;
+			HighPrecision im   = m_renderConfig.fracTopLeft.y() + m_renderConfig.fracSize.y() / 2;
+			HighPrecision zoom = m_renderConfig.originalFracSize.x() / m_renderConfig.fracSize.x();
+
+			ImGui::Text("%s", fmt::format("Re:   {:.50f}", im).c_str());
+			ImGui::Text("%s", fmt::format("Im:   {:.50f}", re).c_str());
+			ImGui::Text("%s", fmt::format("Zoom: {:e}x", (double)zoom).c_str());
+		}
+		ImGui::End();
+
+		// Fine movement window
+		json fineMovement = m_settings["menus"]["fineMovement"];
+		ImGui::SetNextWindowPos({(float)fineMovement["posX"], (float)fineMovement["posY"]},
+								ImGuiCond_Once);
+		ImGui::SetNextWindowSize({(float)fineMovement["width"], (float)fineMovement["height"]},
+								 ImGuiCond_Once);
+		ImGui::Begin("Fine Movement", nullptr);
+		{
+			ImGui::InputText("Re", &m_fineMovementRe);
+			ImGui::InputText("Im", &m_fineMovementIm);
+			ImGui::InputText("Zoom", &m_fineMovementZoom);
+			if (ImGui::Button("Apply")) {
+				HighPrecision re, im, zoom, sizeRe, sizeIm;
+				scn::scan(m_fineMovementRe, "{}", re);
+				scn::scan(m_fineMovementIm, "{}", im);
+				scn::scan(m_fineMovementZoom, "{}", zoom);
+				sizeRe = m_renderConfig.originalFracSize.x() / zoom;
+				sizeIm = m_renderConfig.originalFracSize.y() / zoom;
+				moveFractalCenter(lrc::Vec<HighPrecision, 2>(re, im),
+								  lrc::Vec<HighPrecision, 2>(sizeRe, sizeIm));
+			}
 		}
 		ImGui::End();
 	}
 
+	void MainWindow::moveFractalCorner(const lrc::Vec<HighPrecision, 2> &topLeft,
+									   const lrc::Vec<HighPrecision, 2> &size) {
+		m_renderConfig.fracTopLeft = topLeft;
+		m_renderConfig.fracSize	   = size;
+
+		renderFractal();
+	}
+
+	void MainWindow::moveFractalCenter(const lrc::Vec<HighPrecision, 2> &center,
+									   const lrc::Vec<HighPrecision, 2> &size) {
+		moveFractalCorner(center - size / lrc::Vec<HighPrecision, 2>(2, 2), size);
+	}
+
 	void MainWindow::regenerateSurfaces() {
+		FRAC_LOG("Regenerating Surfaces...");
 		int64_t w		 = m_renderConfig.imageSize.x();
 		int64_t h		 = m_renderConfig.imageSize.y();
 		m_fractalSurface = ci::Surface((int32_t)w, (int32_t)h, true);
+		m_fractalTexture = ci::gl::Texture2d::create(m_fractalSurface);
+		FRAC_LOG("Surfaces regenerated");
 	}
 
 	void MainWindow::renderFractal() {
@@ -129,6 +202,7 @@ namespace frac {
 
 		FRAC_LOG("Rendering Fractal...");
 
+		m_renderBoxes.clear();
 		m_threadPool.reset(m_renderConfig.numThreads);
 
 		// Split the render into boxes to be rendered in parallel
@@ -138,21 +212,28 @@ namespace frac {
 		// Round number of boxes up so the full image is covered
 		auto numBoxes = lrc::Vec2i(lrc::ceil(lrc::Vec2f(imageSize) / lrc::Vec2f(boxSize)));
 
+		m_renderBoxes.reserve(numBoxes.x() * numBoxes.y());
+
 		for (int64_t i = 0; i < numBoxes.y(); ++i) {
 			for (int64_t j = 0; j < numBoxes.x(); ++j) {
 				lrc::Vec2i adjustedBoxSize(lrc::min(boxSize.x(), imageSize.x() - j * boxSize.x()),
 										   lrc::min(boxSize.y(), imageSize.y() - i * boxSize.y()));
-				RenderBox box {lrc::Vec2i(j, i) * boxSize, adjustedBoxSize};
+				RenderBox box {lrc::Vec2i(j, i) * boxSize, adjustedBoxSize, RenderBoxState::Queued};
 
 				// renderBox(box);
-				m_threadPool.push_task([this, box]() { renderBox(box); });
+				auto prevSize = (int64_t)m_renderBoxes.size();
+				m_renderBoxes.emplace_back(box); // Must happen before pushing to queue
+				m_threadPool.push_task([this, box, prevSize]() { renderBox(box, prevSize); });
 			}
 		}
 
 		FRAC_LOG("Fractal Complete...");
 	}
 
-	void MainWindow::renderBox(const RenderBox &box) {
+	void MainWindow::renderBox(const RenderBox &box, int64_t boxIndex) {
+		// Update the render box state
+		m_renderBoxes[boxIndex].state = RenderBoxState::Rendering;
+
 		using HighVec2 = lrc::Vec<HighPrecision, 2>;
 
 		HighVec2 fractalOrigin =
@@ -202,18 +283,30 @@ namespace frac {
 										  pix / static_cast<float>(aliasFactor * aliasFactor));
 			}
 		}
+
+		// Update the render box state
+		m_renderBoxes[boxIndex].state = RenderBoxState::Rendered;
 	}
 
 	void MainWindow::mouseMove(ci::app::MouseEvent event) { m_mousePos = event.getPos(); }
 
 	void MainWindow::mouseDown(ci::app::MouseEvent event) {
+		// Don't capture mouse events if ImGui wants them
+		if (ImGui::GetIO().WantCaptureMouse) return;
+
 		m_mouseDown	   = true;
 		m_mouseDownPos = event.getPos();
 	}
 
-	void MainWindow::mouseDrag(ci::app::MouseEvent event) { m_mousePos = event.getPos(); }
+	void MainWindow::mouseDrag(ci::app::MouseEvent event) {
+		if (ImGui::GetIO().WantCaptureMouse) return;
+
+		m_mousePos = event.getPos();
+	}
 
 	void MainWindow::mouseUp(ci::app::MouseEvent event) {
+		if (ImGui::GetIO().WantCaptureMouse) return;
+
 		m_mouseDown = false;
 
 		// Resize the fractal area
@@ -260,7 +353,7 @@ namespace frac {
 		index = 0;
 		for (int64_t y = 0; y < imgHeight; ++y) {
 			for (int64_t x = 0; x < imgWidth; ++x) {
-				m_fractalSurface.setPixel({y, x}, newPixels[index++]);
+				m_fractalSurface.setPixel({x, y}, newPixels[index++]);
 			}
 		}
 
