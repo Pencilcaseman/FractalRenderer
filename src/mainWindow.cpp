@@ -138,8 +138,8 @@ namespace frac {
 			HighPrecision im   = m_renderConfig.fracTopLeft.y() + m_renderConfig.fracSize.y() / 2;
 			HighPrecision zoom = m_renderConfig.originalFracSize.x() / m_renderConfig.fracSize.x();
 
-			ImGui::Text("%s", fmt::format("Re:   {:.50f}", im).c_str());
-			ImGui::Text("%s", fmt::format("Im:   {:.50f}", re).c_str());
+			ImGui::Text("%s", fmt::format("Re:   {:.100f}", re).c_str());
+			ImGui::Text("%s", fmt::format("Im:   {:.100f}", im).c_str());
 			ImGui::Text("%s", fmt::format("Zoom: {:e}x", (double)zoom).c_str());
 		}
 		ImGui::End();
@@ -155,11 +155,15 @@ namespace frac {
 			ImGui::InputText("Re", &m_fineMovementRe);
 			ImGui::InputText("Im", &m_fineMovementIm);
 			ImGui::InputText("Zoom", &m_fineMovementZoom);
+
 			if (ImGui::Button("Apply")) {
 				HighPrecision re, im, zoom, sizeRe, sizeIm;
 				scn::scan(m_fineMovementRe, "{}", re);
 				scn::scan(m_fineMovementIm, "{}", im);
 				scn::scan(m_fineMovementZoom, "{}", zoom);
+
+				FRAC_LOG(fmt::format("Received Real Part: {}", re));
+
 				sizeRe = m_renderConfig.originalFracSize.x() / zoom;
 				sizeIm = m_renderConfig.originalFracSize.y() / zoom;
 				moveFractalCenter(lrc::Vec<HighPrecision, 2>(re, im),

@@ -20,7 +20,7 @@
       "Re": 3.2,
       "Im": 2.66666666666
     },
-    "precision": 128,
+    "precision": 512,
     "colorPalette": [
       {
         "red": 0.5568628,
