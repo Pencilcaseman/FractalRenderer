@@ -19,6 +19,9 @@ namespace frac {
 	// using HighPrecision = double;
 	using HighPrecision = lrc::mpf;
 	using LowPrecision	= double;
+
+	using HighVec2 = lrc::Vec<HighPrecision, 2>;
+	using LowVec2  = lrc::Vec<LowPrecision, 2>;
 } // namespace frac
 
 #include <fractal/debug.hpp>

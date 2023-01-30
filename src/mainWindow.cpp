@@ -18,6 +18,7 @@ namespace frac {
 		m_renderConfig = {
 		  m_settings["renderConfig"]["numThreads"].get<int64_t>(),
 		  m_settings["renderConfig"]["maxIters"].get<int64_t>(),
+		  m_settings["renderConfig"]["precision"].get<int64_t>(),
 		  m_settings["renderConfig"]["bail"].get<LowPrecision>(),
 		  m_settings["renderConfig"]["antiAlias"].get<int>(),
 
@@ -78,10 +79,13 @@ namespace frac {
 		renderFractal();
 	}
 
-	void MainWindow::cleanup() {
+	void MainWindow::stopRender() {
 		m_haltRender = true;
 		m_threadPool.wait_for_tasks();
+		m_haltRender = false;
 	}
+
+	void MainWindow::cleanup() { stopRender(); }
 
 	void MainWindow::drawFractal() {
 		m_fractalTexture = ci::gl::Texture2d::create(m_fractalSurface);
@@ -168,6 +172,44 @@ namespace frac {
 				sizeIm = m_renderConfig.originalFracSize.y() / zoom;
 				moveFractalCenter(lrc::Vec<HighPrecision, 2>(re, im),
 								  lrc::Vec<HighPrecision, 2>(sizeRe, sizeIm));
+			}
+		}
+		ImGui::End();
+
+		// Render configuration
+		json renderConfig = m_settings["menus"]["renderConfig"];
+		ImGui::SetNextWindowPos({(float)renderConfig["posX"], (float)renderConfig["posY"]},
+								ImGuiCond_Once);
+		ImGui::SetNextWindowSize({(float)renderConfig["width"], (float)renderConfig["height"]},
+								 ImGuiCond_Once);
+		ImGui::Begin("Render Configuration", nullptr);
+		{
+			static int64_t minThreads	= 1;
+			static int64_t maxThreads	= std::thread::hardware_concurrency();
+			static int64_t minIters		= 1;
+			static int64_t maxIters		= 100000;
+			static int64_t minPrecision = 64;
+			static int64_t maxPrecision = 1024;
+
+			static int64_t newThreads	= m_renderConfig.numThreads;
+			static int64_t newIters		= m_renderConfig.maxIters;
+			static int64_t newPrecision = m_renderConfig.precision;
+
+			ImGui::SliderScalar(
+			  "Threads", ImGuiDataType_S64, &newThreads, &minThreads, &maxThreads);
+
+			ImGui::SliderScalar("Iterations", ImGuiDataType_S64, &newIters, &minIters, &maxIters);
+
+			ImGui::SliderScalar(
+			  "Precision", ImGuiDataType_S64, &newPrecision, &minPrecision, &maxPrecision);
+
+			if (ImGui::Button("Apply")) {
+				stopRender();
+				m_renderConfig.numThreads = newThreads;
+				m_renderConfig.maxIters	  = newIters;
+				m_renderConfig.precision  = newPrecision;
+				lrc::prec2(newPrecision);
+				renderFractal();
 			}
 		}
 		ImGui::End();
@@ -266,30 +308,62 @@ namespace frac {
 				auto pixPos =
 				  fractalOrigin + step * HighVec2(px - box.topLeft.x(), py - box.topLeft.y());
 
-				ci::ColorA pix(0, 0, 0, 1);
+				ci::ColorA pix;
 
-				for (int64_t aliasY = 0; aliasY < aliasFactor; ++aliasY) {
-					for (int64_t aliasX = 0; aliasX < aliasFactor; ++aliasX) {
-						auto pos = pixPos + step * HighVec2(aliasX, aliasY) * aliasStepCorrect;
-
-						auto [iters, endPoint] =
-						  m_fractal->iterCoord(lrc::Complex<HighPrecision>(pos.x(), pos.y()));
-						if (endPoint.real() * endPoint.real() + endPoint.imag() * endPoint.imag() <
-							4) {
-							pix += ci::ColorA(0, 0, 0, 1); // Probably in the set
-						} else {
-							pix += m_fractal->getColor(endPoint, iters); // Probably not in the set
-						}
-					}
+				if (m_renderConfig.precision <= 64) {
+					pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
+				} else {
+					pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
 				}
 
-				m_fractalSurface.setPixel(lrc::Vec2i(px, py),
-										  pix / static_cast<float>(aliasFactor * aliasFactor));
+				m_fractalSurface.setPixel(lrc::Vec2i(px, py), pix);
 			}
 		}
 
 		// Update the render box state
 		m_renderBoxes[boxIndex].state = RenderBoxState::Rendered;
+	}
+
+	ci::ColorA MainWindow::pixelColorLow(const LowVec2 &pixPos, int64_t aliasFactor,
+										 const LowVec2 &step, const LowVec2 &aliasStepCorrect) {
+		ci::ColorA pix(0, 0, 0, 1);
+
+		for (int64_t aliasY = 0; aliasY < aliasFactor; ++aliasY) {
+			for (int64_t aliasX = 0; aliasX < aliasFactor; ++aliasX) {
+				auto pos = pixPos + step * LowVec2(aliasX, aliasY) * aliasStepCorrect;
+
+				auto [iters, endPoint] =
+				  m_fractal->iterCoordLow(lrc::Complex<LowPrecision>(pos.x(), pos.y()));
+				if (endPoint.real() * endPoint.real() + endPoint.imag() * endPoint.imag() < 4) {
+					pix += ci::ColorA(0, 0, 0, 1); // Probably in the set
+				} else {
+					pix += m_fractal->getColorLow(endPoint, iters); // Probably not in the set
+				}
+			}
+		}
+
+		return pix / static_cast<float>(aliasFactor * aliasFactor);
+	}
+
+	ci::ColorA MainWindow::pixelColorHigh(const HighVec2 &pixPos, int64_t aliasFactor,
+										  const HighVec2 &step, const HighVec2 &aliasStepCorrect) {
+		ci::ColorA pix(0, 0, 0, 1);
+
+		for (int64_t aliasY = 0; aliasY < aliasFactor; ++aliasY) {
+			for (int64_t aliasX = 0; aliasX < aliasFactor; ++aliasX) {
+				auto pos = pixPos + step * HighVec2(aliasX, aliasY) * aliasStepCorrect;
+
+				auto [iters, endPoint] =
+				  m_fractal->iterCoordHigh(lrc::Complex<HighPrecision>(pos.x(), pos.y()));
+				if (endPoint.real() * endPoint.real() + endPoint.imag() * endPoint.imag() < 4) {
+					pix += ci::ColorA(0, 0, 0, 1); // Probably in the set
+				} else {
+					pix += m_fractal->getColorHigh(endPoint, iters); // Probably not in the set
+				}
+			}
+		}
+
+		return pix / static_cast<float>(aliasFactor * aliasFactor);
 	}
 
 	void MainWindow::mouseMove(ci::app::MouseEvent event) { m_mousePos = event.getPos(); }

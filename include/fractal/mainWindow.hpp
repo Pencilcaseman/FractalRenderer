@@ -18,6 +18,8 @@ namespace frac {
 		/// Set up the window, configure ImGui and initialize the fractal rendering surfaces
 		void setup() override;
 
+		void stopRender();
+
 		// Run on shutdown
 		void cleanup() override;
 
@@ -31,11 +33,11 @@ namespace frac {
 		/// Draw the UI
 		void drawImGui();
 
-		 void moveFractalCorner(const lrc::Vec<HighPrecision, 2> &topLeft,
-		 					   const lrc::Vec<HighPrecision, 2> &size);
+		void moveFractalCorner(const lrc::Vec<HighPrecision, 2> &topLeft,
+							   const lrc::Vec<HighPrecision, 2> &size);
 
-		 void moveFractalCenter(const lrc::Vec<HighPrecision, 2> &center,
-		 					   const lrc::Vec<HighPrecision, 2> &size);
+		void moveFractalCenter(const lrc::Vec<HighPrecision, 2> &center,
+							   const lrc::Vec<HighPrecision, 2> &size);
 
 		void regenerateSurfaces();
 
@@ -48,6 +50,14 @@ namespace frac {
 		/// to be used within the call queue to render multiple sections in parallel
 		/// \param box
 		void renderBox(const RenderBox &box, int64_t boxIndex = -1);
+
+		LIBRAPID_ALWAYS_INLINE ci::ColorA pixelColorLow(const LowVec2 &pixPos, int64_t aliasFactor,
+														const LowVec2 &step,
+														const LowVec2 &aliasStepCorrect);
+
+		LIBRAPID_ALWAYS_INLINE ci::ColorA pixelColorHigh(const HighVec2 &pixPos,
+														 int64_t aliasFactor, const HighVec2 &step,
+														 const HighVec2 &aliasStepCorrect);
 
 		/// Callback for mouse movement (this does not include mouse clicks or drags)
 		/// \param event The mouse event

@@ -1,7 +1,8 @@
 {
   "renderConfig": {
-    "numThreads": 4,
+    "numThreads": 8,
     "maxIters": 500,
+    "precision": 64,
     "bail": 65536,
     "antiAlias": 2,
     "imageSize": {
@@ -20,7 +21,6 @@
       "Re": 3.2,
       "Im": 2.66666666666
     },
-    "precision": 512,
     "colorPalette": [
       {
         "red": 0.5568628,
@@ -63,6 +63,12 @@
     },
     "fineMovement": {
       "width": 250,
+      "height": 100,
+      "posX": 250,
+      "posY": 0
+    },
+    "renderConfig": {
+      "width": 500,
       "height": 100,
       "posX": 250,
       "posY": 0

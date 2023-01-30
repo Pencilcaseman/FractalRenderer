@@ -19,6 +19,7 @@ namespace frac {
 	struct RenderConfig {
 		int64_t numThreads; // Number of threads to render on (max)
 		int64_t maxIters;	// Largest number of iterations to allow
+		int64_t precision;		// Precision (in bits) of floating point tyeps used for arithmetic
 		LowPrecision bail;	// Bailout value
 		int antiAlias;		// Anti-aliasing factor -- 1 = no anti-aliasing
 
