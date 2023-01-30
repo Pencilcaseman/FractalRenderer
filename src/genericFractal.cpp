@@ -3,6 +3,8 @@
 namespace frac {
 	Fractal::Fractal(const RenderConfig &config) : m_renderConfig(config) {}
 
+	void Fractal::updateRenderConfig(const RenderConfig &config) { m_renderConfig = config; }
+
 	ci::ColorA Fractal::getColorLow(const lrc::Complex<LowPrecision> &coord, int64_t iters) const {
 		using Col = ColorPalette::ColorType;
 

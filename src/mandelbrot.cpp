@@ -19,7 +19,7 @@ namespace frac {
 		int64_t iteration = 0;
 
 		// Bail when larger than this
-		double bailout = 1 << 16;
+		double bailout = Fractal::m_renderConfig.bail;
 
 		while (re * re + im * im <= bailout && iteration < Fractal::m_renderConfig.maxIters) {
 			tmp = re * re - im * im + re_0;

@@ -14,6 +14,9 @@ namespace frac {
 			quit();
 		}
 
+		// Set the default precision
+		lrc::prec2(m_settings["renderConfig"]["precision"].get<int64_t>());
+
 		// Load settings from settings JSON object
 		m_renderConfig = {
 		  m_settings["renderConfig"]["numThreads"].get<int64_t>(),
@@ -34,8 +37,6 @@ namespace frac {
 		  lrc::Vec<HighPrecision, 2>(0, 0)};
 
 		m_renderConfig.originalFracSize = m_renderConfig.fracSize;
-
-		lrc::prec2(m_settings["renderConfig"]["precision"].get<int64_t>());
 
 		for (const auto &color : m_settings["renderConfig"]["colorPalette"]) {
 			m_renderConfig.palette.addColor(ColorPalette::ColorType(color["red"].get<float>(),
@@ -142,9 +143,12 @@ namespace frac {
 			HighPrecision im   = m_renderConfig.fracTopLeft.y() + m_renderConfig.fracSize.y() / 2;
 			HighPrecision zoom = m_renderConfig.originalFracSize.x() / m_renderConfig.fracSize.x();
 
-			ImGui::Text("%s", fmt::format("Re:   {:.100f}", re).c_str());
-			ImGui::Text("%s", fmt::format("Im:   {:.100f}", im).c_str());
+			ImGui::Text("%s", fmt::format("Re:   {}", re).c_str());
+			ImGui::Text("%s", fmt::format("Im:   {}", im).c_str());
 			ImGui::Text("%s", fmt::format("Zoom: {:e}x", (double)zoom).c_str());
+			ImGui::Text(
+			  "%s",
+			  fmt::format("Max Zoom: e+{:.3f}", m_renderConfig.precision / lrc::log2(10)).c_str());
 		}
 		ImGui::End();
 
@@ -190,25 +194,35 @@ namespace frac {
 			static int64_t maxIters		= 100000;
 			static int64_t minPrecision = 64;
 			static int64_t maxPrecision = 1024;
+			static int64_t minAntiAlias = 1;
+			static int64_t maxAntiAlias = 16;
 
 			static int64_t newThreads	= m_renderConfig.numThreads;
 			static int64_t newIters		= m_renderConfig.maxIters;
 			static int64_t newPrecision = m_renderConfig.precision;
+			static int64_t newAntiAlias = m_renderConfig.antiAlias;
 
 			ImGui::SliderScalar(
 			  "Threads", ImGuiDataType_S64, &newThreads, &minThreads, &maxThreads);
 
-			ImGui::SliderScalar("Iterations", ImGuiDataType_S64, &newIters, &minIters, &maxIters);
-
 			ImGui::SliderScalar(
-			  "Precision", ImGuiDataType_S64, &newPrecision, &minPrecision, &maxPrecision);
+			  "Anti Aliasing", ImGuiDataType_S64, &newAntiAlias, &minAntiAlias, &maxAntiAlias);
+
+			ImGui::DragScalarN(
+			  "Iterations", ImGuiDataType_S64, &newIters, 1, 100, &minIters, &maxIters);
+
+			ImGui::DragScalarN(
+			  "Precision", ImGuiDataType_S64, &newPrecision, 1, 32, &minPrecision, &maxPrecision);
 
 			if (ImGui::Button("Apply")) {
 				stopRender();
 				m_renderConfig.numThreads = newThreads;
 				m_renderConfig.maxIters	  = newIters;
 				m_renderConfig.precision  = newPrecision;
+				m_renderConfig.antiAlias  = newAntiAlias;
 				lrc::prec2(newPrecision);
+				m_fractal->updateRenderConfig(m_renderConfig);
+				updateConfigPrecision();
 				renderFractal();
 			}
 		}
@@ -219,7 +233,7 @@ namespace frac {
 									   const lrc::Vec<HighPrecision, 2> &size) {
 		m_renderConfig.fracTopLeft = topLeft;
 		m_renderConfig.fracSize	   = size;
-
+		m_fractal->updateRenderConfig(m_renderConfig);
 		renderFractal();
 	}
 
@@ -235,6 +249,22 @@ namespace frac {
 		m_fractalSurface = ci::Surface((int32_t)w, (int32_t)h, true);
 		m_fractalTexture = ci::gl::Texture2d::create(m_fractalSurface);
 		FRAC_LOG("Surfaces regenerated");
+	}
+
+	void MainWindow::updateConfigPrecision() {
+		RenderConfig newConfig {m_renderConfig.numThreads,
+								m_renderConfig.maxIters,
+								m_renderConfig.precision,
+								m_renderConfig.bail,
+								m_renderConfig.antiAlias,
+								m_renderConfig.imageSize,
+								m_renderConfig.boxSize,
+								m_renderConfig.fracTopLeft,
+								m_renderConfig.fracSize,
+								m_renderConfig.originalFracSize,
+								m_renderConfig.palette};
+		m_fractal->updateRenderConfig(newConfig);
+		m_renderConfig = newConfig;
 	}
 
 	void MainWindow::renderFractal() {
@@ -268,7 +298,7 @@ namespace frac {
 
 				// renderBox(box);
 				auto prevSize = (int64_t)m_renderBoxes.size();
-				m_renderBoxes.emplace_back(box); // Must happen before pushing to queue
+				m_renderBoxes.emplace_back(box); // Must happen before pushing to render queue
 				m_threadPool.push_task([this, box, prevSize]() { renderBox(box, prevSize); });
 			}
 		}
@@ -280,11 +310,9 @@ namespace frac {
 		// Update the render box state
 		m_renderBoxes[boxIndex].state = RenderBoxState::Rendering;
 
-		using HighVec2 = lrc::Vec<HighPrecision, 2>;
-
 		HighVec2 fractalOrigin =
 		  lrc::map(static_cast<HighVec2>(box.topLeft),
-				   lrc::Vec<HighPrecision, 2>({0, 0}),
+				   HighVec2({0, 0}),
 				   static_cast<HighVec2>(m_renderConfig.imageSize),
 				   m_renderConfig.fracTopLeft,
 				   m_renderConfig.fracTopLeft + static_cast<HighVec2>(m_renderConfig.fracSize));
@@ -437,6 +465,7 @@ namespace frac {
 
 		m_renderConfig.fracTopLeft = newFracPos;
 		m_renderConfig.fracSize	   = newFracSize;
+		m_fractal->updateRenderConfig(m_renderConfig);
 
 		FRAC_LOG(fmt::format("ImageOrigin: {}", imageOrigin));
 		FRAC_LOG(fmt::format("MouseStartInImage: {}", mouseStartInImage));

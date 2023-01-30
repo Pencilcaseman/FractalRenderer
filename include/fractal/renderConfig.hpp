@@ -21,7 +21,7 @@ namespace frac {
 		int64_t maxIters;	// Largest number of iterations to allow
 		int64_t precision;		// Precision (in bits) of floating point tyeps used for arithmetic
 		LowPrecision bail;	// Bailout value
-		int antiAlias;		// Anti-aliasing factor -- 1 = no anti-aliasing
+		int64_t antiAlias;		// Anti-aliasing factor -- 1 = no anti-aliasing
 
 		lrc::Vec2i imageSize; // Size of the image to render
 		lrc::Vec2i boxSize;	  // Size of sub-regions to render (see RenderBox)

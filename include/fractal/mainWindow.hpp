@@ -41,6 +41,8 @@ namespace frac {
 
 		void regenerateSurfaces();
 
+		void updateConfigPrecision();
+
 		/// Render the fractal into the fractal surface, and copy that to the
 		/// fractal surface to be drawn. This will be executed on a separate thread
 		/// in order to keep the UI updating

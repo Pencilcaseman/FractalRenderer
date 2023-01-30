@@ -12,6 +12,8 @@ namespace frac {
 		Fractal &operator=(Fractal &&)		= delete;
 		virtual ~Fractal()					= default;
 
+		virtual void updateRenderConfig(const RenderConfig &config);
+
 		virtual std::pair<int64_t, lrc::Complex<LowPrecision>>
 		iterCoordLow(const lrc::Complex<LowPrecision> &coord) const = 0;
 
