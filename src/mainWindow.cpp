@@ -63,7 +63,7 @@ namespace frac {
 		ImGui::Initialize();
 		ImGui::StyleColorsDark();
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		ImGui::GetIO().FontGlobalScale = 1.0f;
+		ImGui::GetIO().FontGlobalScale = 2.0f;
 
 		// Enable window docking
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -252,19 +252,17 @@ namespace frac {
 	}
 
 	void MainWindow::updateConfigPrecision() {
-		RenderConfig newConfig {m_renderConfig.numThreads,
-								m_renderConfig.maxIters,
-								m_renderConfig.precision,
-								m_renderConfig.bail,
-								m_renderConfig.antiAlias,
-								m_renderConfig.imageSize,
-								m_renderConfig.boxSize,
-								m_renderConfig.fracTopLeft,
-								m_renderConfig.fracSize,
-								m_renderConfig.originalFracSize,
-								m_renderConfig.palette};
-		m_fractal->updateRenderConfig(newConfig);
-		m_renderConfig = newConfig;
+		int64_t prec = m_renderConfig.precision;
+		HighPrecision highPrecTopLeftX(m_renderConfig.fracTopLeft.x(), prec);
+		HighPrecision highPrecTopLeftY(m_renderConfig.fracTopLeft.y(), prec);
+		HighPrecision highPrecFracSizeX(m_renderConfig.fracSize.x(), prec);
+		HighPrecision highPrecFracSizeY(m_renderConfig.fracSize.y(), prec);
+		HighPrecision highPrecOriginalFracSizeX(m_renderConfig.originalFracSize.x(), prec);
+		HighPrecision highPrecOriginalFracSizeY(m_renderConfig.originalFracSize.y(), prec);
+
+		m_renderConfig.fracTopLeft		= {highPrecTopLeftX, highPrecTopLeftY};
+		m_renderConfig.fracSize			= {highPrecFracSizeX, highPrecFracSizeY};
+		m_renderConfig.originalFracSize = {highPrecOriginalFracSizeX, highPrecOriginalFracSizeY};
 	}
 
 	void MainWindow::renderFractal() {
@@ -416,7 +414,6 @@ namespace frac {
 		m_mouseDown = false;
 
 		// Resize the fractal area
-		using HighVec2			   = lrc::Vec<HighPrecision, 2>;
 		HighVec2 imageSize		   = m_renderConfig.imageSize;
 		HighVec2 imageOrigin	   = {0, getWindowHeight() - imageSize.y()};
 		HighVec2 mouseStartInImage = HighVec2(m_mouseDownPos) - imageOrigin;
@@ -472,6 +469,8 @@ namespace frac {
 		FRAC_LOG(fmt::format("MouseDelta: {}", mouseDelta));
 		FRAC_LOG(fmt::format("NewFracPos: {}", newFracPos));
 		FRAC_LOG(fmt::format("NewFracSize: {}", newFracSize));
+		FRAC_LOG(fmt::format("NewFracPosPrec: {}", newFracPos.x().get_prec()));
+		FRAC_LOG(fmt::format("NewFracSizePrec: {}", newFracSize.x().get_prec()));
 
 		renderFractal();
 	}
