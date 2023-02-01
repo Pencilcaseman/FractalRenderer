@@ -63,7 +63,7 @@ namespace frac {
 		ImGui::Initialize();
 		ImGui::StyleColorsDark();
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		ImGui::GetIO().FontGlobalScale = 2.0f;
+		ImGui::GetIO().FontGlobalScale = 1.0f;
 
 		// Enable window docking
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -146,9 +146,9 @@ namespace frac {
 			ImGui::Text("%s", fmt::format("Re:   {}", re).c_str());
 			ImGui::Text("%s", fmt::format("Im:   {}", im).c_str());
 			ImGui::Text("%s", fmt::format("Zoom: {:e}x", (double)zoom).c_str());
-			ImGui::Text(
-			  "%s",
-			  fmt::format("Max Zoom: e+{:.3f}", m_renderConfig.precision / lrc::log2(10)).c_str());
+
+			double maxZoomExponent = m_renderConfig.precision / lrc::log2(10);
+			ImGui::Text("%s", fmt::format("Max Zoom: e+{:.3f}", maxZoomExponent).c_str());
 		}
 		ImGui::End();
 
