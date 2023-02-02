@@ -143,12 +143,14 @@ namespace frac {
 			HighPrecision im   = m_renderConfig.fracTopLeft.y() + m_renderConfig.fracSize.y() / 2;
 			HighPrecision zoom = m_renderConfig.originalFracSize.x() / m_renderConfig.fracSize.x();
 
-			ImGui::Text("%s", fmt::format("Re:   {}", re).c_str());
-			ImGui::Text("%s", fmt::format("Im:   {}", im).c_str());
-			ImGui::Text("%s", fmt::format("Zoom: {:e}x", (double)zoom).c_str());
+			ImGui::TextWrapped("%s", fmt::format("Re:   {}", re).c_str());
+			ImGui::TextWrapped("%s", fmt::format("Im:   {}", im).c_str());
+			ImGui::TextWrapped("%s", fmt::format("Zoom: {:e}x", (double)zoom).c_str());
 
+			// HighPrecision maxZoomExponent =
+			//   HighPrecision(m_renderConfig.precision) / lrc::log2(HighPrecision(10));
 			double maxZoomExponent = m_renderConfig.precision / lrc::log2(10);
-			ImGui::Text("%s", fmt::format("Max Zoom: e+{:.3f}", maxZoomExponent).c_str());
+			ImGui::TextWrapped("%s", fmt::format("Max Zoom: e+{:.3f}", maxZoomExponent).c_str());
 		}
 		ImGui::End();
 
