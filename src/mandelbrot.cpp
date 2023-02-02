@@ -29,6 +29,14 @@ namespace frac {
 		}
 
 		return {iteration, lrc::Complex<LowPrecision>(re, im)};
+
+		// lrc::Complex<LowPrecision> tempVarThing = coord;
+		// while (lrc::abs(tempVarThing) <= bailout && iteration < Fractal::m_renderConfig.maxIters) {
+		// 	tempVarThing = lrc::pow(tempVarThing, LowPrecision(4)) + coord;
+		// 	++iteration;
+		// }
+
+		// return {iteration, tempVarThing};
 	}
 
 	std::pair<int64_t, lrc::Complex<HighPrecision>>
