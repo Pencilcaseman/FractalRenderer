@@ -56,22 +56,22 @@
   },
   "menus": {
     "fractalInfo": {
-      "width": 250,
-      "height": 100,
-      "posX": 0,
+      "width": 400,
+      "height": 200,
+      "posX": 800,
       "posY": 0
     },
     "fineMovement": {
-      "width": 250,
-      "height": 100,
-      "posX": 250,
-      "posY": 0
+      "width": 400,
+      "height": 200,
+      "posX": 800,
+      "posY": 400
     },
     "renderConfig": {
-      "width": 500,
-      "height": 100,
-      "posX": 250,
-      "posY": 0
+      "width": 400,
+      "height": 200,
+      "posX": 800,
+      "posY": 200
     }
   }
 }
