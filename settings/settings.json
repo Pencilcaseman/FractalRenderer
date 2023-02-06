@@ -72,6 +72,12 @@
       "height": 200,
       "posX": 800,
       "posY": 200
+    },
+    "renderStatistics": {
+      "width": 300,
+      "height": 100,
+      "posX": 800,
+      "posY": 200
     }
   }
 }

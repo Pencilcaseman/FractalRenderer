@@ -61,6 +61,8 @@ namespace frac {
 														 int64_t aliasFactor, const HighVec2 &step,
 														 const HighVec2 &aliasStepCorrect);
 
+		LIBRAPID_NODISCARD LIBRAPID_ALWAYS_INLINE RenderBoxTimeStats boxTimeStats() const;
+
 		/// Callback for mouse movement (this does not include mouse clicks or drags)
 		/// \param event The mouse event
 		void mouseMove(ci::app::MouseEvent event) override;

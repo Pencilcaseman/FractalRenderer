@@ -232,6 +232,26 @@ namespace frac {
 			}
 		}
 		ImGui::End();
+
+		// Render Statistics
+		json renderStatistics = m_settings["menus"]["renderStatistics"];
+		ImGui::SetNextWindowPos({(float)renderStatistics["posX"], (float)renderStatistics["posY"]},
+								ImGuiCond_Once);
+		ImGui::SetNextWindowSize(
+		  {(float)renderStatistics["width"], (float)renderStatistics["height"]}, ImGuiCond_Once);
+
+		RenderBoxTimeStats stats = boxTimeStats();
+		ImGui::Begin("Render Statistics", nullptr);
+		{
+			ImGui::Text("Pixels/s (min): %s", fmt::format("{:.3f}", stats.min).c_str());
+			ImGui::Text("Pixels/s (max): %s", fmt::format("{:.3f}", stats.max).c_str());
+			ImGui::Text("Pixels/s (avg): %s", fmt::format("{:.3f}", stats.average).c_str());
+			ImGui::Text("Estimated Time Remaining: %s",
+						lrc::formatTime(stats.remainingTime).c_str());
+			ImGui::Text("Estimated Time Remaining: %s",
+						fmt::format("{:.3f}", stats.remainingTime).c_str());
+		}
+		ImGui::End();
 	}
 
 	void MainWindow::moveFractalCorner(const lrc::Vec<HighPrecision, 2> &topLeft,
@@ -309,9 +329,11 @@ namespace frac {
 		FRAC_LOG("Fractal Complete...");
 	}
 
+#if 0
 	void MainWindow::renderBox(const RenderBox &box, int64_t boxIndex) {
 		// Update the render box state
 		m_renderBoxes[boxIndex].state = RenderBoxState::Rendering;
+		double start				  = lrc::now();
 
 		HighVec2 fractalOrigin =
 		  lrc::map(static_cast<HighVec2>(box.topLeft),
@@ -352,13 +374,16 @@ namespace frac {
 		}
 
 		// Update the render box state
-		m_renderBoxes[boxIndex].state = RenderBoxState::Rendered;
+		m_renderBoxes[boxIndex].state	   = RenderBoxState::Rendered;
+		m_renderBoxes[boxIndex].renderTime = lrc::now() - start;
 	}
 
-	/*
+#else
+
 	void MainWindow::renderBox(const RenderBox &box, int64_t boxIndex) {
 		// Update the render box state
 		m_renderBoxes[boxIndex].state = RenderBoxState::Rendering;
+		double start				  = lrc::now();
 
 		HighVec2 fractalOrigin =
 		  lrc::map(static_cast<HighVec2>(box.topLeft),
@@ -501,9 +526,10 @@ namespace frac {
 		}
 
 		// Update the render box state
-		m_renderBoxes[boxIndex].state = RenderBoxState::Rendered;
+		m_renderBoxes[boxIndex].state	   = RenderBoxState::Rendered;
+		m_renderBoxes[boxIndex].renderTime = lrc::now() - start;
 	}
-	 */
+#endif
 
 	ci::ColorA MainWindow::pixelColorLow(const LowVec2 &pixPos, int64_t aliasFactor,
 										 const LowVec2 &step, const LowVec2 &aliasStepCorrect) {
@@ -545,6 +571,27 @@ namespace frac {
 		}
 
 		return pix / static_cast<float>(aliasFactor * aliasFactor);
+	}
+
+	RenderBoxTimeStats MainWindow::boxTimeStats() const {
+		double min	 = 0;
+		double max	 = 0;
+		double total = 0;
+		size_t count = 0;
+
+		for (const auto &box : m_renderBoxes) {
+			if (box.renderTime <= 0) continue;
+			if (box.renderTime < min) min = box.renderTime;
+			if (box.renderTime > max) max = box.renderTime;
+			total += box.renderTime;
+			count += 1;
+		}
+
+		double average		  = total / (double)count;
+		size_t remainingBoxes = m_renderBoxes.size() - count;
+		double remainingTime  = (double)remainingBoxes * average;
+
+		return {min, max, average, remainingTime};
 	}
 
 	void MainWindow::mouseMove(ci::app::MouseEvent event) { m_mousePos = event.getPos(); }

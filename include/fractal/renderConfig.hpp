@@ -14,14 +14,22 @@ namespace frac {
 		lrc::Vec2i topLeft;
 		lrc::Vec2i dimensions;
 		RenderBoxState state = RenderBoxState::None;
+		double renderTime	 = 0;
+	};
+
+	struct RenderBoxTimeStats {
+		double min	  = 0;
+		double max	  = 0;
+		double average = 0;
+		double remainingTime = 0;
 	};
 
 	struct RenderConfig {
 		int64_t numThreads; // Number of threads to render on (max)
 		int64_t maxIters;	// Largest number of iterations to allow
-		int64_t precision;		// Precision (in bits) of floating point tyeps used for arithmetic
+		int64_t precision;	// Precision (in bits) of floating point tyeps used for arithmetic
 		LowPrecision bail;	// Bailout value
-		int64_t antiAlias;		// Anti-aliasing factor -- 1 = no anti-aliasing
+		int64_t antiAlias;	// Anti-aliasing factor -- 1 = no anti-aliasing
 
 		lrc::Vec2i imageSize; // Size of the image to render
 		lrc::Vec2i boxSize;	  // Size of sub-regions to render (see RenderBox)
