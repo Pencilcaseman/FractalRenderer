@@ -309,54 +309,53 @@ namespace frac {
 		FRAC_LOG("Fractal Complete...");
 	}
 
-	//	void MainWindow::renderBox(const RenderBox &box, int64_t boxIndex) {
-	//		// Update the render box state
-	//		m_renderBoxes[boxIndex].state = RenderBoxState::Rendering;
-	//
-	//		HighVec2 fractalOrigin =
-	//		  lrc::map(static_cast<HighVec2>(box.topLeft),
-	//				   HighVec2({0, 0}),
-	//				   static_cast<HighVec2>(m_renderConfig.imageSize),
-	//				   m_renderConfig.fracTopLeft,
-	//				   m_renderConfig.fracTopLeft + static_cast<HighVec2>(m_renderConfig.fracSize));
-	//
-	//		HighVec2 step = m_renderConfig.fracSize /
-	// static_cast<HighVec2>(m_renderConfig.imageSize);
-	//
-	//		int64_t aliasFactor		  = m_renderConfig.antiAlias;
-	//		HighPrecision scaleFactor = HighPrecision(1) / static_cast<HighPrecision>(aliasFactor);
-	//		HighVec2 aliasStepCorrect(scaleFactor, scaleFactor);
-	//
-	//		// Make the primary axis of iteration the x-axis to improve cache efficiency and
-	//		// increase performance.
-	//		for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y(); ++py) {
-	//			// Quick return if required. Without this, the
-	//			// render threads will continue running after the
-	//			// application is closed, leading to weird behaviour.
-	//			if (m_haltRender) return;
-	//
-	//			for (int64_t px = box.topLeft.x(); px < box.topLeft.x() + box.dimensions.x(); ++px)
-	//{
-	//				// Anti-aliasing
-	//				auto pixPos =
-	//				  fractalOrigin + step * HighVec2(px - box.topLeft.x(), py - box.topLeft.y());
-	//
-	//				ci::ColorA pix;
-	//
-	//				if (m_renderConfig.precision <= 64) {
-	//					pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
-	//				} else {
-	//					pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
-	//				}
-	//
-	//				m_fractalSurface.setPixel(lrc::Vec2i(px, py), pix);
-	//			}
-	//		}
-	//
-	//		// Update the render box state
-	//		m_renderBoxes[boxIndex].state = RenderBoxState::Rendered;
-	//	}
+	void MainWindow::renderBox(const RenderBox &box, int64_t boxIndex) {
+		// Update the render box state
+		m_renderBoxes[boxIndex].state = RenderBoxState::Rendering;
 
+		HighVec2 fractalOrigin =
+		  lrc::map(static_cast<HighVec2>(box.topLeft),
+				   HighVec2({0, 0}),
+				   static_cast<HighVec2>(m_renderConfig.imageSize),
+				   m_renderConfig.fracTopLeft,
+				   m_renderConfig.fracTopLeft + static_cast<HighVec2>(m_renderConfig.fracSize));
+
+		HighVec2 step = m_renderConfig.fracSize / static_cast<HighVec2>(m_renderConfig.imageSize);
+
+		int64_t aliasFactor		  = m_renderConfig.antiAlias;
+		HighPrecision scaleFactor = HighPrecision(1) / static_cast<HighPrecision>(aliasFactor);
+		HighVec2 aliasStepCorrect(scaleFactor, scaleFactor);
+
+		// Make the primary axis of iteration the x-axis to improve cache efficiency and
+		// increase performance.
+		for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y(); ++py) {
+			// Quick return if required. Without this, the
+			// render threads will continue running after the
+			// application is closed, leading to weird behaviour.
+			if (m_haltRender) return;
+
+			for (int64_t px = box.topLeft.x(); px < box.topLeft.x() + box.dimensions.x(); ++px) {
+				// Anti-aliasing
+				auto pixPos =
+				  fractalOrigin + step * HighVec2(px - box.topLeft.x(), py - box.topLeft.y());
+
+				ci::ColorA pix;
+
+				if (m_renderConfig.precision <= 64) {
+					pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
+				} else {
+					pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
+				}
+
+				m_fractalSurface.setPixel(lrc::Vec2i(px, py), pix);
+			}
+		}
+
+		// Update the render box state
+		m_renderBoxes[boxIndex].state = RenderBoxState::Rendered;
+	}
+
+	/*
 	void MainWindow::renderBox(const RenderBox &box, int64_t boxIndex) {
 		// Update the render box state
 		m_renderBoxes[boxIndex].state = RenderBoxState::Rendering;
@@ -378,6 +377,8 @@ namespace frac {
 
 		// TODO: MAKE THIS A FUNCTION!!!!!!!!!!
 
+		if (m_haltRender) return;
+
 		// Render the top edge
 		for (int64_t px = box.topLeft.x(); px < box.topLeft.x() + box.dimensions.x(); ++px) {
 			// Anti-aliasing
@@ -395,6 +396,8 @@ namespace frac {
 
 			m_fractalSurface.setPixel(lrc::Vec2i(px, box.topLeft.y()), pix);
 		}
+
+		if (m_haltRender) return;
 
 		// Render the right edge
 		for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y(); ++py) {
@@ -415,6 +418,8 @@ namespace frac {
 									  pix);
 		}
 
+		if (m_haltRender) return;
+
 		// Render the bottom edge
 		for (int64_t px = box.topLeft.x(); px < box.topLeft.x() + box.dimensions.x(); ++px) {
 			// Anti-aliasing
@@ -434,6 +439,8 @@ namespace frac {
 			m_fractalSurface.setPixel(lrc::Vec2i(px, box.topLeft.y() + box.dimensions.y() - 1),
 									  pix);
 		}
+
+		if (m_haltRender) return;
 
 		// Render the left edge
 		for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y(); ++py) {
@@ -457,11 +464,6 @@ namespace frac {
 		if (blackEdges) {
 			for (int64_t py = box.topLeft.y() + 1; py < box.topLeft.y() + box.dimensions.y() - 1;
 				 ++py) {
-				// Quick return if required. Without this, the
-				// render threads will continue running after the
-				// application is closed, leading to weird behaviour.
-				if (m_haltRender) return;
-
 				for (int64_t px = box.topLeft.x() + 1;
 					 px < box.topLeft.x() + box.dimensions.x() - 1;
 					 ++px) {
@@ -501,6 +503,7 @@ namespace frac {
 		// Update the render box state
 		m_renderBoxes[boxIndex].state = RenderBoxState::Rendered;
 	}
+	 */
 
 	ci::ColorA MainWindow::pixelColorLow(const LowVec2 &pixPos, int64_t aliasFactor,
 										 const LowVec2 &step, const LowVec2 &aliasStepCorrect) {
