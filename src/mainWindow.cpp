@@ -248,8 +248,6 @@ namespace frac {
 			ImGui::Text("Pixels/s (avg): %s", fmt::format("{:.3f}", stats.average).c_str());
 			ImGui::Text("Estimated Time Remaining: %s",
 						lrc::formatTime(stats.remainingTime).c_str());
-			ImGui::Text("Estimated Time Remaining: %s",
-						fmt::format("{:.3f}", stats.remainingTime).c_str());
 		}
 		ImGui::End();
 	}
@@ -574,13 +572,14 @@ namespace frac {
 	}
 
 	RenderBoxTimeStats MainWindow::boxTimeStats() const {
-		double min	 = 0;
-		double max	 = 0;
+		double min	 = 1e10;
+		double max	 = -1e10;
 		double total = 0;
 		size_t count = 0;
 
 		for (const auto &box : m_renderBoxes) {
-			if (box.renderTime <= 0) continue;
+			if (box.renderTime == 0) continue;
+
 			if (box.renderTime < min) min = box.renderTime;
 			if (box.renderTime > max) max = box.renderTime;
 			total += box.renderTime;
@@ -589,7 +588,8 @@ namespace frac {
 
 		double average		  = total / (double)count;
 		size_t remainingBoxes = m_renderBoxes.size() - count;
-		double remainingTime  = (double)remainingBoxes * average;
+		double remainingTime =
+		  ((double)remainingBoxes * average) / (double)m_renderConfig.numThreads;
 
 		return {min, max, average, remainingTime};
 	}
