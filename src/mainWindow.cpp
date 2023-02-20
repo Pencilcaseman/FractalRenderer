@@ -14,9 +14,6 @@ namespace frac {
 			quit();
 		}
 
-		// Set the default precision
-		lrc::prec2(m_settings["renderConfig"]["precision"].get<int64_t>());
-
 		// Load settings from settings JSON object
 		m_renderConfig = {
 		  m_settings["renderConfig"]["numThreads"].get<int64_t>(),
