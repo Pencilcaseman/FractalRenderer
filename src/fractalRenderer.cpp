@@ -1,42 +1,51 @@
 #include <fractal/fractal.hpp>
 
 namespace frac {
+	FractalRenderer::~FractalRenderer() { stopRender(); }
+
 	void FractalRenderer::setConfig(const json &config) {
 		m_settings = config;
 
-		// Set the default precision
-		lrc::prec2(m_settings["renderConfig"]["precision"].get<int64_t>());
+		try {
+			// Set the default precision
+			lrc::prec2(m_settings["renderConfig"]["precision"].get<int64_t>());
 
-		// Load settings from settings JSON object
-		m_renderConfig = {
-		  m_settings["renderConfig"]["numThreads"].get<int64_t>(),
-		  m_settings["renderConfig"]["maxIters"].get<int64_t>(),
-		  m_settings["renderConfig"]["precision"].get<int64_t>(),
-		  m_settings["renderConfig"]["bail"].get<LowPrecision>(),
-		  m_settings["renderConfig"]["antiAlias"].get<int>(),
+			// Load settings from settings JSON object
+			m_renderConfig = {
+			  m_settings["renderConfig"]["numThreads"].get<int64_t>(),
+			  m_settings["renderConfig"]["maxIters"].get<int64_t>(),
+			  m_settings["renderConfig"]["precision"].get<int64_t>(),
+			  m_settings["renderConfig"]["bail"].get<LowPrecision>(),
+			  m_settings["renderConfig"]["antiAlias"].get<int>(),
 
-		  lrc::Vec2i(m_settings["renderConfig"]["imageSize"]["width"].get<int64_t>(),
-					 m_settings["renderConfig"]["imageSize"]["height"].get<int64_t>()),
-		  lrc::Vec2i(m_settings["renderConfig"]["boxSize"]["width"].get<int64_t>(),
-					 m_settings["renderConfig"]["boxSize"]["height"].get<int64_t>()),
+			  lrc::Vec2i(m_settings["renderConfig"]["imageSize"]["width"].get<int64_t>(),
+						 m_settings["renderConfig"]["imageSize"]["height"].get<int64_t>()),
+			  lrc::Vec2i(m_settings["renderConfig"]["boxSize"]["width"].get<int64_t>(),
+						 m_settings["renderConfig"]["boxSize"]["height"].get<int64_t>()),
 
-		  lrc::Vec<HighPrecision, 2>(m_settings["renderConfig"]["fracTopLeft"]["Re"].get<float>(),
-									 m_settings["renderConfig"]["fracTopLeft"]["Im"].get<float>()),
-		  lrc::Vec<HighPrecision, 2>(m_settings["renderConfig"]["fracSize"]["Re"].get<float>(),
-									 m_settings["renderConfig"]["fracSize"]["Im"].get<float>()),
-		  lrc::Vec<HighPrecision, 2>(0, 0)};
+			  lrc::Vec<HighPrecision, 2>(
+				m_settings["renderConfig"]["fracTopLeft"]["Re"].get<float>(),
+				m_settings["renderConfig"]["fracTopLeft"]["Im"].get<float>()),
+			  lrc::Vec<HighPrecision, 2>(m_settings["renderConfig"]["fracSize"]["Re"].get<float>(),
+										 m_settings["renderConfig"]["fracSize"]["Im"].get<float>()),
+			  lrc::Vec<HighPrecision, 2>(0, 0)};
 
-		m_renderConfig.originalFracSize = m_renderConfig.fracSize;
+			m_renderConfig.originalFracSize = m_renderConfig.fracSize;
 
-		// Load the colour palette from the JSON object
-		for (const auto &color : m_settings["renderConfig"]["colorPalette"]) {
-			m_renderConfig.palette.addColor(ColorPalette::ColorType(color["red"].get<float>(),
-																	color["green"].get<float>(),
-																	color["blue"].get<float>(),
-																	color["alpha"].get<float>()));
+			// Load the colour palette from the JSON object
+			for (const auto &color : m_settings["renderConfig"]["colorPalette"]) {
+				m_renderConfig.palette.addColor(
+				  ColorPalette::ColorType(color["red"].get<float>(),
+										  color["green"].get<float>(),
+										  color["blue"].get<float>(),
+										  color["alpha"].get<float>()));
+			}
+
+			m_fractal = std::make_unique<Mandelbrot>(m_renderConfig);
+		} catch (std::exception &e) {
+			FRAC_LOG(fmt::format("Failed to load settings: {}", e.what()));
+			stopRender();
 		}
-
-		m_fractal = std::make_unique<Mandelbrot>(m_renderConfig);
 	}
 
 	void FractalRenderer::stopRender() {
@@ -96,7 +105,7 @@ namespace frac {
 		FRAC_LOG("Fractal Complete...");
 	}
 
-	void FractalRenderer::renderBox(const RenderBox &box, int64_t prevSize) {
+	void FractalRenderer::renderBox(const RenderBox &box, int64_t boxIndex) {
 		// Update the render box state
 		m_renderBoxes[boxIndex].state = RenderBoxState::Rendering;
 		double start				  = lrc::now();
@@ -245,4 +254,107 @@ namespace frac {
 		m_renderBoxes[boxIndex].state	   = RenderBoxState::Rendered;
 		m_renderBoxes[boxIndex].renderTime = lrc::now() - start;
 	}
+
+	ci::ColorA FractalRenderer::pixelColorLow(const LowVec2 &pixPos, int64_t aliasFactor,
+											  const LowVec2 &step,
+											  const LowVec2 &aliasStepCorrect) {
+		ci::ColorA pix(0, 0, 0, 1);
+
+		for (int64_t aliasY = 0; aliasY < aliasFactor; ++aliasY) {
+			for (int64_t aliasX = 0; aliasX < aliasFactor; ++aliasX) {
+				auto pos = pixPos + step * LowVec2(aliasX, aliasY) * aliasStepCorrect;
+
+				auto [iters, endPoint] =
+				  m_fractal->iterCoordLow(lrc::Complex<LowPrecision>(pos.x(), pos.y()));
+				if (endPoint.real() * endPoint.real() + endPoint.imag() * endPoint.imag() < 4) {
+					pix += ci::ColorA(0, 0, 0, 1); // Probably in the set
+				} else {
+					pix += m_fractal->getColorLow(endPoint, iters); // Probably not in the set
+				}
+			}
+		}
+
+		return pix / static_cast<float>(aliasFactor * aliasFactor);
+	}
+
+	ci::ColorA FractalRenderer::pixelColorHigh(const HighVec2 &pixPos, int64_t aliasFactor,
+											   const HighVec2 &step,
+											   const HighVec2 &aliasStepCorrect) {
+		ci::ColorA pix(0, 0, 0, 1);
+
+		for (int64_t aliasY = 0; aliasY < aliasFactor; ++aliasY) {
+			for (int64_t aliasX = 0; aliasX < aliasFactor; ++aliasX) {
+				auto pos = pixPos + step * HighVec2(aliasX, aliasY) * aliasStepCorrect;
+
+				auto [iters, endPoint] =
+				  m_fractal->iterCoordHigh(lrc::Complex<HighPrecision>(pos.x(), pos.y()));
+				if (endPoint.real() * endPoint.real() + endPoint.imag() * endPoint.imag() < 4) {
+					pix += ci::ColorA(0, 0, 0, 1); // Probably in the set
+				} else {
+					pix += m_fractal->getColorHigh(endPoint, iters); // Probably not in the set
+				}
+			}
+		}
+
+		return pix / static_cast<float>(aliasFactor * aliasFactor);
+	}
+
+	void FractalRenderer::updateRenderConfig() { m_fractal->updateRenderConfig(m_renderConfig); }
+
+	void FractalRenderer::regenerateSurface() {
+		FRAC_LOG("Regenerating Surface...");
+		int64_t w		 = m_renderConfig.imageSize.x();
+		int64_t h		 = m_renderConfig.imageSize.y();
+		m_fractalSurface = ci::Surface((int32_t)w, (int32_t)h, true);
+		FRAC_LOG("Surface regenerated");
+	}
+
+	void FractalRenderer::updateConfigPrecision() {
+		int64_t prec = m_renderConfig.precision;
+		HighPrecision highPrecTopLeftX(m_renderConfig.fracTopLeft.x(), prec);
+		HighPrecision highPrecTopLeftY(m_renderConfig.fracTopLeft.y(), prec);
+		HighPrecision highPrecFracSizeX(m_renderConfig.fracSize.x(), prec);
+		HighPrecision highPrecFracSizeY(m_renderConfig.fracSize.y(), prec);
+		HighPrecision highPrecOriginalFracSizeX(m_renderConfig.originalFracSize.x(), prec);
+		HighPrecision highPrecOriginalFracSizeY(m_renderConfig.originalFracSize.y(), prec);
+
+		m_renderConfig.fracTopLeft		= {highPrecTopLeftX, highPrecTopLeftY};
+		m_renderConfig.fracSize			= {highPrecFracSizeX, highPrecFracSizeY};
+		m_renderConfig.originalFracSize = {highPrecOriginalFracSizeX, highPrecOriginalFracSizeY};
+	}
+
+	RenderBoxTimeStats FractalRenderer::boxTimeStats() const {
+		double min	 = 1e10;
+		double max	 = -1e10;
+		double total = 0;
+		size_t count = 0;
+
+		for (const auto &box : m_renderBoxes) {
+			if (box.renderTime == 0) continue;
+
+			if (box.renderTime < min) min = box.renderTime;
+			if (box.renderTime > max) max = box.renderTime;
+			total += box.renderTime;
+			count += 1;
+		}
+
+		double average		  = total / (double)count;
+		size_t remainingBoxes = m_renderBoxes.size() - count;
+		double remainingTime =
+		  ((double)remainingBoxes * average) / (double)m_renderConfig.numThreads;
+
+		return {min, max, average, remainingTime};
+	}
+
+	const RenderConfig &FractalRenderer::config() const { return m_renderConfig; }
+	RenderConfig &FractalRenderer::config() { return m_renderConfig; }
+
+	const std::vector<RenderBox> &FractalRenderer::renderBoxes() const { return m_renderBoxes; }
+	std::vector<RenderBox> &FractalRenderer::renderBoxes() { return m_renderBoxes; }
+
+	const json &FractalRenderer::settings() const { return m_settings; }
+	json &FractalRenderer::settings() { return m_settings; }
+
+	const ci::Surface &FractalRenderer::surface() const { return m_fractalSurface; }
+	ci::Surface &FractalRenderer::surface() { return m_fractalSurface; }
 } // namespace frac
