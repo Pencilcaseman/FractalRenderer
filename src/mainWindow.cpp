@@ -13,36 +13,6 @@ namespace frac {
 			FRAC_ERROR("Failed to open settings file");
 			quit();
 		}
-
-		// Load settings from settings JSON object
-		m_renderConfig = {
-		  m_settings["renderConfig"]["numThreads"].get<int64_t>(),
-		  m_settings["renderConfig"]["maxIters"].get<int64_t>(),
-		  m_settings["renderConfig"]["precision"].get<int64_t>(),
-		  m_settings["renderConfig"]["bail"].get<LowPrecision>(),
-		  m_settings["renderConfig"]["antiAlias"].get<int>(),
-
-		  lrc::Vec2i(m_settings["renderConfig"]["imageSize"]["width"].get<int64_t>(),
-					 m_settings["renderConfig"]["imageSize"]["height"].get<int64_t>()),
-		  lrc::Vec2i(m_settings["renderConfig"]["boxSize"]["width"].get<int64_t>(),
-					 m_settings["renderConfig"]["boxSize"]["height"].get<int64_t>()),
-
-		  lrc::Vec<HighPrecision, 2>(m_settings["renderConfig"]["fracTopLeft"]["Re"].get<float>(),
-									 m_settings["renderConfig"]["fracTopLeft"]["Im"].get<float>()),
-		  lrc::Vec<HighPrecision, 2>(m_settings["renderConfig"]["fracSize"]["Re"].get<float>(),
-									 m_settings["renderConfig"]["fracSize"]["Im"].get<float>()),
-		  lrc::Vec<HighPrecision, 2>(0, 0)};
-
-		m_renderConfig.originalFracSize = m_renderConfig.fracSize;
-
-		for (const auto &color : m_settings["renderConfig"]["colorPalette"]) {
-			m_renderConfig.palette.addColor(ColorPalette::ColorType(color["red"].get<float>(),
-																	color["green"].get<float>(),
-																	color["blue"].get<float>(),
-																	color["alpha"].get<float>()));
-		}
-
-		m_fractal = std::make_unique<Mandelbrot>(m_renderConfig);
 	}
 
 	void MainWindow::configureWindow() {
@@ -78,9 +48,7 @@ namespace frac {
 	}
 
 	void MainWindow::stopRender() {
-		m_haltRender = true;
-		m_threadPool.wait_for_tasks();
-		m_haltRender = false;
+		LIBRAPID_ASSERT(false, "Not implemented");
 	}
 
 	void MainWindow::cleanup() { stopRender(); }
@@ -251,15 +219,12 @@ namespace frac {
 
 	void MainWindow::moveFractalCorner(const lrc::Vec<HighPrecision, 2> &topLeft,
 									   const lrc::Vec<HighPrecision, 2> &size) {
-		m_renderConfig.fracTopLeft = topLeft;
-		m_renderConfig.fracSize	   = size;
-		m_fractal->updateRenderConfig(m_renderConfig);
-		renderFractal();
+		LIBRAPID_ASSERT(false, "Not implemented");
 	}
 
 	void MainWindow::moveFractalCenter(const lrc::Vec<HighPrecision, 2> &center,
 									   const lrc::Vec<HighPrecision, 2> &size) {
-		moveFractalCorner(center - size / lrc::Vec<HighPrecision, 2>(2, 2), size);
+		LIBRAPID_ASSERT(false, "Not implemented");
 	}
 
 	void MainWindow::regenerateSurfaces() {

@@ -79,18 +79,9 @@ namespace frac {
 		/// \param event The mouse event
 		void mouseUp(ci::app::MouseEvent event) override;
 
-		RenderConfig m_renderConfig;			 // The settings for the fractal renderer
 		ci::Surface m_fractalSurface;			 // The surface that the fractal is rendered to
 		ci::gl::Texture2dRef m_fractalTexture;	 // The image to be rendered to the screen
 		ci::Font m_font = ci::Font("Arial", 24); // The font to use for rendering text
-		lrc::Vec2i m_mousePos;					 // The current position of the mouse in the window
-		json m_settings;						 // The settings for the fractal
-		std::unique_ptr<Fractal> m_fractal;		 // The fractal to render
-		ThreadPool m_threadPool;				 // Pool for render threads
-
-		std::vector<RenderBox> m_renderBoxes; // The state of each render box
-
-		bool m_haltRender = false; // Used to gracefully stop the render threads
 
 		lrc::Vec2i m_mouseDownPos;	 // The position of the mouse when it was clicked
 		lrc::Vec2i m_newViewBoxSize; // The size of the new view box (used for zooming)
