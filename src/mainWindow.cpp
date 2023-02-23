@@ -46,13 +46,12 @@ namespace frac {
 		renderFractal();
 	}
 
-	void MainWindow::stopRender() { LIBRAPID_ASSERT(false, "Not implemented"); }
+	void MainWindow::stopRender() { m_renderer.stopRender(); }
 
 	void MainWindow::cleanup() { stopRender(); }
 
 	void MainWindow::drawFractal() {
 		m_fractalTexture = ci::gl::Texture2d::create(m_renderer.surface());
-		// lrc::Vec2f drawPos(0, getWindowHeight() - m_renderConfig.imageSize.y());
 
 		const RenderConfig &config = m_renderer.config();
 		double aspect			   = (double)config.imageSize.x() / (double)config.imageSize.y();
@@ -222,15 +221,15 @@ namespace frac {
 
 	void MainWindow::moveFractalCorner(const lrc::Vec<HighPrecision, 2> &topLeft,
 									   const lrc::Vec<HighPrecision, 2> &size) {
-		LIBRAPID_ASSERT(false, "Not implemented");
+		m_renderer.moveFractalCenter(topLeft, size);
 	}
 
 	void MainWindow::moveFractalCenter(const lrc::Vec<HighPrecision, 2> &center,
 									   const lrc::Vec<HighPrecision, 2> &size) {
-		LIBRAPID_ASSERT(false, "Not implemented");
+		m_renderer.moveFractalCenter(center, size);
 	}
 
-	void MainWindow::renderFractal() { LIBRAPID_ASSERT(false, "Not implemented"); }
+	void MainWindow::renderFractal() { m_renderer.renderFractal(); }
 
 	void MainWindow::mouseMove(ci::app::MouseEvent event) { m_mousePos = event.getPos(); }
 
