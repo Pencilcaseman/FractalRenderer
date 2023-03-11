@@ -14,3 +14,5 @@ cmake-build-*
 .idea
 codiga.yml
 .PVS-Studio
+
+.PVS-Studio/
