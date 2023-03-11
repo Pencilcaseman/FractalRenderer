@@ -39,27 +39,10 @@ namespace frac {
 		void moveFractalCenter(const lrc::Vec<HighPrecision, 2> &center,
 							   const lrc::Vec<HighPrecision, 2> &size);
 
-		void regenerateSurfaces();
-
-		void updateConfigPrecision();
-
 		/// Render the fractal into the fractal surface, and copy that to the
 		/// fractal surface to be drawn. This will be executed on a separate thread
 		/// in order to keep the UI updating
 		void renderFractal();
-
-		/// Render a sub-section of the fractal, defined by the \p box variable. This is intended
-		/// to be used within the call queue to render multiple sections in parallel
-		/// \param box
-		void renderBox(const RenderBox &box, int64_t boxIndex = -1);
-
-		LIBRAPID_ALWAYS_INLINE ci::ColorA pixelColorLow(const LowVec2 &pixPos, int64_t aliasFactor,
-														const LowVec2 &step,
-														const LowVec2 &aliasStepCorrect);
-
-		LIBRAPID_ALWAYS_INLINE ci::ColorA pixelColorHigh(const HighVec2 &pixPos,
-														 int64_t aliasFactor, const HighVec2 &step,
-														 const HighVec2 &aliasStepCorrect);
 
 		/// Callback for mouse movement (this does not include mouse clicks or drags)
 		/// \param event The mouse event
@@ -77,22 +60,26 @@ namespace frac {
 		/// \param event The mouse event
 		void mouseUp(ci::app::MouseEvent event) override;
 
-		RenderConfig m_renderConfig;			 // The settings for the fractal renderer
-		ci::Surface m_fractalSurface;			 // The surface that the fractal is rendered to
-		ci::gl::Texture2dRef m_fractalTexture;	 // The image to be rendered to the screen
+		template<typename T>
+		static lrc::Vec<T, 2> aspectCorrectedBox(const lrc::Vec<T, 2> &p1, const lrc::Vec<T, 2> &p2,
+												 float aspectRatio) {
+			lrc::Vec<T, 2> correctedBox;
+			lrc::Vec<T, 2> delta = p2 - p1;
+			if (delta.y() > delta.x() / aspectRatio)
+				correctedBox = {delta.x(), delta.x() / aspectRatio};
+			else
+				correctedBox = {delta.y() * aspectRatio, delta.y()};
+			return correctedBox;
+		}
+
+	private:
+		FractalRenderer m_renderer;				 // The fractal renderer
+		ci::gl::Texture2dRef m_fractalTexture;	 // The fractal texture
 		ci::Font m_font = ci::Font("Arial", 24); // The font to use for rendering text
 		lrc::Vec2i m_mousePos;					 // The current position of the mouse in the window
-		json m_settings;						 // The settings for the fractal
-		std::unique_ptr<Fractal> m_fractal;		 // The fractal to render
-		ThreadPool m_threadPool;				 // Pool for render threads
-
-		std::vector<RenderBox> m_renderBoxes; // The state of each render box
-
-		bool m_haltRender = false; // Used to gracefully stop the render threads
-
-		lrc::Vec2i m_mouseDownPos;	 // The position of the mouse when it was clicked
-		lrc::Vec2i m_newViewBoxSize; // The size of the new view box (used for zooming)
-		bool m_mouseDown = false;	 // Whether the mouse is currently down
+		lrc::Vec2i m_mouseDownPos;				 // The position of the mouse when it was clicked
+		lrc::Vec2i m_newViewBoxSize;			 // The size of the new view box (used for zooming)
+		bool m_mouseDown = false;				 // Whether the mouse is currently down
 
 		// Values used for ImGui input fields
 		std::string m_fineMovementRe;

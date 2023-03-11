@@ -8,6 +8,7 @@ add_executable(FractalRenderer main.cpp ${FRACTAL_SOURCES})
 
 # Include multiprecision floating point
 set(LIBRAPID_USE_MULTIPREC ON)
+set(LIBRAPID_FAST_MATH ON)
 
 add_subdirectory(cinderbox)
 add_subdirectory(json)
