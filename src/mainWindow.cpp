@@ -87,19 +87,17 @@ namespace frac {
 		drawFractal();
 		outlineRenderBoxes();
 
-		if (m_mouseDown) {
+		if (m_drawingZoomBox) {
 			// Draw an aspect-ratio corrected box
-			RenderConfig config		= m_renderer.config();
-			float aspectRatio		= (float)config.imageSize.x() / (float)config.imageSize.y();
-			lrc::Vec2i correctedBox = aspectCorrectedBox(m_mouseDownPos, m_mousePos, aspectRatio);
-
+			RenderConfig config = m_renderer.config();
+			float aspectRatio = (float)config.imageSize.x() / (float)config.imageSize.y();
+			lrc::Vec2i correctedBox =
+			  aspectCorrectedBox(m_mouseDownPos, m_mousePos, aspectRatio);
 			auto correctedEnd = m_mouseDownPos + correctedBox;
-			ci::gl::color(ci::ColorA(1, 0, 0, 0.333)); // Red with alpha
-			ci::gl::drawSolidRect(ci::Rectf(
-			  m_mouseDownPos.x(), m_mouseDownPos.y(), correctedEnd.x(), correctedEnd.y()));
-			ci::gl::color(ci::ColorA(1, 0, 0, 1)); // Red
-			glu::drawStrokedRectangle(m_mouseDownPos, m_mouseDownPos + correctedBox, 5);
+			drawZoomBox(m_mouseDownPos, correctedEnd);
 		}
+
+		if (m_showZoomBox) { drawZoomBox(m_zoomBoxStart, m_zoomBoxEnd); }
 	}
 
 	void MainWindow::drawImGui() {
@@ -154,8 +152,8 @@ namespace frac {
 
 				sizeRe = config.originalFracSize.x() / zoom;
 				sizeIm = config.originalFracSize.y() / zoom;
-				m_renderer.moveFractalCenter(lrc::Vec<HighPrecision, 2>(re, im),
-											 lrc::Vec<HighPrecision, 2>(sizeRe, sizeIm));
+				moveFractalCenter(lrc::Vec<HighPrecision, 2>(re, im),
+								  lrc::Vec<HighPrecision, 2>(sizeRe, sizeIm));
 			}
 		}
 		ImGui::End();
@@ -192,7 +190,7 @@ namespace frac {
 			  "Iterations", ImGuiDataType_S64, &newIters, 1, 100, &minIters, &maxIters);
 
 			ImGui::DragScalarN(
-			  "Precision", ImGuiDataType_S64, &newPrecision, 1, 32, &minPrecision, &maxPrecision);
+			  "Precision", ImGuiDataType_S64, &newPrecision, 1, 0.5, &minPrecision, &maxPrecision);
 
 			if (ImGui::Button("Apply")) {
 				stopRender();
@@ -220,7 +218,8 @@ namespace frac {
 		{
 			ImGui::Text("Pixels/s (min): %s", fmt::format("{:.3f}", stats.min).c_str());
 			ImGui::Text("Pixels/s (max): %s", fmt::format("{:.3f}", stats.max).c_str());
-			ImGui::Text("Pixels/s (avg): %s", fmt::format("{:.3f}", stats.average).c_str());
+			ImGui::Text("Pixels/s (avg): %s",
+						fmt::format("{:.3f}", stats.average).c_str());
 			ImGui::Text("Estimated Time Remaining: %s",
 						lrc::formatTime(stats.remainingTime).c_str());
 		}
@@ -237,6 +236,69 @@ namespace frac {
 		m_renderer.moveFractalCenter(center, size);
 	}
 
+	void MainWindow::zoomFractal(const lrc::Vec2i &pixTopLeft,
+								 const lrc::Vec2i &pixBottomRight) {
+		// The vast majority of the calculations must be done at the highest
+		// precision possible. Without this, the zooming will not function
+		// correctly when the zoom factor exceeds the range of 64-bit precision.
+
+		RenderConfig &config = m_renderer.config();
+		ci::Surface &surface = m_renderer.surface();
+
+		// Resize the fractal area
+		HighVec2 imageSize	= config.imageSize;
+		HighVec2 pixelDelta = pixBottomRight - pixTopLeft;
+
+		HighVec2 newFracPos = lrc::map(HighVec2(pixTopLeft),
+									   HighVec2(0, 0),
+									   imageSize,
+									   config.fracTopLeft,
+									   config.fracTopLeft + config.fracSize);
+
+		HighVec2 newFracSize = lrc::map(
+		  pixelDelta, HighVec2(0, 0), imageSize, HighVec2(0, 0), config.fracSize);
+
+		// Copy the pixels from the selected region to the new region
+		// A temporary buffer is required here because, at some point, the loop
+		// would be writing to the same pixels it is reading from, resulting in
+		// strange visual glitches.
+		int64_t imgWidth  = config.imageSize.x();
+		int64_t imgHeight = config.imageSize.y();
+		int64_t index	  = 0;
+		std::vector<ci::ColorA> newPixels(imgWidth * imgHeight);
+		auto mouseStartInImageLow =
+		  pixTopLeft - lrc::Vec2i {0, getWindowHeight() - config.imageSize.y()};
+		for (int64_t y = 0; y < imgHeight; ++y) {
+			for (int64_t x = 0; x < imgWidth; ++x) {
+				int64_t pixX = lrc::map(x,
+										0.f,
+										imgWidth,
+										mouseStartInImageLow.x(),
+										mouseStartInImageLow.x() + (float)pixelDelta.x());
+				int64_t pixY = lrc::map(y,
+										0.f,
+										imgHeight,
+										mouseStartInImageLow.y(),
+										mouseStartInImageLow.y() + (float)pixelDelta.y());
+
+				newPixels[index++] = surface.getPixel({pixX, pixY});
+			}
+		}
+
+		// Write the new pixels to the surface
+		index = 0;
+		for (int64_t y = 0; y < imgHeight; ++y) {
+			for (int64_t x = 0; x < imgWidth; ++x) {
+				surface.setPixel({x, y}, newPixels[index++]);
+			}
+		}
+
+		config.fracTopLeft = newFracPos;
+		config.fracSize	   = newFracSize;
+		m_renderer.updateRenderConfig();
+		renderFractal();
+	}
+
 	void MainWindow::renderFractal() { m_renderer.renderFractal(); }
 
 	void MainWindow::mouseMove(ci::app::MouseEvent event) { m_mousePos = event.getPos(); }
@@ -247,87 +309,72 @@ namespace frac {
 
 		m_mouseDown	   = true;
 		m_mouseDownPos = event.getPos();
+
+		// Ensure mouse is within the image
+		if (m_mouseDownPos.x() >= 0 &&
+			m_mouseDownPos.x() < m_renderer.config().imageSize.x() &&
+			m_mouseDownPos.y() >= 0 &&
+			m_mouseDownPos.y() < m_renderer.config().imageSize.y()) {
+			constexpr size_t offset = 0; // pixel offset from the edge of the box
+			if (m_showZoomBox && m_mouseDownPos.x() > m_zoomBoxStart.x() + offset &&
+				m_mouseDownPos.x() < m_zoomBoxEnd.x() - offset &&
+				m_mouseDownPos.y() > m_zoomBoxStart.y() + offset &&
+				m_mouseDownPos.y() < m_zoomBoxEnd.y() - offset) {
+				m_moveZoomBox = true;
+			} else {
+				m_drawingZoomBox = true;
+				m_showZoomBox	 = false;
+			}
+		}
 	}
 
 	void MainWindow::mouseDrag(ci::app::MouseEvent event) {
 		if (ImGui::GetIO().WantCaptureMouse) return;
+		lrc::Vec2i delta = lrc::Vec2i(event.getPos()) - m_mousePos;
+		m_mousePos		 = event.getPos();
 
-		m_mousePos = event.getPos();
+		if (m_moveZoomBox) {
+			m_zoomBoxStart += delta;
+			m_zoomBoxEnd += delta;
+		}
 	}
 
 	void MainWindow::mouseUp(ci::app::MouseEvent event) {
 		if (ImGui::GetIO().WantCaptureMouse) return;
-
 		RenderConfig &config = m_renderer.config();
-		ci::Surface &surface = m_renderer.surface();
 		m_mouseDown			 = false;
 
 		// Resize the fractal area
-		HighVec2 imageSize		   = config.imageSize;
-		HighVec2 imageOrigin	   = {0, getWindowHeight() - imageSize.y()};
-		HighVec2 mouseStartInImage = HighVec2(m_mouseDownPos) - imageOrigin;
+		lrc::Vec2i imageSize = config.imageSize;
+		float aspectRatio	 = (float)imageSize.x() / (float)imageSize.y();
 
-		HighVec2 mouseDelta = HighVec2(m_mousePos) - HighVec2(m_mouseDownPos);
+		lrc::Vec2f aspectCorrected =
+		  aspectCorrectedBox(m_mouseDownPos, m_mousePos, aspectRatio);
 
-		HighPrecision aspectRatio = HighPrecision(imageSize.x()) / HighPrecision(imageSize.y());
-		HighVec2 aspectCorrected =
-		  aspectCorrectedBox(HighVec2(m_mouseDownPos), HighVec2(m_mousePos), aspectRatio);
-
-		HighVec2 newFracPos = lrc::map(mouseStartInImage,
-									   HighVec2(0, 0),
-									   imageSize,
-									   config.fracTopLeft,
-									   config.fracTopLeft + config.fracSize);
-
-		// HighVec2 newFracSize =
-		//   lrc::map(mouseDelta, HighVec2(0, 0), imageSize, HighVec2(0, 0), config.fracSize);
-
-		HighVec2 newFracSize =
-		  lrc::map(aspectCorrected, HighVec2(0, 0), imageSize, HighVec2(0, 0), config.fracSize);
-
-		// Copy the pixels from the selected region to the new region
-		int64_t imgWidth  = config.imageSize.x();
-		int64_t imgHeight = config.imageSize.y();
-		int64_t index	  = 0;
-		std::vector<ci::ColorA> newPixels(imgWidth * imgHeight);
-		auto mouseStartInImageLow =
-		  m_mouseDownPos - lrc::Vec2i {0, getWindowHeight() - config.imageSize.y()};
-		for (int64_t y = 0; y < imgHeight; ++y) {
-			for (int64_t x = 0; x < imgWidth; ++x) {
-				int64_t pixX = lrc::map(x,
-										0.f,
-										imgWidth,
-										mouseStartInImageLow.x(),
-										mouseStartInImageLow.x() + (float)aspectCorrected.x());
-				int64_t pixY = lrc::map(y,
-										0.f,
-										imgHeight,
-										mouseStartInImageLow.y(),
-										mouseStartInImageLow.y() + (float)aspectCorrected.y());
-
-				newPixels[index++] = surface.getPixel({pixX, pixY});
-			}
+		// Persistent zoom area
+		if (m_drawingZoomBox) {
+			m_zoomBoxStart	 = m_mouseDownPos;
+			m_zoomBoxEnd	 = m_mouseDownPos + lrc::Vec2i(aspectCorrected);
+			m_showZoomBox	 = true;
+			m_drawingZoomBox = false;
 		}
+	}
 
-		// Write the new pixels to the surface
-		index = 0;
-		for (int64_t y = 0; y < imgHeight; ++y) {
-			for (int64_t x = 0; x < imgWidth; ++x) { surface.setPixel({x, y}, newPixels[index++]); }
+	void MainWindow::keyDown(ci::app::KeyEvent event) {
+		if (m_showZoomBox && event.getCode() == ci::app::KeyEvent::KEY_RETURN) {
+			// Apply zoom box
+			zoomFractal(m_zoomBoxStart, m_zoomBoxEnd);
+			m_showZoomBox = false;
+		} else if (m_showZoomBox && event.getCode() == ci::app::KeyEvent::KEY_ESCAPE) {
+			// Cancel zoom box
+			m_showZoomBox = false;
 		}
+	}
 
-		config.fracTopLeft = newFracPos;
-		config.fracSize	   = newFracSize;
-		m_renderer.updateRenderConfig();
-
-		FRAC_LOG(fmt::format("ImageOrigin: {}", imageOrigin));
-		FRAC_LOG(fmt::format("MouseStartInImage: {}", mouseStartInImage));
-		FRAC_LOG(fmt::format("MouseDelta: {}", mouseDelta));
-		FRAC_LOG(fmt::format("AspectCorrected: {}", aspectCorrected));
-		FRAC_LOG(fmt::format("NewFracPos: {}", newFracPos));
-		FRAC_LOG(fmt::format("NewFracSize: {}", newFracSize));
-		FRAC_LOG(fmt::format("NewFracPosPrec: {}", newFracPos.x().get_prec()));
-		FRAC_LOG(fmt::format("NewFracSizePrec: {}", newFracSize.x().get_prec()));
-
-		renderFractal();
+	void MainWindow::drawZoomBox(const lrc::Vec2f &start, const lrc::Vec2f &end) const {
+		ci::gl::color(ci::ColorA(1, 0, 0, 0.333)); // Red with alpha
+		ci::gl::drawSolidRect(ci::Rectf(start.x(), start.y(), end.x(), end.y()));
+		ci::gl::color(ci::ColorA(1, 0, 0, 1)); // Red
+		glu::drawStrokedRectangle(start, end, 5);
 	}
 } // namespace frac

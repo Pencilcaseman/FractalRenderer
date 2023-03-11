@@ -22,16 +22,21 @@ namespace frac {
 		/// in order to keep the UI updating
 		void renderFractal();
 
-		/// Render a sub-section of the fractal, defined by the \p box variable. This is intended
-		/// to be used within the call queue to render multiple sections in parallel
-		/// \param box
+		/// Render a sub-section of the fractal, defined by the \p box variable. This is
+		/// intended to be used within the call queue to render multiple sections in
+		/// parallel \param box
 		void renderBox(const RenderBox &box, int64_t boxIndex = -1);
 
-		ci::ColorA pixelColorLow(const LowVec2 &pixPos, int64_t aliasFactor, const LowVec2 &step,
-								 const LowVec2 &aliasStepCorrect);
+		LIBRAPID_NODISCARD bool renderLine(const RenderBox &box, const lrc::Vec2i &inc,
+										   const HighVec2 &fractalOrigin, const HighVec2 &step,
+										   int64_t aliasFactor,
+										   const HighVec2 &aliasStepCorrect);
 
-		ci::ColorA pixelColorHigh(const HighVec2 &pixPos, int64_t aliasFactor, const HighVec2 &step,
-								  const HighVec2 &aliasStepCorrect);
+		ci::ColorA pixelColorLow(const LowVec2 &pixPos, int64_t aliasFactor,
+								 const LowVec2 &step, const LowVec2 &aliasStepCorrect);
+
+		ci::ColorA pixelColorHigh(const HighVec2 &pixPos, int64_t aliasFactor,
+								  const HighVec2 &step, const HighVec2 &aliasStepCorrect);
 
 		void updateRenderConfig();
 		void updateConfigPrecision();
