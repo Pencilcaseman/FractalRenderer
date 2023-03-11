@@ -87,10 +87,18 @@ namespace frac {
 		drawFractal();
 		outlineRenderBoxes();
 
-		// Draw a rectangle if dragging mouse
 		if (m_mouseDown) {
-			ci::gl::color(ci::ColorA(1, 0, 0, 1));
-			glu::drawStrokedRectangle(m_mouseDownPos, m_mousePos, 5);
+			// Draw an aspect-ratio corrected box
+			RenderConfig config		= m_renderer.config();
+			float aspectRatio		= (float)config.imageSize.x() / (float)config.imageSize.y();
+			lrc::Vec2i correctedBox = aspectCorrectedBox(m_mouseDownPos, m_mousePos, aspectRatio);
+
+			auto correctedEnd = m_mouseDownPos + correctedBox;
+			ci::gl::color(ci::ColorA(1, 0, 0, 0.333)); // Red with alpha
+			ci::gl::drawSolidRect(ci::Rectf(
+			  m_mouseDownPos.x(), m_mouseDownPos.y(), correctedEnd.x(), correctedEnd.y()));
+			ci::gl::color(ci::ColorA(1, 0, 0, 1)); // Red
+			glu::drawStrokedRectangle(m_mouseDownPos, m_mouseDownPos + correctedBox, 5);
 		}
 	}
 
@@ -260,14 +268,22 @@ namespace frac {
 		HighVec2 mouseStartInImage = HighVec2(m_mouseDownPos) - imageOrigin;
 
 		HighVec2 mouseDelta = HighVec2(m_mousePos) - HighVec2(m_mouseDownPos);
+
+		HighPrecision aspectRatio = HighPrecision(imageSize.x()) / HighPrecision(imageSize.y());
+		HighVec2 aspectCorrected =
+		  aspectCorrectedBox(HighVec2(m_mouseDownPos), HighVec2(m_mousePos), aspectRatio);
+
 		HighVec2 newFracPos = lrc::map(mouseStartInImage,
 									   HighVec2(0, 0),
 									   imageSize,
 									   config.fracTopLeft,
 									   config.fracTopLeft + config.fracSize);
 
+		// HighVec2 newFracSize =
+		//   lrc::map(mouseDelta, HighVec2(0, 0), imageSize, HighVec2(0, 0), config.fracSize);
+
 		HighVec2 newFracSize =
-		  lrc::map(mouseDelta, HighVec2(0, 0), imageSize, HighVec2(0, 0), config.fracSize);
+		  lrc::map(aspectCorrected, HighVec2(0, 0), imageSize, HighVec2(0, 0), config.fracSize);
 
 		// Copy the pixels from the selected region to the new region
 		int64_t imgWidth  = config.imageSize.x();
@@ -282,12 +298,12 @@ namespace frac {
 										0.f,
 										imgWidth,
 										mouseStartInImageLow.x(),
-										mouseStartInImageLow.x() + (float)mouseDelta.x());
+										mouseStartInImageLow.x() + (float)aspectCorrected.x());
 				int64_t pixY = lrc::map(y,
 										0.f,
 										imgHeight,
 										mouseStartInImageLow.y(),
-										mouseStartInImageLow.y() + (float)mouseDelta.y());
+										mouseStartInImageLow.y() + (float)aspectCorrected.y());
 
 				newPixels[index++] = surface.getPixel({pixX, pixY});
 			}
@@ -306,6 +322,7 @@ namespace frac {
 		FRAC_LOG(fmt::format("ImageOrigin: {}", imageOrigin));
 		FRAC_LOG(fmt::format("MouseStartInImage: {}", mouseStartInImage));
 		FRAC_LOG(fmt::format("MouseDelta: {}", mouseDelta));
+		FRAC_LOG(fmt::format("AspectCorrected: {}", aspectCorrected));
 		FRAC_LOG(fmt::format("NewFracPos: {}", newFracPos));
 		FRAC_LOG(fmt::format("NewFracSize: {}", newFracSize));
 		FRAC_LOG(fmt::format("NewFracPosPrec: {}", newFracPos.x().get_prec()));

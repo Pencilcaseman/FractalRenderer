@@ -60,6 +60,19 @@ namespace frac {
 		/// \param event The mouse event
 		void mouseUp(ci::app::MouseEvent event) override;
 
+		template<typename T>
+		static lrc::Vec<T, 2> aspectCorrectedBox(const lrc::Vec<T, 2> &p1, const lrc::Vec<T, 2> &p2,
+												 float aspectRatio) {
+			lrc::Vec<T, 2> correctedBox;
+			lrc::Vec<T, 2> delta = p2 - p1;
+			if (delta.y() > delta.x() / aspectRatio)
+				correctedBox = {delta.x(), delta.x() / aspectRatio};
+			else
+				correctedBox = {delta.y() * aspectRatio, delta.y()};
+			return correctedBox;
+		}
+
+	private:
 		FractalRenderer m_renderer;				 // The fractal renderer
 		ci::gl::Texture2dRef m_fractalTexture;	 // The fractal texture
 		ci::Font m_font = ci::Font("Arial", 24); // The font to use for rendering text
