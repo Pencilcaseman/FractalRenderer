@@ -187,10 +187,10 @@ namespace frac {
 			  "Anti Aliasing", ImGuiDataType_S64, &newAntiAlias, &minAntiAlias, &maxAntiAlias);
 
 			ImGui::DragScalarN(
-			  "Iterations", ImGuiDataType_S64, &newIters, 1, 100, &minIters, &maxIters);
+			  "Iterations", ImGuiDataType_S64, &newIters, 1, 5, &minIters, &maxIters);
 
 			ImGui::DragScalarN(
-			  "Precision", ImGuiDataType_S64, &newPrecision, 1, 0.5, &minPrecision, &maxPrecision);
+			  "Precision", ImGuiDataType_S64, &newPrecision, 1, 0.1, &minPrecision, &maxPrecision);
 
 			if (ImGui::Button("Apply")) {
 				stopRender();

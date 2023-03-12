@@ -81,15 +81,12 @@ namespace frac {
 
 		void drawZoomBox(const lrc::Vec2f &start, const lrc::Vec2f &end) const;
 
-		FractalRenderer m_renderer;			   // The fractal renderer
-		ci::gl::Texture2dRef m_fractalTexture; // The fractal texture
-		ci::Font m_font =
-		  ci::Font("Arial", 24); // The font to use for rendering text
-		lrc::Vec2i
-		  m_mousePos; // The current position of the mouse in the window
-		lrc::Vec2i
-		  m_mouseDownPos; // The position of the mouse when it was clicked
-		bool m_mouseDown = false; // Whether the mouse is currently down
+		FractalRenderer m_renderer;				 // The fractal renderer
+		ci::gl::Texture2dRef m_fractalTexture;	 // The fractal texture
+		ci::Font m_font = ci::Font("Arial", 24); // The font to use for rendering text
+		lrc::Vec2i m_mousePos;	   // The current position of the mouse in the window
+		lrc::Vec2i m_mouseDownPos; // The position of the mouse when it was clicked
+		bool m_mouseDown = false;  // Whether the mouse is currently down
 
 		bool m_drawingZoomBox = false;
 		bool m_showZoomBox	  = false;
