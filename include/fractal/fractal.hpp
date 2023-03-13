@@ -31,4 +31,5 @@ namespace frac {
 #include <fractal/genericFractal.hpp>
 #include <fractal/mandelbrot.hpp>
 #include <fractal/fractalRenderer.hpp>
+#include <fractal/history.hpp>
 #include <fractal/mainWindow.hpp>
