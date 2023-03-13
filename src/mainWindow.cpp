@@ -30,9 +30,6 @@ namespace frac {
 		ImGui::StyleColorsDark();
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		ImGui::GetIO().FontGlobalScale = 1.0f;
-
-		// Enable window docking
-		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	}
 
 	void MainWindow::setup() {

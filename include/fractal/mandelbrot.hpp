@@ -15,10 +15,10 @@ namespace frac {
 
 		~Mandelbrot() override = default;
 
-		[[nodiscard]] std::pair<int64_t, lrc::Complex<LowPrecision>>
+		LIBRAPID_NODISCARD std::pair<int64_t, lrc::Complex<LowPrecision>>
 		iterCoordLow(const lrc::Complex<LowPrecision> &coord) const override;
 
-		[[nodiscard]] std::pair<int64_t, lrc::Complex<HighPrecision>>
+		LIBRAPID_NODISCARD std::pair<int64_t, lrc::Complex<HighPrecision>>
 		iterCoordHigh(const lrc::Complex<HighPrecision> &coord) const override;
 	};
 } // namespace frac
