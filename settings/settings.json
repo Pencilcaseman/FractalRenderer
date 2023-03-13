@@ -52,7 +52,9 @@
 				"blue": 0.5647059,
 				"alpha": 1.0
 			}
-		]
+		],
+		"draftRender": false,
+		"draftInc": 3
 	},
 	"menus": {
 		"fractalInfo": {
@@ -78,6 +80,11 @@
 			"height": 100,
 			"posX": 800,
 			"posY": 450
+		},
+		"history": {
+			"frameWidth": 150,
+			"frameSep": 8,
+			"scrollSpeed": 20
 		}
 	}
 }

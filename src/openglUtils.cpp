@@ -28,4 +28,14 @@ namespace frac::glu {
 		drawLine(bottomRight, {topLeft.x(), bottomRight.y()}, thickness);
 		drawLine({topLeft.x(), bottomRight.y()}, topLeft, thickness);
 	}
+
+	void drawCross(const lrc::Vec2f &center, float radius, float thickness) {
+		ci::vec3 translation({center.x(), center.y(), 0});
+		ci::gl::pushMatrices();
+		ci::gl::translate(translation);
+		ci::gl::lineWidth(thickness);
+		ci::gl::drawLine(ci::vec2(0, -radius), ci::vec2(0, radius));
+		ci::gl::drawLine(ci::vec2(-radius, 0), ci::vec2(radius, 0));
+		ci::gl::popMatrices();
+	}
 } // namespace frac::glu

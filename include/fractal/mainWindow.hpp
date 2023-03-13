@@ -68,6 +68,8 @@ namespace frac {
 		/// \param event The mouse event
 		void mouseUp(ci::app::MouseEvent event) override;
 
+		void mouseWheel(ci::app::MouseEvent event) override;
+
 		void keyDown(ci::app::KeyEvent event) override;
 
 	private:
@@ -94,6 +96,7 @@ namespace frac {
 		bool m_mouseDown = false;  // Whether the mouse is currently down
 
 		HistoryBuffer m_history;
+		float m_historyScrollTarget = 0.0f;
 
 		bool m_drawingZoomBox = false;
 		bool m_showZoomBox	  = false;

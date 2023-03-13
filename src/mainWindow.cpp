@@ -116,6 +116,9 @@ namespace frac {
 	}
 
 	void MainWindow::drawImGui() {
+		// Arbitrary constant to make the UI look nice
+		constexpr int64_t labelledItemWidth = -120;
+
 		RenderConfig &config = m_renderer.config();
 		const json &settings = m_renderer.settings();
 
@@ -193,24 +196,32 @@ namespace frac {
 			static int64_t maxPrecision = 1024;
 			static int64_t minAntiAlias = 1;
 			static int64_t maxAntiAlias = 16;
+			static int64_t minDraftInc	= 1;
+			static int64_t maxDraftInc	= 4;
 
 			static int64_t newThreads	= config.numThreads;
 			static int64_t newIters		= config.maxIters;
 			static int64_t newPrecision = config.precision;
 			static int64_t newAntiAlias = config.antiAlias;
+			static bool newDraftRender	= config.draftRender;
+			static int64_t newDraftInc	= config.draftInc;
 
+			ImGui::PushItemWidth(labelledItemWidth);
 			ImGui::SliderScalar(
 			  "Threads", ImGuiDataType_S64, &newThreads, &minThreads, &maxThreads);
 
+			ImGui::PushItemWidth(labelledItemWidth);
 			ImGui::SliderScalar("Anti Aliasing",
 								ImGuiDataType_S64,
 								&newAntiAlias,
 								&minAntiAlias,
 								&maxAntiAlias);
 
+			ImGui::PushItemWidth(labelledItemWidth);
 			ImGui::DragScalarN(
 			  "Iterations", ImGuiDataType_S64, &newIters, 1, 5, &minIters, &maxIters);
 
+			ImGui::PushItemWidth(labelledItemWidth);
 			ImGui::DragScalarN("Precision",
 							   ImGuiDataType_S64,
 							   &newPrecision,
@@ -221,14 +232,29 @@ namespace frac {
 
 			if (ImGui::Button("Apply")) {
 				stopRender();
-				config.numThreads = newThreads;
-				config.maxIters	  = newIters;
-				config.precision  = newPrecision;
-				config.antiAlias  = newAntiAlias;
+				config.numThreads  = newThreads;
+				config.maxIters	   = newIters;
+				config.precision   = newPrecision;
+				config.antiAlias   = newAntiAlias;
+				config.draftRender = newDraftRender;
+				config.draftInc	   = newDraftInc;
 				lrc::prec2(newPrecision);
 				m_renderer.updateRenderConfig();
 				m_renderer.updateConfigPrecision();
 				renderFractal();
+			}
+
+			ImGui::SameLine();
+			ImGui::Checkbox("Draft Mode", &newDraftRender);
+
+			if (newDraftRender) {
+				ImGui::SameLine();
+				ImGui::PushItemWidth(labelledItemWidth);
+				ImGui::SliderScalar("Draft Increment",
+									ImGuiDataType_S64,
+									&newDraftInc,
+									&minDraftInc,
+									&maxDraftInc);
 			}
 		}
 		ImGui::End();
@@ -256,14 +282,16 @@ namespace frac {
 	}
 
 	void MainWindow::drawHistory() {
-		constexpr float historyFrameWidth = 150;
-		constexpr float historyFrameSep	  = 8; // Spacing between frames
-		const auto windowWidth			  = (float)getWindowWidth();
-		const auto windowHeight			  = (float)getWindowHeight();
-		const RenderConfig &config		  = m_renderer.config();
-		size_t historySize				  = m_history.size();
-		HistoryNode *node				  = m_history.first();
-		int64_t index					  = 0;
+		const json &settings		  = m_renderer.settings();
+		const float historyFrameWidth = settings["menus"]["history"]["frameWidth"];
+		const float historyFrameSep	  = settings["menus"]["history"]["frameSep"];
+
+		const auto windowWidth	   = (float)getWindowWidth();
+		const auto windowHeight	   = (float)getWindowHeight();
+		const RenderConfig &config = m_renderer.config();
+		size_t historySize		   = m_history.size();
+		HistoryNode *node		   = m_history.first();
+		int64_t index			   = 0;
 
 		// Draw a bounding box for the frames to sit within
 		float boxLeft = windowWidth - historyFrameWidth - historyFrameSep * 2;
@@ -278,6 +306,12 @@ namespace frac {
 							   (renderSize.y() + historyFrameSep) *
 								   (float)(historySize - index - 1) +
 								 historyFrameSep);
+
+			if (drawPos.y() > windowHeight || drawPos.y() + renderSize.y() < 0) break;
+
+			drawPos.y(drawPos.y() +
+					  m_historyScrollTarget *
+						settings["menus"]["history"]["scrollSpeed"].get<float>());
 
 			ci::gl::color(ci::ColorA(1, 1, 1, 1));
 			ci::gl::draw(texture, ci::Rectf(drawPos, drawPos + renderSize));
@@ -439,6 +473,15 @@ namespace frac {
 		}
 	}
 
+	void MainWindow::mouseWheel(ci::app::MouseEvent event) {
+		if (ImGui::GetIO().WantCaptureMouse) return;
+
+		const json &settings = m_renderer.settings();
+		if (m_mousePos.x() > settings["menus"]["history"]["frameWidth"]) {
+			m_historyScrollTarget += event.getWheelIncrement();
+		}
+	}
+
 	void MainWindow::keyDown(ci::app::KeyEvent event) {
 		if (m_showZoomBox && event.getCode() == ci::app::KeyEvent::KEY_RETURN) {
 			// Update history and apply zoom box
@@ -452,8 +495,13 @@ namespace frac {
 	}
 
 	void MainWindow::drawZoomBox(const lrc::Vec2f &start, const lrc::Vec2f &end) const {
+		// Translucent inner box
 		ci::gl::color(ci::ColorA(1, 0, 0, 0.333)); // Red with alpha
 		ci::gl::drawSolidRect(ci::Rectf(start.x(), start.y(), end.x(), end.y()));
+		// Small cross in the middle
+		ci::gl::color(ci::ColorA(0, 0, 1, 0.333)); // Blue with alpha
+		glu::drawCross((start + end) * 0.5f, 5.f, 2.f);
+		// Bounding box
 		ci::gl::color(ci::ColorA(1, 0, 0, 1)); // Red
 		glu::drawStrokedRectangle(start, end, 5);
 	}

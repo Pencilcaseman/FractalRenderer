@@ -1,6 +1,7 @@
 #include <fractal/fractal.hpp>
 
 namespace frac {
+	FractalRenderer::FractalRenderer(const json &config) { setConfig(config); }
 	FractalRenderer::~FractalRenderer() { stopRender(); }
 
 	void FractalRenderer::setConfig(const json &config) {
@@ -11,7 +12,7 @@ namespace frac {
 			lrc::prec2(m_settings["renderConfig"]["precision"].get<int64_t>());
 
 			// Load settings from settings JSON object
-			m_renderConfig = {
+			m_renderConfig = RenderConfig {
 			  m_settings["renderConfig"]["numThreads"].get<int64_t>(),
 			  m_settings["renderConfig"]["maxIters"].get<int64_t>(),
 			  m_settings["renderConfig"]["precision"].get<int64_t>(),
@@ -30,7 +31,12 @@ namespace frac {
 			  lrc::Vec<HighPrecision, 2>(
 				m_settings["renderConfig"]["fracSize"]["Re"].get<float>(),
 				m_settings["renderConfig"]["fracSize"]["Im"].get<float>()),
-			  lrc::Vec<HighPrecision, 2>(0, 0)};
+			  lrc::Vec<HighPrecision, 2>(0, 0),
+
+			  ColorPalette(), // Default for now -- colors added later
+
+			  m_settings["renderConfig"]["draftRender"].get<bool>(),
+			  m_settings["renderConfig"]["draftInc"].get<int64_t>()};
 
 			m_renderConfig.originalFracSize = m_renderConfig.fracSize;
 
@@ -97,8 +103,11 @@ namespace frac {
 				lrc::Vec2i adjustedBoxSize(
 				  lrc::min(boxSize.x(), imageSize.x() - j * boxSize.x()),
 				  lrc::min(boxSize.y(), imageSize.y() - i * boxSize.y()));
-				RenderBox box {
-				  lrc::Vec2i(j, i) * boxSize, adjustedBoxSize, RenderBoxState::Queued};
+				RenderBox box {lrc::Vec2i(j, i) * boxSize,
+							   adjustedBoxSize,
+							   m_renderConfig.draftRender,
+							   m_renderConfig.draftInc,
+							   RenderBoxState::Queued};
 
 				// renderBox(box);
 				auto prevSize = (int64_t)m_renderBoxes.size();
@@ -115,7 +124,9 @@ namespace frac {
 	void FractalRenderer::renderBox(const RenderBox &box, int64_t boxIndex) {
 		// Update the render box state
 		m_renderBoxes[boxIndex].state = RenderBoxState::Rendering;
-		double start				  = lrc::now();
+		const double start			  = lrc::now();
+
+		const int64_t inc = box.draftRender ? box.draftInc : 1;
 
 		HighVec2 fractalOrigin = lrc::map(
 		  static_cast<HighVec2>(box.topLeft),
@@ -138,9 +149,21 @@ namespace frac {
 
 		if (m_haltRender) return;
 
+		if (box.draftRender) {
+			for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y();
+				 ++py) {
+				for (int64_t px = box.topLeft.x();
+					 px < box.topLeft.x() + box.dimensions.x();
+					 ++px) {
+					m_fractalSurface.setPixel(lrc::Vec2i(px, py),
+											  ci::ColorA {0.2, 0, 0.2, 0.5});
+				}
+			}
+		}
+
 		// Render the top edge
 		for (int64_t px = box.topLeft.x(); px < box.topLeft.x() + box.dimensions.x();
-			 ++px) {
+			 px += inc) {
 			// Anti-aliasing
 			auto pixPos = fractalOrigin + step * HighVec2(px - box.topLeft.x(), 0);
 
@@ -163,7 +186,7 @@ namespace frac {
 
 		// Render the right edge
 		for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y();
-			 ++py) {
+			 py += inc) {
 			// Anti-aliasing
 			auto pixPos =
 			  fractalOrigin + step * HighVec2(box.dimensions.x(), py - box.topLeft.y());
@@ -188,7 +211,7 @@ namespace frac {
 
 		// Render the bottom edge
 		for (int64_t px = box.topLeft.x(); px < box.topLeft.x() + box.dimensions.x();
-			 ++px) {
+			 px += inc) {
 			// Anti-aliasing
 			auto pixPos = fractalOrigin +
 						  step * HighVec2(px - box.topLeft.x(), box.dimensions.y() - 1);
@@ -213,7 +236,7 @@ namespace frac {
 
 		// Render the left edge
 		for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y();
-			 ++py) {
+			 py += inc) {
 			// Anti-aliasing
 			auto pixPos =
 			  fractalOrigin +
@@ -237,10 +260,10 @@ namespace frac {
 		if (blackEdges) {
 			for (int64_t py = box.topLeft.y() + 1;
 				 py < box.topLeft.y() + box.dimensions.y() - 1;
-				 ++py) {
+				 py += inc) {
 				for (int64_t px = box.topLeft.x() + 1;
 					 px < box.topLeft.x() + box.dimensions.x() - 1;
-					 ++px) {
+					 px += inc) {
 					m_fractalSurface.setPixel(lrc::Vec2i(px, py),
 											  ci::ColorA {0, 0, 0, 1});
 				}
@@ -250,7 +273,7 @@ namespace frac {
 			// efficiency and increase performance.
 			for (int64_t py = box.topLeft.y() + 1;
 				 py < box.topLeft.y() + box.dimensions.y() - 1;
-				 ++py) {
+				 py += inc) {
 				// Quick return if required. Without this, the
 				// render threads will continue running after the
 				// application is closed, leading to weird behaviour.
@@ -258,7 +281,7 @@ namespace frac {
 
 				for (int64_t px = box.topLeft.x() + 1;
 					 px < box.topLeft.x() + box.dimensions.x() - 1;
-					 ++px) {
+					 px += inc) {
 					// Anti-aliasing
 					auto pixPos = fractalOrigin + step * HighVec2(px - box.topLeft.x(),
 																  py - box.topLeft.y());
