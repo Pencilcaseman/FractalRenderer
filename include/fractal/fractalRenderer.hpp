@@ -4,7 +4,7 @@ namespace frac {
 	class FractalRenderer {
 	public:
 		FractalRenderer() = default;
-		FractalRenderer(const json &config);
+		explicit FractalRenderer(const json &config);
 		~FractalRenderer();
 
 		void setConfig(const json &config);
@@ -26,11 +26,6 @@ namespace frac {
 		/// intended to be used within the call queue to render multiple sections in
 		/// parallel \param box
 		void renderBox(const RenderBox &box, int64_t boxIndex = -1);
-
-		LIBRAPID_NODISCARD bool renderLine(const RenderBox &box, const lrc::Vec2i &inc,
-										   const HighVec2 &fractalOrigin, const HighVec2 &step,
-										   int64_t aliasFactor,
-										   const HighVec2 &aliasStepCorrect);
 
 		ci::ColorA pixelColorLow(const LowVec2 &pixPos, int64_t aliasFactor,
 								 const LowVec2 &step, const LowVec2 &aliasStepCorrect);
@@ -64,6 +59,6 @@ namespace frac {
 		ThreadPool m_threadPool;			// Pool for render threads
 
 		std::vector<RenderBox> m_renderBoxes; // The state of each render box
-		bool m_haltRender = false;			  // Used to gracefully stop the render threads
+		bool m_haltRender = false; // Used to gracefully stop the render threads
 	};
 } // namespace frac

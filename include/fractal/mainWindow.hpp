@@ -8,14 +8,15 @@ namespace frac {
 
 		void configureSettings();
 
-		/// Set up the main window, making sure it's the right size and that the frame rates
-		/// are set correctly
+		/// Set up the main window, making sure it's the right size and that the frame
+		/// rates are set correctly
 		void configureWindow();
 
 		/// Configure ImGui, setting up the style and enabling docking
 		void configureImGui();
 
-		/// Set up the window, configure ImGui and initialize the fractal rendering surfaces
+		/// Set up the window, configure ImGui and initialize the fractal rendering
+		/// surfaces
 		void setup() override;
 
 		void stopRender();
@@ -33,14 +34,18 @@ namespace frac {
 		/// Draw the UI
 		void drawImGui();
 
+		/// Draw the history frames
+		void drawHistory();
+
+		void updateHistoryItem();
+
 		void moveFractalCorner(const lrc::Vec<HighPrecision, 2> &topLeft,
 							   const lrc::Vec<HighPrecision, 2> &size);
 
 		void moveFractalCenter(const lrc::Vec<HighPrecision, 2> &center,
 							   const lrc::Vec<HighPrecision, 2> &size);
 
-		void zoomFractal(const lrc::Vec2i &pixTopLeft,
-						 const lrc::Vec2i &pixBottomRight);
+		void zoomFractal(const lrc::Vec2i &pixTopLeft, const lrc::Vec2i &pixBottomRight);
 
 		/// Render the fractal into the fractal surface, and copy that to the
 		/// fractal surface to be drawn. This will be executed on a separate
@@ -87,6 +92,8 @@ namespace frac {
 		lrc::Vec2i m_mousePos;	   // The current position of the mouse in the window
 		lrc::Vec2i m_mouseDownPos; // The position of the mouse when it was clicked
 		bool m_mouseDown = false;  // Whether the mouse is currently down
+
+		HistoryBuffer m_history;
 
 		bool m_drawingZoomBox = false;
 		bool m_showZoomBox	  = false;

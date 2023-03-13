@@ -8,10 +8,13 @@ namespace frac {
 		std::fstream settingsFile(FRACTAL_UI_SETTINGS_PATH, std::ios::in);
 		if (settingsFile.is_open()) {
 			m_renderer.setConfig(json::parse(settingsFile));
+			m_history.append(m_renderer.config(), m_renderer.surface());
 		} else {
 			FRAC_ERROR("Failed to open settings file");
 			quit();
 		}
+
+		FRAC_LOG("Settings Configured");
 	}
 
 	void MainWindow::configureWindow() {
@@ -22,7 +25,10 @@ namespace frac {
 		// Set up rendering settings
 		ci::gl::enableDepthWrite();
 		ci::gl::enableDepthRead();
+		ci::gl::enableDepth();
 		glDepthFunc(GL_ALWAYS);
+
+		FRAC_LOG("Window Configured");
 	}
 
 	void MainWindow::configureImGui() {
@@ -30,6 +36,8 @@ namespace frac {
 		ImGui::StyleColorsDark();
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		ImGui::GetIO().FontGlobalScale = 1.0f;
+
+		FRAC_LOG("ImGui Configured");
 	}
 
 	void MainWindow::setup() {
@@ -41,18 +49,23 @@ namespace frac {
 
 		m_renderer.regenerateSurface();
 		renderFractal();
+
+		FRAC_LOG("Setup Complete");
 	}
 
 	void MainWindow::stopRender() { m_renderer.stopRender(); }
 
-	void MainWindow::cleanup() { stopRender(); }
+	void MainWindow::cleanup() {
+		stopRender();
+		FRAC_LOG("Cleaned Up");
+	}
 
 	void MainWindow::drawFractal() {
 		m_fractalTexture = ci::gl::Texture2d::create(m_renderer.surface());
 
 		const RenderConfig &config = m_renderer.config();
-		double aspect			   = (double)config.imageSize.x() / (double)config.imageSize.y();
-		double height			   = getWindowHeight();
+		double aspect = (double)config.imageSize.x() / (double)config.imageSize.y();
+		double height = getWindowHeight();
 		lrc::Vec2f renderSize(height * aspect, height);
 
 		ci::gl::color(ci::ColorA(1, 1, 1, 1));
@@ -66,8 +79,12 @@ namespace frac {
 			switch (box.state) {
 				case RenderBoxState::None:
 				case RenderBoxState::Rendered: continue;
-				case RenderBoxState::Queued: ci::gl::color(ci::ColorA(0, 1, 0, 0.2)); break;
-				case RenderBoxState::Rendering: ci::gl::color(ci::ColorA(1, 1, 0, 0.2)); break;
+				case RenderBoxState::Queued:
+					ci::gl::color(ci::ColorA(0, 1, 0, 0.2));
+					break;
+				case RenderBoxState::Rendering:
+					ci::gl::color(ci::ColorA(1, 1, 0, 0.2));
+					break;
 			}
 
 			ci::ivec2 boxPos  = box.topLeft;
@@ -83,6 +100,7 @@ namespace frac {
 		drawImGui();
 		drawFractal();
 		outlineRenderBoxes();
+		drawHistory();
 
 		if (m_drawingZoomBox) {
 			// Draw an aspect-ratio corrected box
@@ -105,8 +123,8 @@ namespace frac {
 		json fractalInfo = settings["menus"]["fractalInfo"];
 		ImGui::SetNextWindowPos({(float)fractalInfo["posX"], (float)fractalInfo["posY"]},
 								ImGuiCond_Once);
-		ImGui::SetNextWindowSize({(float)fractalInfo["width"], (float)fractalInfo["height"]},
-								 ImGuiCond_Once);
+		ImGui::SetNextWindowSize(
+		  {(float)fractalInfo["width"], (float)fractalInfo["height"]}, ImGuiCond_Once);
 		ImGui::Begin("Fractal Info", nullptr);
 		{
 			ImGui::Text("Fractal Type: Mandelbrot");
@@ -123,16 +141,17 @@ namespace frac {
 			ImGui::TextWrapped("%s", fmt::format("Zoom: {}x", os.str()).c_str());
 
 			double maxZoomExponent = config.precision / lrc::log2(10);
-			ImGui::TextWrapped("%s", fmt::format("Max Zoom: e+{:.3f}", maxZoomExponent).c_str());
+			ImGui::TextWrapped(
+			  "%s", fmt::format("Max Zoom: e+{:.3f}", maxZoomExponent).c_str());
 		}
 		ImGui::End();
 
 		// Fine movement window
 		json fineMovement = settings["menus"]["fineMovement"];
-		ImGui::SetNextWindowPos({(float)fineMovement["posX"], (float)fineMovement["posY"]},
-								ImGuiCond_Once);
-		ImGui::SetNextWindowSize({(float)fineMovement["width"], (float)fineMovement["height"]},
-								 ImGuiCond_Once);
+		ImGui::SetNextWindowPos(
+		  {(float)fineMovement["posX"], (float)fineMovement["posY"]}, ImGuiCond_Once);
+		ImGui::SetNextWindowSize(
+		  {(float)fineMovement["width"], (float)fineMovement["height"]}, ImGuiCond_Once);
 		ImGui::Begin("Fine Movement", nullptr);
 		{
 			ImGui::InputText("Re", &m_fineMovementRe);
@@ -151,16 +170,19 @@ namespace frac {
 				sizeIm = config.originalFracSize.y() / zoom;
 				moveFractalCenter(lrc::Vec<HighPrecision, 2>(re, im),
 								  lrc::Vec<HighPrecision, 2>(sizeRe, sizeIm));
+				renderFractal();
 			}
 		}
 		ImGui::End();
 
 		// Render configuration
 		json renderConfigMenu = settings["menus"]["renderConfig"];
-		ImGui::SetNextWindowPos({(float)renderConfigMenu["posX"], (float)renderConfigMenu["posY"]},
-								ImGuiCond_Once);
+		ImGui::SetNextWindowPos(
+		  {(float)renderConfigMenu["posX"], (float)renderConfigMenu["posY"]},
+		  ImGuiCond_Once);
 		ImGui::SetNextWindowSize(
-		  {(float)renderConfigMenu["width"], (float)renderConfigMenu["height"]}, ImGuiCond_Once);
+		  {(float)renderConfigMenu["width"], (float)renderConfigMenu["height"]},
+		  ImGuiCond_Once);
 		ImGui::Begin("Render Configuration", nullptr);
 		{
 			static int64_t minThreads	= 1;
@@ -180,14 +202,22 @@ namespace frac {
 			ImGui::SliderScalar(
 			  "Threads", ImGuiDataType_S64, &newThreads, &minThreads, &maxThreads);
 
-			ImGui::SliderScalar(
-			  "Anti Aliasing", ImGuiDataType_S64, &newAntiAlias, &minAntiAlias, &maxAntiAlias);
+			ImGui::SliderScalar("Anti Aliasing",
+								ImGuiDataType_S64,
+								&newAntiAlias,
+								&minAntiAlias,
+								&maxAntiAlias);
 
 			ImGui::DragScalarN(
 			  "Iterations", ImGuiDataType_S64, &newIters, 1, 5, &minIters, &maxIters);
 
-			ImGui::DragScalarN(
-			  "Precision", ImGuiDataType_S64, &newPrecision, 1, 0.1, &minPrecision, &maxPrecision);
+			ImGui::DragScalarN("Precision",
+							   ImGuiDataType_S64,
+							   &newPrecision,
+							   1,
+							   0.1,
+							   &minPrecision,
+							   &maxPrecision);
 
 			if (ImGui::Button("Apply")) {
 				stopRender();
@@ -205,10 +235,12 @@ namespace frac {
 
 		// Render Statistics
 		json renderStatistics = settings["menus"]["renderStatistics"];
-		ImGui::SetNextWindowPos({(float)renderStatistics["posX"], (float)renderStatistics["posY"]},
-								ImGuiCond_Once);
+		ImGui::SetNextWindowPos(
+		  {(float)renderStatistics["posX"], (float)renderStatistics["posY"]},
+		  ImGuiCond_Once);
 		ImGui::SetNextWindowSize(
-		  {(float)renderStatistics["width"], (float)renderStatistics["height"]}, ImGuiCond_Once);
+		  {(float)renderStatistics["width"], (float)renderStatistics["height"]},
+		  ImGuiCond_Once);
 
 		RenderBoxTimeStats stats = m_renderer.boxTimeStats();
 		ImGui::Begin("Render Statistics", nullptr);
@@ -223,9 +255,43 @@ namespace frac {
 		ImGui::End();
 	}
 
+	void MainWindow::drawHistory() {
+		constexpr float historyFrameWidth = 150;
+		constexpr float historyFrameSep	  = 8; // Spacing between frames
+		const auto windowWidth			  = (float)getWindowWidth();
+		const auto windowHeight			  = (float)getWindowHeight();
+		const RenderConfig &config		  = m_renderer.config();
+		size_t historySize				  = m_history.size();
+		HistoryNode *node				  = m_history.first();
+		int64_t index					  = 0;
+
+		// Draw a bounding box for the frames to sit within
+		float boxLeft = windowWidth - historyFrameWidth - historyFrameSep * 2;
+		ci::gl::color(ci::ColorA(0.15, 0.15, 0.3, 1));
+		ci::gl::drawSolidRect(ci::Rectf(boxLeft, 0, windowWidth, windowHeight));
+
+		while (node) {
+			auto texture = ci::gl::Texture2d::create(node->surface());
+			float aspect = (float)config.imageSize.x() / (float)config.imageSize.y();
+			lrc::Vec2f renderSize(historyFrameWidth, historyFrameWidth / aspect);
+			lrc::Vec2f drawPos(windowWidth - historyFrameWidth - historyFrameSep,
+							   (renderSize.y() + historyFrameSep) *
+								   (float)(historySize - index - 1) +
+								 historyFrameSep);
+
+			ci::gl::color(ci::ColorA(1, 1, 1, 1));
+			ci::gl::draw(texture, ci::Rectf(drawPos, drawPos + renderSize));
+			ci::gl::color(ci::ColorA(0, 0, 0, 1));
+			glu::drawStrokedRectangle(drawPos, drawPos + renderSize, 3);
+
+			node = node->next();
+			index++;
+		}
+	}
+
 	void MainWindow::moveFractalCorner(const lrc::Vec<HighPrecision, 2> &topLeft,
 									   const lrc::Vec<HighPrecision, 2> &size) {
-		m_renderer.moveFractalCenter(topLeft, size);
+		m_renderer.moveFractalCorner(topLeft, size);
 	}
 
 	void MainWindow::moveFractalCenter(const lrc::Vec<HighPrecision, 2> &center,
@@ -238,6 +304,10 @@ namespace frac {
 		// The vast majority of the calculations must be done at the highest
 		// precision possible. Without this, the zooming will not function
 		// correctly when the zoom factor exceeds the range of 64-bit precision.
+
+		FRAC_LOG("Moving Fractal...");
+		FRAC_LOG(fmt::format("Pixel Coordinates: {} -> {}", pixTopLeft, pixBottomRight));
+		updateHistoryItem();
 
 		RenderConfig &config = m_renderer.config();
 		ci::Surface &surface = m_renderer.surface();
@@ -296,7 +366,19 @@ namespace frac {
 		renderFractal();
 	}
 
-	void MainWindow::renderFractal() { m_renderer.renderFractal(); }
+	void MainWindow::renderFractal() {
+		// updateHistoryItem();
+		m_renderer.renderFractal();
+		m_history.append(m_renderer.config(), m_renderer.surface());
+	}
+
+	void MainWindow::updateHistoryItem() {
+		// Update history buffer surface before re-rendering the fractal
+		if (m_history.size() > 0) {
+			m_history.last()->setSurface(m_renderer.surface());
+			FRAC_LOG("Writing to surface");
+		}
+	}
 
 	void MainWindow::mouseMove(ci::app::MouseEvent event) { m_mousePos = event.getPos(); }
 
@@ -359,7 +441,8 @@ namespace frac {
 
 	void MainWindow::keyDown(ci::app::KeyEvent event) {
 		if (m_showZoomBox && event.getCode() == ci::app::KeyEvent::KEY_RETURN) {
-			// Apply zoom box
+			// Update history and apply zoom box
+			// updateHistoryItem();
 			zoomFractal(m_zoomBoxStart, m_zoomBoxEnd);
 			m_showZoomBox = false;
 		} else if (m_showZoomBox && event.getCode() == ci::app::KeyEvent::KEY_ESCAPE) {

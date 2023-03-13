@@ -1,31 +1,39 @@
 #pragma once
 
 namespace frac {
-	class HistoryBufferLinkedList {
+	class HistoryNode {
 	public:
-		HistoryBufferLinkedList()											= default;
-		HistoryBufferLinkedList(const HistoryBufferLinkedList &)			= delete;
-		HistoryBufferLinkedList(HistoryBufferLinkedList &&)					= delete;
-		HistoryBufferLinkedList &operator=(const HistoryBufferLinkedList &) = delete;
-		HistoryBufferLinkedList &operator=(HistoryBufferLinkedList &&)		= delete;
-		~HistoryBufferLinkedList()											= default;
+		HistoryNode()								= default;
+		HistoryNode(const HistoryNode &)			= delete;
+		HistoryNode(HistoryNode &&)					= delete;
+		HistoryNode &operator=(const HistoryNode &) = delete;
+		HistoryNode &operator=(HistoryNode &&)		= delete;
+		~HistoryNode()								= default;
 
-		void append(HistoryBufferLinkedList *list);
+		void append(HistoryNode *list);
 		void killChildren();
 		LIBRAPID_NODISCARD size_t sizeForward(size_t prevSize = 0) const;
 		LIBRAPID_NODISCARD size_t sizeBackward(size_t prevSize = 0) const;
 
-		LIBRAPID_NODISCARD HistoryBufferLinkedList *next() const;
-		LIBRAPID_NODISCARD HistoryBufferLinkedList *prev() const;
+		LIBRAPID_NODISCARD HistoryNode *next() const;
+		LIBRAPID_NODISCARD HistoryNode *prev() const;
 
-		LIBRAPID_NODISCARD HistoryBufferLinkedList *start();
-		LIBRAPID_NODISCARD HistoryBufferLinkedList *end();
+		LIBRAPID_NODISCARD HistoryNode *first();
+		LIBRAPID_NODISCARD HistoryNode *last();
 
 		void set(const RenderConfig &config, const ci::Surface &surface);
+		void setConfig(const RenderConfig &config);
+		void setSurface(const ci::Surface &surface);
+
+		LIBRAPID_NODISCARD const RenderConfig &config() const;
+		LIBRAPID_NODISCARD const ci::Surface &surface() const;
+
+		LIBRAPID_NODISCARD RenderConfig &config();
+		LIBRAPID_NODISCARD ci::Surface &surface();
 
 	private:
-		HistoryBufferLinkedList *m_next = nullptr;
-		HistoryBufferLinkedList *m_prev = nullptr;
+		HistoryNode *m_next = nullptr;
+		HistoryNode *m_prev = nullptr;
 
 		RenderConfig m_config;
 		ci::Surface m_surface;
@@ -54,8 +62,11 @@ namespace frac {
 
 		LIBRAPID_NODISCARD size_t size() const;
 
+		LIBRAPID_NODISCARD HistoryNode *first() const;
+		LIBRAPID_NODISCARD HistoryNode *last() const;
+
 	private:
-		HistoryBufferLinkedList *m_listHead	   = nullptr;
-		HistoryBufferLinkedList *m_currentNode = nullptr;
+		HistoryNode *m_listHead	   = nullptr;
+		HistoryNode *m_currentNode = nullptr;
 	};
 } // namespace frac
