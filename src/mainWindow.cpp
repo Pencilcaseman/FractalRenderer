@@ -292,6 +292,7 @@ namespace frac {
 		size_t historySize		   = m_history.size();
 		HistoryNode *node		   = m_history.first();
 		int64_t index			   = 0;
+		int64_t totalHeight		   = 0;
 
 		// Draw a bounding box for the frames to sit within
 		float boxLeft = windowWidth - historyFrameWidth - historyFrameSep * 2;
@@ -307,11 +308,10 @@ namespace frac {
 								   (float)(historySize - index - 1) +
 								 historyFrameSep);
 
+			totalHeight += (int64_t)(renderSize.y() + historyFrameSep);
 			if (drawPos.y() > windowHeight || drawPos.y() + renderSize.y() < 0) break;
 
-			drawPos.y(drawPos.y() +
-					  m_historyScrollTarget *
-						settings["menus"]["history"]["scrollSpeed"].get<float>());
+			drawPos.y(drawPos.y() + m_historyScrollTarget);
 
 			ci::gl::color(ci::ColorA(1, 1, 1, 1));
 			ci::gl::draw(texture, ci::Rectf(drawPos, drawPos + renderSize));
@@ -321,6 +321,10 @@ namespace frac {
 			node = node->next();
 			index++;
 		}
+
+		// Limit scrolling -- this is done after drawing to ensure the frame size is taken
+		// into account
+		m_historyScrollTarget = lrc::clamp(m_historyScrollTarget, 0, totalHeight);
 	}
 
 	void MainWindow::moveFractalCorner(const lrc::Vec<HighPrecision, 2> &topLeft,
@@ -478,7 +482,9 @@ namespace frac {
 
 		const json &settings = m_renderer.settings();
 		if (m_mousePos.x() > settings["menus"]["history"]["frameWidth"]) {
-			m_historyScrollTarget += event.getWheelIncrement();
+			m_historyScrollTarget +=
+			  event.getWheelIncrement() *
+			  settings["menus"]["history"]["scrollSpeed"].get<float>();
 		}
 	}
 
