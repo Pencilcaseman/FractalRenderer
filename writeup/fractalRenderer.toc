@@ -53,9 +53,9 @@
 \contentsline {subsection}{\numberline {3.11}History Implementation (\texttt {history.cpp})}{59}{subsection.3.11}%
 \contentsline {subsection}{\numberline {3.12}Main Window Definition (\texttt {mainWindow.hpp})}{62}{subsection.3.12}%
 \contentsline {subsection}{\numberline {3.13}Main Window Implementation (\texttt {mainWindow.cpp})}{65}{subsection.3.13}%
-\contentsline {subsection}{\numberline {3.14}Mandelbrot Fractal Definition (\texttt {mandelbrot.hpp})}{79}{subsection.3.14}%
-\contentsline {subsection}{\numberline {3.15}Mandelbrot Fractal Implementation (\texttt {mandelbrot.cpp})}{79}{subsection.3.15}%
-\contentsline {subsection}{\numberline {3.16}OpenGL Utilities Definition (\texttt {openglUtils.hpp})}{82}{subsection.3.16}%
-\contentsline {subsection}{\numberline {3.17}OpenGL Utilities Implementation (\texttt {openglUtils.cpp})}{82}{subsection.3.17}%
-\contentsline {subsection}{\numberline {3.18}Render Configuration Definition (\texttt {renderConfig.hpp})}{84}{subsection.3.18}%
-\contentsline {subsection}{\numberline {3.19}Render Configuration Implementation (\texttt {renderConfig.cpp})}{85}{subsection.3.19}%
+\contentsline {subsection}{\numberline {3.14}Mandelbrot Fractal Definition (\texttt {mandelbrot.hpp})}{81}{subsection.3.14}%
+\contentsline {subsection}{\numberline {3.15}Mandelbrot Fractal Implementation (\texttt {mandelbrot.cpp})}{81}{subsection.3.15}%
+\contentsline {subsection}{\numberline {3.16}OpenGL Utilities Definition (\texttt {openglUtils.hpp})}{84}{subsection.3.16}%
+\contentsline {subsection}{\numberline {3.17}OpenGL Utilities Implementation (\texttt {openglUtils.cpp})}{84}{subsection.3.17}%
+\contentsline {subsection}{\numberline {3.18}Render Configuration Definition (\texttt {renderConfig.hpp})}{86}{subsection.3.18}%
+\contentsline {subsection}{\numberline {3.19}Render Configuration Implementation (\texttt {renderConfig.cpp})}{87}{subsection.3.19}%
