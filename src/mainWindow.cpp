@@ -9,6 +9,7 @@ namespace frac {
 		if (settingsFile.is_open()) {
 			m_renderer.setConfig(json::parse(settingsFile));
 			m_history.append(m_renderer.config(), m_renderer.surface());
+			m_historyNode = m_history.first();
 		} else {
 			FRAC_ERROR("Failed to open settings file");
 			quit();
@@ -20,7 +21,7 @@ namespace frac {
 	void MainWindow::configureWindow() {
 		setFrameRate(-1);				  // Unlimited framerate
 		ci::gl::enableVerticalSync(true); // Enable vertical sync to avoid tearing
-		setWindowSize(1200, 700);		  // Set the initial window size
+		setWindowSize(1364, 700);		  // Set the initial window size
 
 		// Set up rendering settings
 		ci::gl::enableDepthWrite();
@@ -54,6 +55,43 @@ namespace frac {
 	}
 
 	void MainWindow::stopRender() { m_renderer.stopRender(); }
+
+	void MainWindow::appendConfigToHistory() {
+		FRAC_LOG("Appending to history");
+
+		if (m_historyNode != m_history.last()) {
+			// There is a pre-existing history, so it must be overwritten
+			m_historyNode->killChildren();
+		}
+
+		m_history.append(m_renderer.config(), m_renderer.surface());
+		m_historyNode = m_history.last();
+	}
+
+	void MainWindow::undoLastMove() {
+		FRAC_LOG("Attempting to Undo...");
+		// Ensure a previous configuration actually exists
+		if (m_historyNode->prev()) {
+			FRAC_LOG("Undo successful");
+			m_historyNode = m_historyNode->prev();
+
+			// Update the render configuration
+			m_renderer.config() = m_historyNode->config();
+			renderFractal(false);
+		}
+	}
+
+	void MainWindow::redoLastMove() {
+		FRAC_LOG("Attempting to Redo...");
+		if (m_historyNode->next()) {
+			FRAC_LOG("Redo successful");
+			m_historyNode = m_historyNode->next();
+
+			// Update the render configuration
+			m_renderer.config() = m_historyNode->config();
+			renderFractal(false);
+		}
+	}
 
 	void MainWindow::cleanup() {
 		stopRender();
@@ -116,7 +154,7 @@ namespace frac {
 	}
 
 	void MainWindow::drawImGui() {
-		// Arbitrary constant to make the UI look nice
+		// Ensure there is space for the labels in the ImGui windows
 		constexpr int64_t labelledItemWidth = -120;
 
 		RenderConfig &config = m_renderer.config();
@@ -143,7 +181,7 @@ namespace frac {
 			os << std::fixed << std::setprecision(6) << std::scientific << zoom;
 			ImGui::TextWrapped("%s", fmt::format("Zoom: {}x", os.str()).c_str());
 
-			double maxZoomExponent = config.precision / lrc::log2(10);
+			double maxZoomExponent = (double)config.precision / lrc::log2(10);
 			ImGui::TextWrapped(
 			  "%s", fmt::format("Max Zoom: e+{:.3f}", maxZoomExponent).c_str());
 		}
@@ -309,22 +347,33 @@ namespace frac {
 								 historyFrameSep);
 
 			totalHeight += (int64_t)(renderSize.y() + historyFrameSep);
-			if (drawPos.y() > windowHeight || drawPos.y() + renderSize.y() < 0) break;
-
 			drawPos.y(drawPos.y() + m_historyScrollTarget);
+
+			// Don't draw the frame if it's not visible on the screen
+			if (drawPos.y() > windowHeight || drawPos.y() + renderSize.y() < 0) goto skip;
 
 			ci::gl::color(ci::ColorA(1, 1, 1, 1));
 			ci::gl::draw(texture, ci::Rectf(drawPos, drawPos + renderSize));
 			ci::gl::color(ci::ColorA(0, 0, 0, 1));
 			glu::drawStrokedRectangle(drawPos, drawPos + renderSize, 3);
 
+			if (node == m_historyNode) {
+				// If this frame is selected, outline it gold
+				ci::gl::color(ci::ColorA(1, 1, 0, 1));
+				glu::drawStrokedRectangle(drawPos, drawPos + renderSize, 4);
+			}
+
+		skip:
 			node = node->next();
 			index++;
 		}
 
-		// Limit scrolling -- this is done after drawing to ensure the frame size is taken
-		// into account
-		m_historyScrollTarget = lrc::clamp(m_historyScrollTarget, 0, totalHeight);
+		if (windowHeight < (float)totalHeight) {
+			m_historyScrollTarget =
+			  lrc::clamp(m_historyScrollTarget, windowHeight - (float)totalHeight, 0);
+		} else {
+			m_historyScrollTarget = 0;
+		}
 	}
 
 	void MainWindow::moveFractalCorner(const lrc::Vec<HighPrecision, 2> &topLeft,
@@ -404,10 +453,11 @@ namespace frac {
 		renderFractal();
 	}
 
-	void MainWindow::renderFractal() {
-		// updateHistoryItem();
+	void MainWindow::renderFractal(bool amendHistory) {
 		m_renderer.renderFractal();
-		m_history.append(m_renderer.config(), m_renderer.surface());
+
+		// m_history.append(m_renderer.config(), m_renderer.surface());
+		if (amendHistory) appendConfigToHistory();
 	}
 
 	void MainWindow::updateHistoryItem() {
@@ -432,11 +482,11 @@ namespace frac {
 			m_mouseDownPos.x() < m_renderer.config().imageSize.x() &&
 			m_mouseDownPos.y() >= 0 &&
 			m_mouseDownPos.y() < m_renderer.config().imageSize.y()) {
-			constexpr size_t offset = 0; // pixel offset from the edge of the box
-			if (m_showZoomBox && m_mouseDownPos.x() > m_zoomBoxStart.x() + offset &&
-				m_mouseDownPos.x() < m_zoomBoxEnd.x() - offset &&
-				m_mouseDownPos.y() > m_zoomBoxStart.y() + offset &&
-				m_mouseDownPos.y() < m_zoomBoxEnd.y() - offset) {
+			// Check if mouse is inside the box (and it is being shown)
+			if (m_showZoomBox && m_mouseDownPos.x() > m_zoomBoxStart.x() &&
+				m_mouseDownPos.x() < m_zoomBoxEnd.x() &&
+				m_mouseDownPos.y() > m_zoomBoxStart.y() &&
+				m_mouseDownPos.y() < m_zoomBoxEnd.y()) {
 				m_moveZoomBox = true;
 			} else {
 				m_drawingZoomBox = true;
@@ -447,6 +497,7 @@ namespace frac {
 
 	void MainWindow::mouseDrag(ci::app::MouseEvent event) {
 		if (ImGui::GetIO().WantCaptureMouse) return;
+
 		lrc::Vec2i delta = lrc::Vec2i(event.getPos()) - m_mousePos;
 		m_mousePos		 = event.getPos();
 
@@ -489,14 +540,49 @@ namespace frac {
 	}
 
 	void MainWindow::keyDown(ci::app::KeyEvent event) {
-		if (m_showZoomBox && event.getCode() == ci::app::KeyEvent::KEY_RETURN) {
-			// Update history and apply zoom box
-			// updateHistoryItem();
-			zoomFractal(m_zoomBoxStart, m_zoomBoxEnd);
-			m_showZoomBox = false;
-		} else if (m_showZoomBox && event.getCode() == ci::app::KeyEvent::KEY_ESCAPE) {
-			// Cancel zoom box
-			m_showZoomBox = false;
+		const json &settings = m_renderer.settings();
+
+		if (m_showZoomBox) {
+			const int64_t scrollSpeed = settings["menus"]["history"]["scrollSpeed"];
+
+			switch (event.getCode()) {
+				case ci::app::KeyEvent::KEY_RETURN: {
+					zoomFractal(m_zoomBoxStart, m_zoomBoxEnd);
+				}
+				case ci::app::KeyEvent::KEY_ESCAPE: {
+					m_showZoomBox = false;
+					break;
+				}
+				case ci::app::KeyEvent::KEY_RIGHT: {
+					m_zoomBoxStart.x(m_zoomBoxStart.x() + scrollSpeed);
+					m_zoomBoxEnd.x(m_zoomBoxEnd.x() + scrollSpeed);
+					break;
+				}
+				case ci::app::KeyEvent::KEY_LEFT: {
+					m_zoomBoxStart.x(m_zoomBoxStart.x() - scrollSpeed);
+					m_zoomBoxEnd.x(m_zoomBoxEnd.x() - scrollSpeed);
+					break;
+				}
+				case ci::app::KeyEvent::KEY_UP: {
+					m_zoomBoxStart.y(m_zoomBoxStart.y() - scrollSpeed);
+					m_zoomBoxEnd.y(m_zoomBoxEnd.y() - scrollSpeed);
+					break;
+				}
+				case ci::app::KeyEvent::KEY_DOWN: {
+					m_zoomBoxStart.y(m_zoomBoxStart.y() + scrollSpeed);
+					m_zoomBoxEnd.y(m_zoomBoxEnd.y() + scrollSpeed);
+					break;
+				}
+			}
+		}
+
+		if (event.getCode() == ci::app::KeyEvent::KEY_z &&
+			event.getModifiers() & ci::app::KeyEvent::CTRL_DOWN) {
+			if (event.getModifiers() & ci::app::KeyEvent::SHIFT_DOWN) {
+				redoLastMove();
+			} else {
+				undoLastMove();
+			}
 		}
 	}
 

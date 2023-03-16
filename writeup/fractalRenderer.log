@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2023.1.25)  26 JAN 2023 23:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2023.1.25)  16 MAR 2023 23:30
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1491,7 +1491,7 @@ s/type1/public/amsfonts/cm/cmmi8.pfb><C:/opt/MiKTeX/fonts/type1/public/amsfonts
 iKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/opt/MiKTeX/fonts/type1/public
 /amsfonts/cm/cmsy10.pfb><C:/opt/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pf
 b><C:/opt/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on fractalRenderer.pdf (14 pages, 3155479 bytes).
+Output written on fractalRenderer.pdf (14 pages, 3155478 bytes).
 PDF statistics:
  270 PDF objects out of 1000 (max. 8388607)
  64 named destinations out of 1000 (max. 500000)

@@ -21,6 +21,11 @@ namespace frac {
 
 		void stopRender();
 
+		void appendConfigToHistory();
+
+		void undoLastMove();
+		void redoLastMove();
+
 		// Run on shutdown
 		void cleanup() override;
 
@@ -50,7 +55,7 @@ namespace frac {
 		/// Render the fractal into the fractal surface, and copy that to the
 		/// fractal surface to be drawn. This will be executed on a separate
 		/// thread in order to keep the UI updating
-		void renderFractal();
+		void renderFractal(bool amendHistory = true);
 
 		/// Callback for mouse movement (this does not include mouse clicks or
 		/// drags) \param event The mouse event
@@ -72,7 +77,6 @@ namespace frac {
 
 		void keyDown(ci::app::KeyEvent event) override;
 
-	private:
 		template<typename T>
 		static lrc::Vec<T, 2> aspectCorrectedBox(const lrc::Vec<T, 2> &p1,
 												 const lrc::Vec<T, 2> &p2,
@@ -88,6 +92,7 @@ namespace frac {
 
 		void drawZoomBox(const lrc::Vec2f &start, const lrc::Vec2f &end) const;
 
+	private:
 		FractalRenderer m_renderer;				 // The fractal renderer
 		ci::gl::Texture2dRef m_fractalTexture;	 // The fractal texture
 		ci::Font m_font = ci::Font("Arial", 24); // The font to use for rendering text
@@ -96,6 +101,7 @@ namespace frac {
 		bool m_mouseDown = false;  // Whether the mouse is currently down
 
 		HistoryBuffer m_history;
+		HistoryNode *m_historyNode	= nullptr;
 		float m_historyScrollTarget = 0.0f;
 
 		bool m_drawingZoomBox = false;

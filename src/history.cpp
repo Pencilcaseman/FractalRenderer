@@ -2,10 +2,12 @@
 
 namespace frac {
 	void HistoryNode::append(HistoryNode *list) {
-		if (m_next)
+		if (m_next) {
 			m_next->append(list);
-		else
-			m_next = list;
+		} else {
+			m_next		   = list;
+			m_next->m_prev = this;
+		}
 	}
 
 	void HistoryNode::killChildren() {
