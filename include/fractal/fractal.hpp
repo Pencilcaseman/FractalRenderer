@@ -16,7 +16,6 @@ using ThreadPool = BS::thread_pool;
 using json		 = nlohmann::json;
 
 namespace frac {
-	// using HighPrecision = double;
 	using HighPrecision = lrc::mpf;
 	using LowPrecision	= double;
 

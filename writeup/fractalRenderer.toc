@@ -1,15 +1,61 @@
-\contentsline {section}{\numberline {1}Project Analysis}{3}{section.1}%
-\contentsline {subsection}{\numberline {1.1}A Brief Introduction to Fractals}{3}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}Defining the Problem}{4}{subsection.1.2}%
-\contentsline {paragraph}{Technological Limitations}{5}{section*.5}%
-\contentsline {paragraph}{Program Limitations}{5}{section*.6}%
-\contentsline {paragraph}{Precision vs Performance}{6}{section*.7}%
-\contentsline {subsection}{\numberline {1.3}The End User}{6}{subsection.1.3}%
-\contentsline {subsection}{\numberline {1.4}Researching Existing Projects and User Requirements}{7}{subsection.1.4}%
-\contentsline {subsection}{\numberline {1.5}The End User}{9}{subsection.1.5}%
-\contentsline {subsection}{\numberline {1.6}Researching Existing Projects and User Requirements}{10}{subsection.1.6}%
-\contentsline {section}{\numberline {2}Design Phase}{12}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Third Party Libraries}{12}{subsection.2.1}%
-\contentsline {paragraph}{Cinder \cite {developers_davis}}{12}{section*.8}%
-\contentsline {paragraph}{LibRapid \cite {Davis_LibRapid_Optimised_Mathematics_2023}}{12}{section*.9}%
-\contentsline {paragraph}{Cinderbox}{12}{section*.10}%
+\contentsline {section}{\numberline {1}Project Analysis}{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}A Brief Introduction to Fractals}{4}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Defining the Problem}{5}{subsection.1.2}%
+\contentsline {paragraph}{Technological Limitations}{6}{section*.5}%
+\contentsline {paragraph}{Program Limitations}{6}{section*.6}%
+\contentsline {paragraph}{Precision vs Performance}{7}{section*.7}%
+\contentsline {subsection}{\numberline {1.3}The End User}{7}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}Analysis of Existing Programs}{8}{subsection.1.4}%
+\contentsline {subsubsection}{\numberline {1.4.1}David J. Eck's Online Mandelbrot Renderer \cite {eck}}{8}{subsubsection.1.4.1}%
+\contentsline {paragraph}{Interface}{8}{section*.8}%
+\contentsline {paragraph}{Configuration}{8}{section*.9}%
+\contentsline {paragraph}{Render Quality}{9}{section*.10}%
+\contentsline {subsubsection}{\numberline {1.4.2}XaoS.js Online Mandelbrot Renderer \cite {xaos.js}}{9}{subsubsection.1.4.2}%
+\contentsline {subsubsection}{\numberline {1.4.3}XaoS Offline Fractal Renderer \cite {fractalfoundation}}{9}{subsubsection.1.4.3}%
+\contentsline {paragraph}{Interface}{10}{section*.12}%
+\contentsline {paragraph}{Configuration}{10}{section*.13}%
+\contentsline {paragraph}{File Export}{10}{section*.14}%
+\contentsline {paragraph}{Supported Fractals}{11}{section*.16}%
+\contentsline {paragraph}{Precision}{11}{section*.17}%
+\contentsline {subsection}{\numberline {1.5}Program Requirements}{11}{subsection.1.5}%
+\contentsline {section}{\numberline {2}Design Phase}{15}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Third Party Libraries}{15}{subsection.2.1}%
+\contentsline {paragraph}{Cinder \cite {developers_davis}}{15}{section*.18}%
+\contentsline {paragraph}{LibRapid \cite {Davis_LibRapid_Optimised_Mathematics_2023}}{15}{section*.19}%
+\contentsline {paragraph}{Cinderbox}{15}{section*.20}%
+\contentsline {subsection}{\numberline {2.2}Library Heirarchy}{15}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}The Debug Logger}{17}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Colour Palettes}{17}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}The Fractal Class}{18}{subsection.2.5}%
+\contentsline {subsubsection}{\numberline {2.5.1}Render Box States}{20}{subsubsection.2.5.1}%
+\contentsline {subsubsection}{\numberline {2.5.2}Render Boxes}{20}{subsubsection.2.5.2}%
+\contentsline {subsubsection}{\numberline {2.5.3}Render Box Statistics}{20}{subsubsection.2.5.3}%
+\contentsline {subsubsection}{\numberline {2.5.4}Render Configurations}{21}{subsubsection.2.5.4}%
+\contentsline {subsection}{\numberline {2.6}The Fractal Renderer Class}{21}{subsection.2.6}%
+\contentsline {subsubsection}{\numberline {2.6.1}Configuration, Getters, Setters and Statistics}{22}{subsubsection.2.6.1}%
+\contentsline {subsubsection}{\numberline {2.6.2}Constructors and Configurations}{24}{subsubsection.2.6.2}%
+\contentsline {subsubsection}{\numberline {2.6.3}Rendering Algorithms}{25}{subsubsection.2.6.3}%
+\contentsline {subsection}{\numberline {2.7}The Main Window}{27}{subsection.2.7}%
+\contentsline {subsection}{\numberline {2.8}Additional Features}{28}{subsection.2.8}%
+\contentsline {subsubsection}{\numberline {2.8.1}Movement History}{28}{subsubsection.2.8.1}%
+\contentsline {subsubsection}{\numberline {2.8.2}Improved Selection Area}{29}{subsubsection.2.8.2}%
+\contentsline {section}{\numberline {3}Technical Solution}{30}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Color Palette (\texttt {colorPalette.hpp})}{30}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Color Palette (\texttt {colorPalette.cpp})}{31}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Debug Logger (\texttt {debug.hpp})}{32}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Debug Logger (\texttt {debug.cpp})}{33}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Fractal Base Class Implementation (\texttt {fractal.hpp})}{36}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Fractal Renderer Definition (\texttt {fractalRenderer.hpp})}{37}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}Fractal Renderer Implementation (\texttt {fractalRenderer.cpp})}{40}{subsection.3.7}%
+\contentsline {subsection}{\numberline {3.8}Generic Fractal Definition (\texttt {genericFractal.hpp})}{52}{subsection.3.8}%
+\contentsline {subsection}{\numberline {3.9}Generic Fractal Implementation (\texttt {genericFractal.cpp})}{53}{subsection.3.9}%
+\contentsline {subsection}{\numberline {3.10}History Definition(\texttt {history.hpp})}{56}{subsection.3.10}%
+\contentsline {subsection}{\numberline {3.11}History Implementation (\texttt {history.cpp})}{59}{subsection.3.11}%
+\contentsline {subsection}{\numberline {3.12}Main Window Definition (\texttt {mainWindow.hpp})}{62}{subsection.3.12}%
+\contentsline {subsection}{\numberline {3.13}Main Window Implementation (\texttt {mainWindow.cpp})}{65}{subsection.3.13}%
+\contentsline {subsection}{\numberline {3.14}Mandelbrot Fractal Definition (\texttt {mandelbrot.hpp})}{79}{subsection.3.14}%
+\contentsline {subsection}{\numberline {3.15}Mandelbrot Fractal Implementation (\texttt {mandelbrot.cpp})}{79}{subsection.3.15}%
+\contentsline {subsection}{\numberline {3.16}OpenGL Utilities Definition (\texttt {openglUtils.hpp})}{82}{subsection.3.16}%
+\contentsline {subsection}{\numberline {3.17}OpenGL Utilities Implementation (\texttt {openglUtils.cpp})}{82}{subsection.3.17}%
+\contentsline {subsection}{\numberline {3.18}Render Configuration Definition (\texttt {renderConfig.hpp})}{84}{subsection.3.18}%
+\contentsline {subsection}{\numberline {3.19}Render Configuration Implementation (\texttt {renderConfig.cpp})}{85}{subsection.3.19}%

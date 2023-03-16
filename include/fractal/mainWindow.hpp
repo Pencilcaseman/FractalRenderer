@@ -19,6 +19,7 @@ namespace frac {
 		/// surfaces
 		void setup() override;
 
+		/// Halt all render threads and wait for them to join main
 		void stopRender();
 
 		void appendConfigToHistory();
@@ -29,27 +30,47 @@ namespace frac {
 		// Run on shutdown
 		void cleanup() override;
 
+		/// Render the fractal to the screen (from the FractalRenderer surface)
 		void drawFractal();
 
+		/// Outline each render box (if active) to show their current states
 		void outlineRenderBoxes();
 
-		/// Called every frame to render the frame
+		/// Called every frame
 		void draw() override;
 
 		/// Draw the UI
 		void drawImGui();
 
-		/// Draw the history frames
+		/// Draw the history window
 		void drawHistory();
 
+		/// Update the most recent history item with the current fractal configuration
+		/// and surface
 		void updateHistoryItem();
 
+		/// Move the top left corner of the fractal and set a new size
+		/// \param topLeft Top-left corner (complex coordinate)
+		/// \param size Size of the fractal (Re, Im)
 		void moveFractalCorner(const lrc::Vec<HighPrecision, 2> &topLeft,
 							   const lrc::Vec<HighPrecision, 2> &size);
 
+		/// Set the center of the fractal and the dimensions -- see moveFractalCorner
+		/// \param center Top-left corner
+		/// \param size Size of fractal
+		/// \see moveFractalCorner
 		void moveFractalCenter(const lrc::Vec<HighPrecision, 2> &center,
 							   const lrc::Vec<HighPrecision, 2> &size);
 
+		/// Advanced zooming method -- given pixel coordinates for the top left and bottom
+		/// right of the new area, perform the following:
+		/// 1. Copy existing pixels in the specified region to a buffer
+		/// 2. Regenerate the surface
+		/// 3. Copy the buffer to the fractal surface
+		/// 4. Reconfigure the fractal renderer
+		/// 5. Trigger another fractal render
+		/// \param pixTopLeft
+		/// \param pixBottomRight
 		void zoomFractal(const lrc::Vec2i &pixTopLeft, const lrc::Vec2i &pixBottomRight);
 
 		/// Render the fractal into the fractal surface, and copy that to the
@@ -73,8 +94,12 @@ namespace frac {
 		/// \param event The mouse event
 		void mouseUp(ci::app::MouseEvent event) override;
 
+		/// Callback for mouse wheel events
+		/// \param event The mouse event
 		void mouseWheel(ci::app::MouseEvent event) override;
 
+		/// Callback for when a key is pressed, including the modifiers (shift, ctrl, etc)
+		/// \param event The key event
 		void keyDown(ci::app::KeyEvent event) override;
 
 		template<typename T>
@@ -90,6 +115,10 @@ namespace frac {
 			return correctedBox;
 		}
 
+		/// Draw a zoom box at a given point. This includes a transparent box surrounded
+		/// by a solid rectangle with a cross in the middle.
+		/// \param start The top left corner of the box
+		/// \param end The bottom right corner of the box
 		void drawZoomBox(const lrc::Vec2f &start, const lrc::Vec2f &end) const;
 
 	private:

@@ -57,8 +57,8 @@ namespace frac {
 	}
 
 #if defined(LIBRAPID_DEBUG) // More reliable than NDEBUG
-	DebugLogger debugLogger("./log.txt", Priority::Info);
+	DebugLogger debugLogger("./log.txt", Priority::Info); // Log all messages
 #else
-	DebugLogger debugLogger("./log.txt", Priority::Warning);
+	DebugLogger debugLogger("./log.txt", Priority::Warning); // Only warnings and above
 #endif
 } // namespace frac

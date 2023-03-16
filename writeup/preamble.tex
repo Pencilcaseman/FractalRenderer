@@ -35,16 +35,21 @@
 \usepackage{fontawesome}
 \usepackage{notoccite}
 \usepackage[numbers,sort&compress]{natbib}
+\usepackage{placeins}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{zref-totpages}
+\usepackage{tablefootnote}
 
 \usetikzlibrary{shapes, decorations, calc, arrows}
 \usetikzlibrary{3d,fit,backgrounds, decorations.text}
 \usetikzlibrary{positioning, shapes.symbols}
 \usetikzlibrary{decorations.pathreplacing, calligraphy}
 
-\pgfplotsset{width=10cm,compat=1.18}
+\pgfplotsset{width=10cm, compat=1.18}
 \usepgfplotslibrary{external}
 
-\tikzexternalize[prefix=cache/tikz]
+% \tikzexternalize[prefix=cache/tikz]
 \tikzset{>=latex}
 
 \SetTracking{encoding={*}, shape=sc}{40}
@@ -75,6 +80,38 @@
 	tabsize=2
 }
 
+% ================================================================================================
+% From https://tex.stackexchange.com/questions/94902/how-can-i-use-line-numbers-with-leading-zeros
+% Pads codeblock line numbers with zeros and aligns them correctly
+
+\errorcontextlines=\maxdimen
+
+\newcommand*{\boxeddecimalnum}[1]{\makebox[3em][r]{\decimalnum{#1}}}
+\usepackage{refcount}
+\usepackage{fmtcount}
+\usepackage{intcalc}
+
+\def\getnumdigitsaux #1{%
+    \ifx#1\quark
+    \expandafter\relax
+    \else
+    +1\expandafter\getnumdigitsaux
+    \fi
+}
+
+\def\quark{\quark}
+\newcommand\getnumdigits[1]{%
+    \the\numexpr\getnumdigitsaux #1\quark
+}
+
+\newcounter{lstuniquenumber}
+\makeatletter
+\lst@AddToHook{Init}{\stepcounter{lstuniquenumber}\edef\lastlineincurrentlisting{\intcalcDec{\getrefnumber{lastlineinlisting\thelstuniquenumber}}}\padzeroes[\expandafter\getnumdigits\expandafter{\lastlineincurrentlisting}]} % at the start of each listing, count the listing, and try to restore the line number saved in the previous run
+\lst@AddToHook{DeInit}{\label{lastlineinlisting\thelstuniquenumber}} % at the end of each listing, save one past the last line number
+\makeatother
+
+% ================================================================================================
+
 \lstdefinestyle{paperStyle2}{
 	autogobble,
 	columns=fullflexible,
@@ -88,15 +125,16 @@
 	commentstyle=\color{greencomments},
 	keywordstyle=\color{bluekeywords},
 	stringstyle=\color{redstrings},
-	numberstyle=\color{graynumbers},
+	% prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+    numberstyle=\color{graynumbers}\ttfamily\boxeddecimalnum,
 	morekeywords={psrotate},
 	basicstyle=\ttfamily\footnotesize,
-	frame=l,
+	frame=1,
 	numbers=left,
 	framesep=22pt,
-	xleftmargin=22pt,
-	tabsize=2,
-	captionpos=b
+	tabsize=4,
+	captionpos=b,
+    xleftmargin=5.5ex
 }
 
 % \definecolor{bluekeywords}{rgb}{0.13, 0.13, 1}
@@ -104,11 +142,11 @@
 % \definecolor{redstrings}{rgb}{0.9, 0, 0}
 % \definecolor{graynumbers}{rgb}{0.5, 0.5, 0.5}
 
-\definecolor{pinkidentifiers}{rgb}{1, 0.53, 0.53}
-\definecolor{bluekeywords}{rgb}{0.53, 0.53, 1}
-\definecolor{greencomments}{rgb}{0, 0.5, 0}
-\definecolor{redstrings}{rgb}{0.9, 0, 0}
-\definecolor{graynumbers}{rgb}{0.5, 0.5, 0.5}
+\definecolor{pinkidentifiers}{rgb}{1.00, 0.40, 0.40}
+\definecolor{bluekeywords}{rgb}{0.40, 0.40, 1.00}
+\definecolor{greencomments}{rgb}{0.00, 0.50, 0.00}
+\definecolor{redstrings}{rgb}{0.90, 0.00, 0.00}
+\definecolor{graynumbers}{rgb}{0.50, 0.50, 0.50}
 
 \setlength\columnsep{30pt} % This is the default columnsep for all pages
 
@@ -142,6 +180,151 @@
 \newtcolorbox{codebox}[1]{colback=blue!15!black,colframe=white!50!black,title={\faCode \quad #1}}
 
 % Define a nice C++ typesetting
-\newcommand\CC{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\relsize{-3}{\textbf{++}}}}
+\newcommand\CPP{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\relsize{-3}{\textbf{++}}}}
+
+% Tikz Style %
+\usetikzlibrary{shapes,arrows}
+\tikzstyle{thing} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, inner sep=3.5mm]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\makeatletter
+\pgfarrowsdeclare{crow's foot}{crow's foot}
+{
+	\pgfarrowsleftextend{+-.5\pgflinewidth}%
+	\pgfarrowsrightextend{+.5\pgflinewidth}%
+}
+{
+	\pgfutil@tempdima=0.6pt%
+	\pgfsetdash{}{+0pt}%
+	\pgfsetmiterjoin%
+	\pgfpathmoveto{\pgfqpoint{0pt}{-9\pgfutil@tempdima}}%
+	\pgfpathlineto{\pgfqpoint{-13\pgfutil@tempdima}{0pt}}%
+	\pgfpathlineto{\pgfqpoint{0pt}{9\pgfutil@tempdima}}%
+	\pgfusepathqstroke%
+}
+
+\pgfarrowsdeclare{omany}{omany}
+{
+	\pgfarrowsleftextend{+-.5\pgflinewidth}%
+	\pgfarrowsrightextend{+.5\pgflinewidth}%
+}
+{
+	\pgfutil@tempdima=0.6pt%
+	\pgfsetdash{}{+0pt}%
+	\pgfsetmiterjoin%
+	\pgfpathmoveto{\pgfqpoint{0pt}{-9\pgfutil@tempdima}}%
+	\pgfpathlineto{\pgfqpoint{-13\pgfutil@tempdima}{0pt}}%
+	\pgfpathlineto{\pgfqpoint{0pt}{9\pgfutil@tempdima}}%
+	\pgfpathmoveto{\pgfqpoint{0\pgfutil@tempdima}{0\pgfutil@tempdima}}%  
+	\pgfpathmoveto{\pgfqpoint{0\pgfutil@tempdima}{0\pgfutil@tempdima}}%
+	\pgfpathmoveto{\pgfqpoint{-6pt}{-6pt}}% 
+	\pgfpathcircle{\pgfpoint{-11.5pt}{0}} {3.5pt}
+	\pgfusepathqstroke%
+}
+
+\pgfarrowsdeclare{one}{one}
+{
+	\pgfarrowsleftextend{+-.5\pgflinewidth}%
+	\pgfarrowsrightextend{+.5\pgflinewidth}%
+}
+{
+	\pgfutil@tempdima=0.6pT
+	\pgfsetdash{}{+0pt}
+	\pgfsetmiterjoin
+	\pgfusepathqstroke
+}
+\makeatother
+\tikzset{%
+	pics/entity/.style n args={3}{code={%
+			\node[draw,
+			rectangle split,
+			rectangle split parts=2,
+			text height=1.5ex,
+			] (#1)
+			{#2 \nodepart{second}
+				\begin{tabular}{>{\raggedright\arraybackslash}p{8.5em}}
+					#3
+				\end{tabular}
+			};%
+	}},
+	pics/entitynoatt/.style n args={2}{code={%
+			\node[draw,
+			text height=1.5ex,
+			] (#1)
+			{#2};%
+	}},
+	zig zag to/.style={
+		to path={(\tikztostart) -| ($(\tikztostart)!#1!(\tikztotarget)$) |- (\tikztotarget)}
+	},
+	zig zag to/.default=0.5,   
+	one to one/.style={
+		one-one, zig zag to
+	},
+	one to oone/.style={
+		one-one, zig zag to
+	},
+	one to many/.style={
+		one-crow's foot, zig zag to,
+	},
+	one to omany/.style={
+		one-omany, zig zag to
+	}
+}
+
+\makeatletter
+\def\squarecorner#1{
+	\pgf@x=\the\wd\pgfnodeparttextbox
+	\pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}
+	\advance\pgf@x by 2\pgf@xc
+	\pgfmathsetlength\pgf@xb{\pgfkeysvalueof{/pgf/minimum width}}
+	\ifdim\pgf@x<\pgf@xb
+	\pgf@x=\pgf@xb
+	\fi
+	\pgf@y=\ht\pgfnodeparttextbox
+	\advance\pgf@y by\dp\pgfnodeparttextbox
+	\pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}
+	\advance\pgf@y by 2\pgf@yc
+	\pgfmathsetlength\pgf@yb{\pgfkeysvalueof{/pgf/minimum height}}
+	\ifdim\pgf@y<\pgf@yb
+	\pgf@y=\pgf@yb
+	\fi
+	\ifdim\pgf@x<\pgf@y
+	\pgf@x=\pgf@y
+	\else
+	\pgf@y=\pgf@x
+	\fi
+	\pgf@x=#1.5\pgf@x
+	\advance\pgf@x by.5\wd\pgfnodeparttextbox
+	\pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/outer xsep}}
+	\advance\pgf@x by#1\pgf@xa
+	\pgf@y=#1.5\pgf@y
+	\advance\pgf@y by-.5\dp\pgfnodeparttextbox
+	\advance\pgf@y by.5\ht\pgfnodeparttextbox
+	\pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/outer ysep}}
+	\advance\pgf@y by#1\pgf@ya
+}
+\makeatother
+
+\pgfdeclareshape{square}{
+	\savedanchor\northeast{\squarecorner{}}
+	\savedanchor\southwest{\squarecorner{-}}
+	
+	\foreach \x in {east,west} \foreach \y in {north,mid,base,south} {
+		\inheritanchor[from=rectangle]{\y\space\x}
+	}
+	\foreach \x in {east,west,north,mid,base,south,center,text} {
+		\inheritanchor[from=rectangle]{\x}
+	}
+	\inheritanchorborder[from=rectangle]
+	\inheritbackgroundpath[from=rectangle]
+}
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!20]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!20]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!20]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!20]
+
+\tikzstyle{boxNode} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black]
+\tikzstyle{conditionNode} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black]
 
 \usepackage{subfiles} % Best loaded last in the preamble

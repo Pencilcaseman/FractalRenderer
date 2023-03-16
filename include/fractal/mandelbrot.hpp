@@ -3,6 +3,11 @@
 #include <fractal/genericFractal.hpp>
 
 namespace frac {
+	/*
+	 * No need to document this file, since the class inherits from a generic fractal
+	 * class and does not implement any novel functions.
+	 */
+
 	class Mandelbrot : public Fractal {
 	public:
 		/// Constructor taking a RenderConfig object
