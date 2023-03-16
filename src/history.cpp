@@ -1,54 +1,65 @@
 #include <fractal/fractal.hpp>
 
 namespace frac {
-	void HistoryBufferLinkedList::append(HistoryBufferLinkedList *list) {
-		if (m_next)
+	void HistoryNode::append(HistoryNode *list) {
+		if (m_next) {
 			m_next->append(list);
-		else
-			m_next = list;
+		} else {
+			m_next		   = list;
+			m_next->m_prev = this;
+		}
 	}
 
-	void HistoryBufferLinkedList::killChildren() {
+	void HistoryNode::killChildren() {
 		if (m_next) m_next->killChildren();
 		delete m_next;
+		m_next = nullptr;
 	}
 
-	size_t HistoryBufferLinkedList::sizeForward(size_t prevSize) const {
+	size_t HistoryNode::sizeForward(size_t prevSize) const {
 		if (m_next)
 			return m_next->sizeForward(prevSize + 1);
 		else
 			return prevSize;
 	}
 
-	size_t HistoryBufferLinkedList::sizeBackward(size_t prevSize) const {
+	size_t HistoryNode::sizeBackward(size_t prevSize) const {
 		if (m_prev)
 			return m_prev->sizeBackward(prevSize + 1);
 		else
 			return prevSize;
 	}
 
-	HistoryBufferLinkedList *HistoryBufferLinkedList::next() const { return m_next; }
-	HistoryBufferLinkedList *HistoryBufferLinkedList::prev() const { return m_prev; }
+	HistoryNode *HistoryNode::next() const { return m_next; }
+	HistoryNode *HistoryNode::prev() const { return m_prev; }
 
-	HistoryBufferLinkedList *HistoryBufferLinkedList::start() {
+	HistoryNode *HistoryNode::first() {
 		if (m_prev)
-			return m_prev->start();
+			return m_prev->first();
 		else
 			return this;
 	}
 
-	HistoryBufferLinkedList *HistoryBufferLinkedList::end() {
+	HistoryNode *HistoryNode::last() {
 		if (m_next)
-			return m_next->end();
+			return m_next->last();
 		else
 			return this;
 	}
 
-	void HistoryBufferLinkedList::set(const RenderConfig &config,
-									  const ci::Surface &surface) {
+	void HistoryNode::set(const RenderConfig &config, const ci::Surface &surface) {
 		m_config  = config;
 		m_surface = surface;
 	}
+
+	void HistoryNode::setConfig(const RenderConfig &config) { m_config = config; }
+
+	void HistoryNode::setSurface(const ci::Surface &surface) { m_surface = surface; }
+
+	const RenderConfig &HistoryNode::config() const { return m_config; }
+	const ci::Surface &HistoryNode::surface() const { return m_surface; }
+	RenderConfig &HistoryNode::config() { return m_config; }
+	ci::Surface &HistoryNode::surface() { return m_surface; }
 
 	HistoryBuffer::~HistoryBuffer() {
 		m_listHead->killChildren();
@@ -59,11 +70,11 @@ namespace frac {
 	}
 
 	void HistoryBuffer::append(const RenderConfig &config, const ci::Surface &surface) {
-		auto list = new HistoryBufferLinkedList;
+		auto list = new HistoryNode;
 		list->set(config, surface);
 		if (m_listHead) {
 			m_listHead->append(list);
-			m_currentNode = m_listHead->end();
+			m_currentNode = m_listHead->last();
 		} else {
 			m_listHead	  = list;
 			m_currentNode = list;
@@ -86,5 +97,11 @@ namespace frac {
 		return false;
 	}
 
-	size_t HistoryBuffer::size() const { return m_listHead->sizeForward(); }
+	size_t HistoryBuffer::size() const {
+		if (!m_listHead) return 0;
+		return m_listHead->sizeForward();
+	}
+
+	HistoryNode *HistoryBuffer::first() const { return m_listHead->first(); }
+	HistoryNode *HistoryBuffer::last() const { return m_listHead->last(); }
 } // namespace frac

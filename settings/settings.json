@@ -1,83 +1,90 @@
 {
-  "renderConfig": {
-    "numThreads": 8,
-    "maxIters": 500,
-    "precision": 64,
-    "bail": 65536,
-    "antiAlias": 2,
-    "imageSize": {
-      "width": 800,
-      "height": 700
-    },
-    "boxSize": {
-      "width": 15,
-      "height": 15
-    },
-    "fracTopLeft": {
-      "Re": -2.2,
-      "Im": -1.4
-    },
-    "fracSize": {
-      "Re": 3.2,
-      "Im": 2.66666666666
-    },
-    "colorPalette": [
-      {
-        "red": 0.5568628,
-        "green": 0.23137255,
-        "blue": 0.27450982,
-        "alpha": 1.0
-      },
-      {
-        "red": 0.88235295,
-        "green": 0.8666667,
-        "blue": 0.56078434,
-        "alpha": 1.0
-      },
-      {
-        "red": 0.8784314,
-        "green": 0.46666667,
-        "blue": 0.49019608,
-        "alpha": 1.0
-      },
-      {
-        "red": 0.29803923,
-        "green": 0.5254902,
-        "blue": 0.65882355,
-        "alpha": 1.0
-      },
-      {
-        "red": 0.2784314,
-        "green": 0.47058824,
-        "blue": 0.5647059,
-        "alpha": 1.0
-      }
-    ]
-  },
-  "menus": {
-    "fractalInfo": {
-      "width": 400,
-      "height": 150,
-      "posX": 800,
-      "posY": 0
-    },
-    "renderConfig": {
-      "width": 400,
-      "height": 150,
-      "posX": 800,
-      "posY": 150
-    },
-    "fineMovement": {
-      "width": 400,
-      "height": 150,
-      "posX": 800,
-      "posY": 300
-    },
-    "renderStatistics": {
-      "width": 400,
-      "height": 100,
-      "posX": 800,
-      "posY": 450
-    }
-  }
+	"renderConfig": {
+		"numThreads": 8,
+		"maxIters": 500,
+		"precision": 64,
+		"bail": 65536,
+		"antiAlias": 2,
+		"imageSize": {
+			"width": 800,
+			"height": 700
+		},
+		"boxSize": {
+			"width": 15,
+			"height": 15
+		},
+		"fracTopLeft": {
+			"Re": -2.2,
+			"Im": -1.4
+		},
+		"fracSize": {
+			"Re": 3.2,
+			"Im": 2.66666666666
+		},
+		"colorPalette": [
+			{
+				"red": 0.5568628,
+				"green": 0.23137255,
+				"blue": 0.27450982,
+				"alpha": 1.0
+			},
+			{
+				"red": 0.88235295,
+				"green": 0.8666667,
+				"blue": 0.56078434,
+				"alpha": 1.0
+			},
+			{
+				"red": 0.8784314,
+				"green": 0.46666667,
+				"blue": 0.49019608,
+				"alpha": 1.0
+			},
+			{
+				"red": 0.29803923,
+				"green": 0.5254902,
+				"blue": 0.65882355,
+				"alpha": 1.0
+			},
+			{
+				"red": 0.2784314,
+				"green": 0.47058824,
+				"blue": 0.5647059,
+				"alpha": 1.0
+			}
+		],
+		"draftRender": false,
+		"draftInc": 3
+	},
+	"menus": {
+		"fractalInfo": {
+			"width": 400,
+			"height": 150,
+			"posX": 800,
+			"posY": 0
+		},
+		"renderConfig": {
+			"width": 400,
+			"height": 150,
+			"posX": 800,
+			"posY": 150
+		},
+		"fineMovement": {
+			"width": 400,
+			"height": 150,
+			"posX": 800,
+			"posY": 300
+		},
+		"renderStatistics": {
+			"width": 400,
+			"height": 100,
+			"posX": 800,
+			"posY": 450
+		},
+		"history": {
+			"frameWidth": 150,
+			"frameSep": 8,
+			"scrollSpeed": 20
+		}
+	}
 }

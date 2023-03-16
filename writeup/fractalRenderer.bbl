@@ -1,4 +1,4 @@
-\begin{thebibliography}{5}
+\begin{thebibliography}{8}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -19,6 +19,17 @@ Frederik Slijkerman.
 \newblock Ultra fractal: Advanced fractal software for windows and macos, Jul
   2022.
 \newblock URL \url{https://www.ultrafractal.com/}.
+
+\bibitem[Eck()]{eck}
+David~J Eck.
+\newblock URL \url{https://math.hws.edu/eck/index.html}.
+
+\bibitem[xao()]{xaos.js}
+URL \url{https://xaos-project.github.io/XaoSjs/}.
+
+\bibitem[fra()]{fractalfoundation}
+Fractal software.
+\newblock URL \url{https://fractalfoundation.org/resources/fractal-software/}.
 
 \bibitem[Developers and Davis()]{developers_davis}
 Cinder Developers and Toby Davis.

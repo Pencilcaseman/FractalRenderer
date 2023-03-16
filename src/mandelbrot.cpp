@@ -4,7 +4,7 @@ namespace frac {
 	Mandelbrot::Mandelbrot(const RenderConfig &config) : Fractal(config) {}
 
 	/*
-	 * Note that, since this class will be used in a polymorphic manner with other, similar classes,
+	 * Note that, since this class will be used polymorphically with other classes,
 	 * these two functions must be implemented separately and cannot be templated, as the compiler
 	 * would error when trying to identify which function to call. Additionally, splitting the
 	 * functions in this way allows for more targeted optimisations to be made in some cases.
