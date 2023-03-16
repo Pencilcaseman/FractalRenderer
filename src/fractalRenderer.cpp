@@ -139,13 +139,13 @@ namespace frac {
 		  m_renderConfig.fracSize / static_cast<HighVec2>(m_renderConfig.imageSize);
 
 		int64_t aliasFactor = m_renderConfig.antiAlias;
+		if (box.draftRender) aliasFactor = 1;
+
 		HighPrecision scaleFactor =
 		  HighPrecision(1) / static_cast<HighPrecision>(aliasFactor);
 		HighVec2 aliasStepCorrect(scaleFactor, scaleFactor);
 
 		bool blackEdges = true;
-
-		// TODO: MAKE THIS A FUNCTION!!!!!!!!!!
 
 		if (m_haltRender) return;
 
