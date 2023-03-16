@@ -23,6 +23,6 @@ namespace frac {
 	}
 
 	ColorPalette::ColorType ColorPalette::merge(const ColorType &a, const ColorType &b, float t) {
-		return a * (1 - t) + b * t;
+		return a + (b - a) * t;
 	}
 } // namespace frac

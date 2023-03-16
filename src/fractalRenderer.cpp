@@ -98,6 +98,7 @@ namespace frac {
 
 		m_renderBoxes.reserve(numBoxes.x() * numBoxes.y());
 
+		// Iterate over all boxes
 		for (int64_t i = 0; i < numBoxes.y(); ++i) {
 			for (int64_t j = 0; j < numBoxes.x(); ++j) {
 				lrc::Vec2i adjustedBoxSize(
@@ -109,10 +110,11 @@ namespace frac {
 							   m_renderConfig.draftInc,
 							   RenderBoxState::Queued};
 
-				// renderBox(box);
 				auto prevSize = (int64_t)m_renderBoxes.size();
-				m_renderBoxes.emplace_back(
-				  box); // Must happen before pushing to render queue
+
+				// Must happen before pushing to render queue
+				m_renderBoxes.emplace_back(box);
+
 				m_threadPool.push_task(
 				  [this, box, prevSize]() { renderBox(box, prevSize); });
 			}
@@ -139,13 +141,13 @@ namespace frac {
 		  m_renderConfig.fracSize / static_cast<HighVec2>(m_renderConfig.imageSize);
 
 		int64_t aliasFactor = m_renderConfig.antiAlias;
-		if (box.draftRender) aliasFactor = 1;
+		if (box.draftRender) aliasFactor = 1; // No anti-aliasing for drafts
 
 		HighPrecision scaleFactor =
 		  HighPrecision(1) / static_cast<HighPrecision>(aliasFactor);
 		HighVec2 aliasStepCorrect(scaleFactor, scaleFactor);
 
-		bool blackEdges = true;
+		bool blackEdges = true; // Assume edges are black to begin with
 
 		if (m_haltRender) return;
 

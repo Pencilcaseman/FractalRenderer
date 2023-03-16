@@ -15,5 +15,10 @@ namespace frac::glu {
 	void drawStrokedRectangle(const lrc::Vec2f &topLeft, const lrc::Vec2f &bottomRight,
 							  float thickness = 1);
 
+	/// Draw a cross at \p center, where each "arm" has length \p radius and thickness
+	/// \p thickness
+	/// \param center Where to draw the cross
+	/// \param radius Radius of the cross
+	/// \param thickness Thickness of the cross
 	void drawCross(const lrc::Vec2f &center, float radius, float thickness = 1);
 } // namespace frac::glu

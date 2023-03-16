@@ -19,6 +19,7 @@ namespace frac {
 		double renderTime	 = 0;
 	};
 
+	/// Information about the time taken to render a box
 	struct RenderBoxTimeStats {
 		double min	  = 0;
 		double max	  = 0;
@@ -26,6 +27,8 @@ namespace frac {
 		double remainingTime = 0;
 	};
 
+	/// Contains all the information required to define an image (not including the
+	/// fractal type and colouring algorithm)
 	struct RenderConfig {
 		int64_t numThreads; // Number of threads to render on (max)
 		int64_t maxIters;	// Largest number of iterations to allow

@@ -309,7 +309,7 @@ namespace frac {
 								 historyFrameSep);
 
 			totalHeight += (int64_t)(renderSize.y() + historyFrameSep);
-			if (drawPos.y() > windowHeight || drawPos.y() + renderSize.y() < 0) break;
+			if (drawPos.y() > windowHeight || drawPos.y() + renderSize.y() < 0) goto skip;
 
 			drawPos.y(drawPos.y() + m_historyScrollTarget);
 
@@ -318,6 +318,7 @@ namespace frac {
 			ci::gl::color(ci::ColorA(0, 0, 0, 1));
 			glu::drawStrokedRectangle(drawPos, drawPos + renderSize, 3);
 
+		skip:
 			node = node->next();
 			index++;
 		}
