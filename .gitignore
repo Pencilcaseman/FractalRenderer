@@ -15,4 +15,7 @@ cmake-build-*
 codiga.yml
 .PVS-Studio
 
+*.pdf
+*.log
+
 .PVS-Studio/
