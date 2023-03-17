@@ -8,6 +8,11 @@ namespace frac {
 	ci::ColorA Fractal::getColorLow(const lrc::Complex<LowPrecision> &coord, int64_t iters) const {
 		using Col = ColorPalette::ColorType;
 
+		if (iters == 0) { return ci::ColorA(1, 0, 0, 1); }
+		if (iters == 1) { return ci::ColorA(0, 1, 0, 1); }
+		if (iters == 2) { return ci::ColorA(0, 0, 1, 1); }
+		return ci::ColorA(1, 1, 1, 1);
+
 		// float logZN		= lrc::log(lrc::abs(lrc::Complex<float>(coord.real(), coord.imag()))) / 2;
 		// float nu		= lrc::log(logZN / lrc::LN2) / lrc::LN2;
 		// float iteration = static_cast<float>(iters) + 1 - nu;
