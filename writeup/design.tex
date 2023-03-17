@@ -283,6 +283,36 @@ When the application is requested to close, the \codeword{cleanup} routine is ca
 
 The window also has a variety of callback functions which are called when specific triggers occur. For example, functions are called every time the mouse is moved, dragged or pressed.
 
+\subsection{Supporting Multiple Fractals}
+
+Adding support for more fractal types and colouring algorithms is quite complicated, and requires a significant rewrite of the current program. The reasons for this are non-trivial but, in essence, it's mainly due to the iterative equations and colouring algorithms required for each fractal type. For example, the Mandelbrot set can be optimised in ways that Newton's fractal cannot, and is generally coloured with completely different methods.
+
+\subsubsection{Altering the Main Rendering Loop}
+
+While many optimisations are possible when rendering fractals, the simplest and most effective one (for the fractals that apply) relies on the fact that, if a complete outline can be drawn where every point is known to be contained within the set, every point within that border must also be within the set. This applies for the Mandelbrot set and many variations of it, but not, for example, on Newton's fractal.
+
+Each fractal type must provide a method of defining what optimisations are available for it so the rendering algorithm can produce a precise, artefact-free image. Although the software will only implement a single optimisation method, support for up to 64 will be implemented. This future-proofs the application and simplifies the addition of more optimal algorithms in the future. The code below shows some snippets from the source code that enable this.
+
+\begin{lstlisting}[language=c++]
+namespace optimisations {
+	constexpr size_t OUTLINE_OPTIMISATION = 0x0001;
+}
+
+// ------------------------------------------------
+	
+virtual size_t supportedOptimisations() const;
+
+// ------------------------------------------------
+
+const size_t supportedOptimisations = m_fractal->supportedOptimisations();
+const bool supportsOutlining =
+	supportedOptimisations & optimisations::OUTLINE_OPTIMISATION;
+\end{lstlisting}
+
+\subsubsection{Enabling Custom Colouring Algorithms}
+
+Using the previous example of Newton's fractal and the Mandelbrot set, it is clear that the algorithms used to colour them are very different. 
+
 \subsection{Additional Features}
 
 The features outlined previously comprise the vast majority of the program, but some additional features must also be designed and implemented. These are often the less critical features, though they still impact the user's interaction with the program.  
@@ -334,6 +364,12 @@ Using a linked list, where each node stores a \codeword{RenderConfig} object and
 			\text{Assign } \codeword{node} \text{ to } \codeword{m_next}
 			$
 		};
+	
+		\node (assignStatement2) [boxNode, right of = assignStatement, node distance = 170pt] {
+			$
+			\text{Assign } \codeword{*this} \text{ to } \codeword{m_next->m_prev}
+			$
+		};
 		
 		\draw [arrow] (classDef) -- (appendFn);
 		\draw [arrow] (appendFn) -- (ifStatement);
@@ -341,6 +377,7 @@ Using a linked list, where each node stores a \codeword{RenderConfig} object and
 		\draw [arrow] (ifPoint) -- (recurse);
 		\draw [arrow] (recurse) -- (appendFn);
 		\draw [arrow] (ifStatement) -- node[anchor = east]{yes} (assignStatement);
+		\draw [arrow] (assignStatement) -- (assignStatement2);
 	\end{tikzpicture}
 \end{center}
 
@@ -377,4 +414,39 @@ void MainWindow::mouseDrag(ci::app::MouseEvent event) {
 	}
 }
 \end{lstlisting}
+
+To move the zoom area with the arrow keys needs a switch-case block to check which key has been pressed.
+
+\begin{lstlisting}[language=c++]
+switch (event.getCode()) {
+	case ci::app::KeyEvent::KEY_RETURN: {
+		zoomFractal(m_zoomBoxStart, m_zoomBoxEnd);
+	}
+	case ci::app::KeyEvent::KEY_ESCAPE: {
+		m_showZoomBox = false;
+		break;
+	}
+	case ci::app::KeyEvent::KEY_RIGHT: {
+		m_zoomBoxStart.x(m_zoomBoxStart.x() + scrollSpeed);
+		m_zoomBoxEnd.x(m_zoomBoxEnd.x() + scrollSpeed);
+		break;
+	}
+	case ci::app::KeyEvent::KEY_LEFT: {
+		m_zoomBoxStart.x(m_zoomBoxStart.x() - scrollSpeed);
+		m_zoomBoxEnd.x(m_zoomBoxEnd.x() - scrollSpeed);
+		break;
+	}
+	case ci::app::KeyEvent::KEY_UP: {
+		m_zoomBoxStart.y(m_zoomBoxStart.y() - scrollSpeed);
+		m_zoomBoxEnd.y(m_zoomBoxEnd.y() - scrollSpeed);
+		break;
+	}
+	case ci::app::KeyEvent::KEY_DOWN: {
+		m_zoomBoxStart.y(m_zoomBoxStart.y() + scrollSpeed);
+		m_zoomBoxEnd.y(m_zoomBoxEnd.y() + scrollSpeed);
+		break;
+	}
+}
+\end{lstlisting}
+
 

@@ -20,6 +20,8 @@ namespace frac {
 
 		~Mandelbrot() override = default;
 
+		size_t supportedOptimisations() const;
+
 		LIBRAPID_NODISCARD std::pair<int64_t, lrc::Complex<LowPrecision>>
 		iterCoordLow(const lrc::Complex<LowPrecision> &coord) const override;
 

@@ -20,6 +20,8 @@ namespace frac {
 
 		~NewtonFractal() override = default;
 
+		size_t supportedOptimisations() const override;
+
 		template<typename T>
 		lrc::Complex<T> f(const lrc::Complex<T> &z) const {
 			return lrc::pow(z, 3) - 1;
@@ -35,5 +37,11 @@ namespace frac {
 
 		LIBRAPID_NODISCARD std::pair<int64_t, lrc::Complex<HighPrecision>>
 		iterCoordHigh(const lrc::Complex<HighPrecision> &coord) const override;
+
+		virtual ci::ColorA getColorLow(const lrc::Complex<LowPrecision> &coord,
+									   int64_t iters) const override;
+
+		virtual ci::ColorA getColorHigh(const lrc::Complex<HighPrecision> &coord,
+										int64_t iters) const override;
 	};
 } // namespace frac

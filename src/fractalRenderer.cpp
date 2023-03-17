@@ -148,6 +148,10 @@ namespace frac {
 		  HighPrecision(1) / static_cast<HighPrecision>(aliasFactor);
 		HighVec2 aliasStepCorrect(scaleFactor, scaleFactor);
 
+		const size_t supportedOptimisations = m_fractal->supportedOptimisations();
+		const bool supportsOutlining =
+		  supportedOptimisations & optimisations::OUTLINE_OPTIMISATION;
+
 		bool blackEdges = true; // Assume edges are black to begin with
 
 		if (m_haltRender) return;
@@ -164,103 +168,14 @@ namespace frac {
 			}
 		}
 
-		// Render the top edge
-		for (int64_t px = box.topLeft.x(); px < box.topLeft.x() + box.dimensions.x();
-			 px += inc) {
-			// Anti-aliasing
-			auto pixPos = fractalOrigin + step * HighVec2(px - box.topLeft.x(), 0);
-
-			ci::ColorA pix;
-
-			if (m_renderConfig.precision <= 64) {
-				pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
-			} else {
-				pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
+		if (supportsOutlining) {
+			for (int64_t i = 0; i < 4; ++i) {
+				blackEdges &= renderEdge(
+				  box, fractalOrigin, aliasFactor, step, aliasStepCorrect, inc, i);
 			}
-
-			if (blackEdges && (pix.r != 0 && pix.g != 0 && pix.b != 0)) {
-				blackEdges = false;
-			}
-
-			m_fractalSurface.setPixel(lrc::Vec2i(px, box.topLeft.y()), pix);
 		}
 
-		if (m_haltRender) return;
-
-		// Render the right edge
-		for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y();
-			 py += inc) {
-			// Anti-aliasing
-			auto pixPos =
-			  fractalOrigin + step * HighVec2(box.dimensions.x(), py - box.topLeft.y());
-
-			ci::ColorA pix;
-
-			if (m_renderConfig.precision <= 64) {
-				pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
-			} else {
-				pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
-			}
-
-			if (blackEdges && (pix.r != 0 && pix.g != 0 && pix.b != 0)) {
-				blackEdges = false;
-			}
-
-			m_fractalSurface.setPixel(
-			  lrc::Vec2i(box.topLeft.x() + box.dimensions.x() - 1, py), pix);
-		}
-
-		if (m_haltRender) return;
-
-		// Render the bottom edge
-		for (int64_t px = box.topLeft.x(); px < box.topLeft.x() + box.dimensions.x();
-			 px += inc) {
-			// Anti-aliasing
-			auto pixPos = fractalOrigin +
-						  step * HighVec2(px - box.topLeft.x(), box.dimensions.y() - 1);
-
-			ci::ColorA pix;
-
-			if (m_renderConfig.precision <= 64) {
-				pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
-			} else {
-				pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
-			}
-
-			if (blackEdges && (pix.r != 0 && pix.g != 0 && pix.b != 0)) {
-				blackEdges = false;
-			}
-
-			m_fractalSurface.setPixel(
-			  lrc::Vec2i(px, box.topLeft.y() + box.dimensions.y() - 1), pix);
-		}
-
-		if (m_haltRender) return;
-
-		// Render the left edge
-		for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y();
-			 py += inc) {
-			// Anti-aliasing
-			auto pixPos =
-			  fractalOrigin +
-			  step * HighVec2(box.topLeft.x() - box.topLeft.x(), py - box.topLeft.y());
-
-			ci::ColorA pix;
-
-			if (m_renderConfig.precision <= 64) {
-				pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
-			} else {
-				pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
-			}
-
-			if (blackEdges && (pix.r != 0 && pix.g != 0 && pix.b != 0)) {
-				blackEdges = false;
-			}
-
-			m_fractalSurface.setPixel(lrc::Vec2i(box.topLeft.x(), py), pix);
-		}
-
-		if (blackEdges) {
+		if (supportsOutlining && blackEdges) {
 			for (int64_t py = box.topLeft.y() + 1;
 				 py < box.topLeft.y() + box.dimensions.y() - 1;
 				 py += inc) {
@@ -272,18 +187,21 @@ namespace frac {
 				}
 			}
 		} else {
+			int64_t offset = 0;
+			if (supportsOutlining) offset = 1;
+
 			// Make the primary axis of iteration the x-axis to improve cache
 			// efficiency and increase performance.
-			for (int64_t py = box.topLeft.y() + 1;
-				 py < box.topLeft.y() + box.dimensions.y() - 1;
+			for (int64_t py = box.topLeft.y() + offset;
+				 py < box.topLeft.y() + box.dimensions.y() - offset;
 				 py += inc) {
 				// Quick return if required. Without this, the
 				// render threads will continue running after the
 				// application is closed, leading to weird behaviour.
 				if (m_haltRender) return;
 
-				for (int64_t px = box.topLeft.x() + 1;
-					 px < box.topLeft.x() + box.dimensions.x() - 1;
+				for (int64_t px = box.topLeft.x() + offset;
+					 px < box.topLeft.x() + box.dimensions.x() - offset;
 					 px += inc) {
 					// Anti-aliasing
 					auto pixPos = fractalOrigin + step * HighVec2(px - box.topLeft.x(),
@@ -307,6 +225,57 @@ namespace frac {
 		m_renderBoxes[boxIndex].renderTime = lrc::now() - start;
 	}
 
+	bool FractalRenderer::renderEdge(const RenderBox &box, const HighVec2 &fractalOrigin,
+									 int64_t aliasFactor, const HighVec2 &step,
+									 const HighVec2 &aliasStepCorrect, int64_t inc,
+									 int64_t edge) {
+		bool edgesInSet = true;
+		if (edge & 1) { // Edge is 1 or 3 -> Right or left
+			int64_t px = 0;
+			if (edge == 3) px = box.dimensions.x() - 1;
+
+			for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y();
+				 py += inc) {
+				// Anti-aliasing
+				auto pixPos = fractalOrigin + step * HighVec2(px, py - box.topLeft.y());
+
+				ci::ColorA pix;
+
+				if (m_renderConfig.precision <= 64) {
+					pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
+				} else {
+					pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
+				}
+
+				if (pix.r != 0 && pix.g != 0 && pix.b != 0) { edgesInSet = false; }
+
+				m_fractalSurface.setPixel(lrc::Vec2i(box.topLeft.x() + px, py), pix);
+			}
+		} else { // Edge is 0 or 2 -> Top or bottom
+			int64_t py = 0;
+			if (edge == 2) py = box.dimensions.y() - 1;
+
+			for (int64_t px = box.topLeft.x(); px < box.topLeft.x() + box.dimensions.x();
+				 px += inc) {
+				// Anti-aliasing
+				auto pixPos = fractalOrigin + step * HighVec2(px - box.topLeft.x(), py);
+
+				ci::ColorA pix;
+
+				if (m_renderConfig.precision <= 64) {
+					pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
+				} else {
+					pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
+				}
+
+				if (pix.r != 0 && pix.g != 0 && pix.b != 0) { edgesInSet = false; }
+
+				m_fractalSurface.setPixel(lrc::Vec2i(px, box.topLeft.y() + py), pix);
+			}
+		}
+		return edgesInSet;
+	}
+
 	ci::ColorA FractalRenderer::pixelColorLow(const LowVec2 &pixPos, int64_t aliasFactor,
 											  const LowVec2 &step,
 											  const LowVec2 &aliasStepCorrect) {
@@ -318,14 +287,7 @@ namespace frac {
 
 				auto [iters, endPoint] =
 				  m_fractal->iterCoordLow(lrc::Complex<LowPrecision>(pos.x(), pos.y()));
-				if (endPoint.real() * endPoint.real() +
-					  endPoint.imag() * endPoint.imag() <
-					4) {
-					pix += ci::ColorA(0, 0, 0, 1); // Probably in the set
-				} else {
-					pix +=
-					  m_fractal->getColorLow(endPoint, iters); // Probably not in the set
-				}
+				pix += m_fractal->getColorLow(endPoint, iters);
 			}
 		}
 
@@ -343,14 +305,7 @@ namespace frac {
 
 				auto [iters, endPoint] =
 				  m_fractal->iterCoordHigh(lrc::Complex<HighPrecision>(pos.x(), pos.y()));
-				if (endPoint.real() * endPoint.real() +
-					  endPoint.imag() * endPoint.imag() <
-					4) {
-					pix += ci::ColorA(0, 0, 0, 1); // Probably in the set
-				} else {
-					pix +=
-					  m_fractal->getColorHigh(endPoint, iters); // Probably not in the set
-				}
+				pix += m_fractal->getColorHigh(endPoint, iters);
 			}
 		}
 

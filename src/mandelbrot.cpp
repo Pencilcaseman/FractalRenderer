@@ -5,10 +5,16 @@ namespace frac {
 
 	/*
 	 * Note that, since this class will be used polymorphically with other classes,
-	 * these two functions must be implemented separately and cannot be templated, as the compiler
-	 * would error when trying to identify which function to call. Additionally, splitting the
-	 * functions in this way allows for more targeted optimisations to be made in some cases.
+	 * these two functions must be implemented separately and cannot be templated, as the
+	 * compiler would error when trying to identify which function to call. Additionally,
+	 * splitting the functions in this way allows for more targeted optimisations to be
+	 * made in some cases.
 	 */
+
+	size_t Mandelbrot::supportedOptimisations() const {
+		// Outlining is proven for the Mandelbrot set
+		return optimisations::OUTLINE_OPTIMISATION;
+	}
 
 	std::pair<int64_t, lrc::Complex<LowPrecision>>
 	Mandelbrot::iterCoordLow(const lrc::Complex<LowPrecision> &coord) const {

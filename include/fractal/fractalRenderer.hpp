@@ -1,6 +1,10 @@
 #pragma once
 
 namespace frac {
+	namespace optimisations {
+		constexpr size_t OUTLINE_OPTIMISATION = 0x000000000000001;
+	}
+
 	class FractalRenderer {
 	public:
 		FractalRenderer() = default;
@@ -44,6 +48,27 @@ namespace frac {
 		/// \param box The box configuration
 		/// \param boxIndex Box ID (for updating states)
 		void renderBox(const RenderBox &box, int64_t boxIndex = -1);
+
+		/// Render a single edge of a RenderBox's bounding area. This is used internally
+		/// inside the renderBox method.
+		///
+		/// Edge:
+		///  - 0 -> Top
+		///  - 1 -> Right
+		///  - 2 -> Bottom
+		///  - 3 -> Left
+		///
+		/// \param box
+		/// \param fractalOrigin
+		/// \param aliasFactor
+		/// \param step
+		/// \param aliasStepCorrect
+		/// \param inc
+		/// \param edge
+		/// \return
+		bool renderEdge(const RenderBox &box, const HighVec2 &fractalOrigin,
+						int64_t aliasFactor, const HighVec2 &step,
+						const HighVec2 &aliasStepCorrect, int64_t inc, int64_t edge);
 
 		/// Calculate the colour of a pixel at standard-precision. This implements
 		/// anti-aliasing as well

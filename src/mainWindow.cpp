@@ -237,17 +237,42 @@ namespace frac {
 
 			if (ImGui::Button("Apply")) {
 				HighPrecision re, im, zoom, sizeRe, sizeIm;
-				scn::scan(m_fineMovementRe, "{}", re);
-				scn::scan(m_fineMovementIm, "{}", im);
-				scn::scan(m_fineMovementZoom, "{}", zoom);
+				bool valid = true;
 
-				FRAC_LOG(fmt::format("Received Real Part: {}", re));
+				auto reScan	  = scn::scan(m_fineMovementRe, "{}", re);
+				auto imScan	  = scn::scan(m_fineMovementIm, "{}", im);
+				auto zoomScan = scn::scan(m_fineMovementZoom, "{}", zoom);
 
-				sizeRe = config.originalFracSize.x() / zoom;
-				sizeIm = config.originalFracSize.y() / zoom;
-				moveFractalCenter(lrc::Vec<HighPrecision, 2>(re, im),
-								  lrc::Vec<HighPrecision, 2>(sizeRe, sizeIm));
-				renderFractal();
+				if (!reScan) {
+					FRAC_ERROR(fmt::format("Invalid Real Part: {}", m_fineMovementRe));
+					valid = false;
+				}
+
+				if (!imScan) {
+					FRAC_ERROR(
+					  fmt::format("Invalid Imaginary Part: {}", m_fineMovementIm));
+					valid = false;
+				}
+
+				if (!zoomScan || zoom <= 0) {
+					FRAC_ERROR(fmt::format("Invalid Zoom: {}", m_fineMovementZoom));
+					valid = false;
+				}
+
+				if (!valid) {
+					FRAC_ERROR(fmt::format("Invalid input: {}, {}, {}",
+										   m_fineMovementRe,
+										   m_fineMovementIm,
+										   m_fineMovementZoom));
+				} else {
+					FRAC_LOG(fmt::format("Received Real Part: {}", re));
+
+					sizeRe = config.originalFracSize.x() / zoom;
+					sizeIm = config.originalFracSize.y() / zoom;
+					moveFractalCenter(lrc::Vec<HighPrecision, 2>(re, im),
+									  lrc::Vec<HighPrecision, 2>(sizeRe, sizeIm));
+					renderFractal();
+				}
 			}
 		}
 		ImGui::End();

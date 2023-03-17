@@ -3,24 +3,30 @@
 namespace frac {
 	Fractal::Fractal(const RenderConfig &config) : m_renderConfig(config) {}
 
-	void Fractal::updateRenderConfig(const RenderConfig &config) { m_renderConfig = config; }
+	void Fractal::updateRenderConfig(const RenderConfig &config) {
+		m_renderConfig = config;
+	}
 
-	ci::ColorA Fractal::getColorLow(const lrc::Complex<LowPrecision> &coord, int64_t iters) const {
+	size_t Fractal::supportedOptimisations() const {
+		return 0; // By default, assume no optimisations are valid
+	}
+
+	ci::ColorA Fractal::getColorLow(const lrc::Complex<LowPrecision> &coord,
+									int64_t iters) const {
 		using Col = ColorPalette::ColorType;
 
-		if (iters == 0) { return ci::ColorA(1, 0, 0, 1); }
-		if (iters == 1) { return ci::ColorA(0, 1, 0, 1); }
-		if (iters == 2) { return ci::ColorA(0, 0, 1, 1); }
-		return ci::ColorA(1, 1, 1, 1);
+		if (coord.real() * coord.real() + coord.imag() * coord.imag() < 4)
+			return {0, 0, 0, 1};
 
-		// float logZN		= lrc::log(lrc::abs(lrc::Complex<float>(coord.real(), coord.imag()))) / 2;
-		// float nu		= lrc::log(logZN / lrc::LN2) / lrc::LN2;
+		// float logZN		= lrc::log(lrc::abs(lrc::Complex<float>(coord.real(),
+		// coord.imag()))) / 2; float nu		= lrc::log(logZN / lrc::LN2) / lrc::LN2;
 		// float iteration = static_cast<float>(iters) + 1 - nu;
 		// const auto &palette = m_renderConfig.palette;
-		// Col color1			= palette[static_cast<size_t>(iteration) % palette.size()];
-		// Col color2			= palette[(static_cast<size_t>(iteration) + 1) % palette.size()];
-		// Col merged			= ColorPalette::merge(color1, color2, lrc::mod(iteration, 1.0f));
-		// return {merged.x(), merged.y(), merged.z(), 1};
+		// Col color1			= palette[static_cast<size_t>(iteration) %
+		// palette.size()]; Col color2			= palette[(static_cast<size_t>(iteration)
+		// + 1) % palette.size()];
+		// Col merged			= ColorPalette::merge(color1, color2,
+		// lrc::mod(iteration, 1.0f)); return {merged.x(), merged.y(), merged.z(), 1};
 
 		// Nice gradient
 		double s1 = (double)iters -
@@ -40,14 +46,18 @@ namespace frac {
 									 int64_t iters) const {
 		using Col = ColorPalette::ColorType;
 
-		// float logZN		= lrc::log(lrc::abs(lrc::Complex<float>(coord.real(), coord.imag()))) / 2;
-		// float nu		= lrc::log(logZN / lrc::LN2) / lrc::LN2;
+		if (coord.real() * coord.real() + coord.imag() * coord.imag() < 4)
+			return {0, 0, 0, 1};
+
+		// float logZN		= lrc::log(lrc::abs(lrc::Complex<float>(coord.real(),
+		// coord.imag()))) / 2; float nu		= lrc::log(logZN / lrc::LN2) / lrc::LN2;
 		// float iteration = static_cast<float>(iters) + 1 - nu;
 		// const auto &palette = m_renderConfig.palette;
-		// Col color1			= palette[static_cast<size_t>(iteration) % palette.size()];
-		// Col color2			= palette[(static_cast<size_t>(iteration) + 1) % palette.size()];
-		// Col merged			= ColorPalette::merge(color1, color2, lrc::mod(iteration, 1.0f));
-		// return {merged.x(), merged.y(), merged.z(), 1};
+		// Col color1			= palette[static_cast<size_t>(iteration) %
+		// palette.size()]; Col color2			= palette[(static_cast<size_t>(iteration)
+		// + 1) % palette.size()];
+		// Col merged			= ColorPalette::merge(color1, color2,
+		// lrc::mod(iteration, 1.0f)); return {merged.x(), merged.y(), merged.z(), 1};
 
 		// Nice gradient
 		double s1 = (double)iters -

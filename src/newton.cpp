@@ -3,6 +3,10 @@
 namespace frac {
 	NewtonFractal::NewtonFractal(const RenderConfig &config) : Fractal(config) {}
 
+	size_t NewtonFractal::supportedOptimisations() const {
+		return 0; // No optimisations supported (currently)
+	}
+
 	std::pair<int64_t, lrc::Complex<LowPrecision>>
 	NewtonFractal::iterCoordLow(const lrc::Complex<LowPrecision> &coord) const {
 		// Roots (solutions) of the polynomial
@@ -11,7 +15,7 @@ namespace frac {
 		  lrc::Complex<LowPrecision>(-.5, sqrt(3) / 2),
 		  lrc::Complex<LowPrecision>(-.5, -sqrt(3) / 2)};
 
-		constexpr double tolerance = 0.000001;
+		constexpr double tolerance = 0.0001;
 
 		lrc::Complex<LowPrecision> z = coord;
 
@@ -29,6 +33,8 @@ namespace frac {
 				}
 			}
 		}
+
+		return std::make_pair(int64_t(0), lrc::Complex<LowPrecision>(0, 0));
 	}
 
 	std::pair<int64_t, lrc::Complex<HighPrecision>>
@@ -51,5 +57,21 @@ namespace frac {
 		}
 
 		return {iteration, lrc::Complex<HighPrecision>(re, im)};
+	}
+
+	ci::ColorA NewtonFractal::getColorLow(const lrc::Complex<LowPrecision> &coord,
+										  int64_t iters) const {
+		if (iters == 0) { return ci::ColorA(1, 0, 0, 1); }
+		if (iters == 1) { return ci::ColorA(0, 1, 0, 1); }
+		if (iters == 2) { return ci::ColorA(0, 0, 1, 1); }
+		return ci::ColorA(1, 1, 1, 1);
+	}
+
+	ci::ColorA NewtonFractal::getColorHigh(const lrc::Complex<HighPrecision> &coord,
+										   int64_t iters) const {
+		if (iters == 0) { return ci::ColorA(1, 0, 0, 1); }
+		if (iters == 1) { return ci::ColorA(0, 1, 0, 1); }
+		if (iters == 2) { return ci::ColorA(0, 0, 1, 1); }
+		return ci::ColorA(1, 1, 1, 1);
 	}
 } // namespace frac

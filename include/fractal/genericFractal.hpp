@@ -16,6 +16,11 @@ namespace frac {
 		/// \param config The new RenderConfig to use
 		virtual void updateRenderConfig(const RenderConfig &config);
 
+		/// Return an integer where the presence of a 1 or 0 at index i represents whether
+		/// optimisation i is valid for this fractal
+		/// \return Unsigned 64-bit integer
+		virtual size_t supportedOptimisations() const;
+
 		/// Iterate over a complex-valued coordinate and return the value at which the
 		/// coordinate exceeds the given threshold or reaches the desired number of
 		/// iterations. The return value also includes the number of iterations it took
