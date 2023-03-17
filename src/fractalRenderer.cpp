@@ -49,7 +49,8 @@ namespace frac {
 										  color["alpha"].get<float>()));
 			}
 
-			m_fractal = std::make_unique<Mandelbrot>(m_renderConfig);
+			// m_fractal = std::make_unique<Mandelbrot>(m_renderConfig);
+			m_fractal = std::make_unique<NewtonFractal>(m_renderConfig);
 		} catch (std::exception &e) {
 			FRAC_LOG(fmt::format("Failed to load settings: {}", e.what()));
 			stopRender();

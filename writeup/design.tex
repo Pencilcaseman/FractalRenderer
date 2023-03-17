@@ -291,7 +291,7 @@ The features outlined previously comprise the vast majority of the program, but 
 
 While we often take the ``undo'' and ``redo'' buttons for granted, they give us a powerful means of reverting unwanted changes. Furthermore, they allow the user to see what adjustments have been made to the fractal between movements, supporting verbal descriptions of how to arrive at fascinating points within the fractal.
 
-Using a linked list, where each node stores a \codeword{RenderConfig} object and a \codeword{Surface}, it is possible to implement a move history into the program. Whenever the user requests to change a setting or move the origin of the fractal, the current surface and render configuration are appended to the history before the changes are applied.
+Using a linked list, where each node stores a \codeword{RenderConfig} object and a \codeword{Surface}, it is possible to implement a move history into the program. Whenever the user requests to change a setting or move the origin of the fractal, the current surface and render configuration are appended to the history before the changes are applied. The algorithm to append to the linked list can be seen below.
 
 \begin{center}
 	\begin{tikzpicture}
@@ -331,9 +331,7 @@ Using a linked list, where each node stores a \codeword{RenderConfig} object and
 		
 		\node (assignStatement) [boxNode, below of = ifStatement, node distance = 100pt] {
 			$
-			\begin{aligned}
-				& \text{Assign } \codeword{node} \text{ to } \codeword{m_next}
-			\end{aligned}
+			\text{Assign } \codeword{node} \text{ to } \codeword{m_next}
 			$
 		};
 		
@@ -342,8 +340,41 @@ Using a linked list, where each node stores a \codeword{RenderConfig} object and
 		\draw (ifStatement) -- (ifPoint);
 		\draw [arrow] (ifPoint) -- (recurse);
 		\draw [arrow] (recurse) -- (appendFn);
-		\draw [arrow] (ifStatement) -- (assignStatement);
+		\draw [arrow] (ifStatement) -- node[anchor = east]{yes} (assignStatement);
 	\end{tikzpicture}
 \end{center}
 
+\vspace{2cm}
+
+The \codeword{MainWindow} class also stores a pointer to the current node in the history buffer. Using this, it is possible to detect whether there are changes before or after the current node by checking the validity of the \codeword{previous} and \codeword{next} pointers respectively.
+
+When the user makes a change, the current node is checked against the end of the history buffer. If there are no changes after the current state, the new state is appended directly to the end of the buffer. However, if changes exist, it is necessary to destroy the rest of the tree with the \codeword{killChildren} method before appending the new configuration. To undo moves, the current node is moved backwards down the list.
+
+To make these commands as intuitive as possible, the undo and redo commands are triggered by pressing \codeword{ctrl+z} and \codeword{ctrl+shift+z} respectively. These are very common commands and will be easy to remember.
+
+To show the user the current history, a small tab is rendered on the right side of the window. Each item in the history buffer is shown by drawing the saved surface, with the current item outlined to make it more obvious where in the history tree you are.
+
+Mouse events within this tab are also supported, such as scrolling and clicking on frames to select items in the history.
+
+Scrolling is implemented with a single offset which is increased or decreased as the mouse wheel is moved. The rate at which the window scrolls is defined by the \codeword{settings[``menus''][``history''][``scrollSpeed'']} value in the settings JSON file.
+
 \subsubsection{Improved Selection Area}
+
+To improve the user-interface, the zoom selection box should not zoom in immediately after being drawn. Once the box is specified, it should be possible to drag the box around to more precisely specify where the zoom will occur. Additionally, keyboard inputs (for example, the arrow keys) should move the selected region.
+
+To support dragging the box with the mouse, adding the mouse position delta between each frame to the current box's position maintains the mouse's location within the box and provides intuitive movement. The code below shows a simple implementation.
+
+\begin{lstlisting}[language=c++]
+void MainWindow::mouseDrag(ci::app::MouseEvent event) {
+	if (ImGui::GetIO().WantCaptureMouse) return;
+	
+	lrc::Vec2i delta = lrc::Vec2i(event.getPos()) - m_mousePos;
+	m_mousePos		 = event.getPos();
+	
+	if (m_moveZoomBox) {
+		m_zoomBoxStart += delta;
+		m_zoomBoxEnd += delta;
+	}
+}
+\end{lstlisting}
+

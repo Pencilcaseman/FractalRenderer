@@ -68,6 +68,42 @@ namespace frac {
 		m_historyNode = m_history.last();
 	}
 
+	std::vector<std::tuple<lrc::Vec2f, lrc::Vec2f, HistoryNode *>>
+	MainWindow::getHistoryFrameLocations() const {
+		std::vector<std::tuple<lrc::Vec2f, lrc::Vec2f, HistoryNode *>> ret;
+
+		const json &settings		  = m_renderer.settings();
+		const float historyFrameWidth = settings["menus"]["history"]["frameWidth"];
+		const float historyFrameSep	  = settings["menus"]["history"]["frameSep"];
+
+		const auto windowWidth	   = (float)getWindowWidth();
+		const RenderConfig &config = m_renderer.config();
+		size_t historySize		   = m_history.size();
+		HistoryNode *node		   = m_history.first();
+		int64_t index			   = 0;
+		int64_t totalHeight		   = 0;
+
+		while (node) {
+			float aspect = (float)config.imageSize.x() / (float)config.imageSize.y();
+			lrc::Vec2f renderSize(historyFrameWidth, historyFrameWidth / aspect);
+			lrc::Vec2f drawPos(windowWidth - historyFrameWidth - historyFrameSep,
+							   (renderSize.y() + historyFrameSep) *
+								   (float)(historySize - index - 1) +
+								 historyFrameSep);
+
+			totalHeight += (int64_t)(renderSize.y() + historyFrameSep);
+			drawPos.y(drawPos.y() + m_historyScrollTarget);
+
+			ret.emplace_back(std::tuple<lrc::Vec2f, lrc::Vec2f, HistoryNode *>(
+			  drawPos, renderSize, node));
+
+			node = node->next();
+			index++;
+		}
+
+		return ret;
+	}
+
 	void MainWindow::undoLastMove() {
 		FRAC_LOG("Attempting to Undo...");
 		// Ensure a previous configuration actually exists
@@ -327,45 +363,37 @@ namespace frac {
 		const auto windowWidth	   = (float)getWindowWidth();
 		const auto windowHeight	   = (float)getWindowHeight();
 		const RenderConfig &config = m_renderer.config();
-		size_t historySize		   = m_history.size();
-		HistoryNode *node		   = m_history.first();
-		int64_t index			   = 0;
-		int64_t totalHeight		   = 0;
+		const std::vector<std::tuple<lrc::Vec2f, lrc::Vec2f, HistoryNode *>> frames =
+		  getHistoryFrameLocations();
+
+		int64_t totalHeight = 0;
 
 		// Draw a bounding box for the frames to sit within
 		float boxLeft = windowWidth - historyFrameWidth - historyFrameSep * 2;
 		ci::gl::color(ci::ColorA(0.15, 0.15, 0.3, 1));
 		ci::gl::drawSolidRect(ci::Rectf(boxLeft, 0, windowWidth, windowHeight));
 
-		while (node) {
-			auto texture = ci::gl::Texture2d::create(node->surface());
-			float aspect = (float)config.imageSize.x() / (float)config.imageSize.y();
-			lrc::Vec2f renderSize(historyFrameWidth, historyFrameWidth / aspect);
-			lrc::Vec2f drawPos(windowWidth - historyFrameWidth - historyFrameSep,
-							   (renderSize.y() + historyFrameSep) *
-								   (float)(historySize - index - 1) +
-								 historyFrameSep);
+		for (const auto &frame : frames) {
+			const lrc::Vec2f framePos  = std::get<0>(frame);
+			const lrc::Vec2f frameSize = std::get<1>(frame);
+			const HistoryNode *node	   = std::get<2>(frame);
 
-			totalHeight += (int64_t)(renderSize.y() + historyFrameSep);
-			drawPos.y(drawPos.y() + m_historyScrollTarget);
+			auto texture = ci::gl::Texture2d::create(node->surface());
+			totalHeight += (int64_t)(frameSize.y() + historyFrameSep);
 
 			// Don't draw the frame if it's not visible on the screen
-			if (drawPos.y() > windowHeight || drawPos.y() + renderSize.y() < 0) goto skip;
+			if (framePos.y() > windowHeight || framePos.y() + frameSize.y() < 0) continue;
 
 			ci::gl::color(ci::ColorA(1, 1, 1, 1));
-			ci::gl::draw(texture, ci::Rectf(drawPos, drawPos + renderSize));
+			ci::gl::draw(texture, ci::Rectf(framePos, framePos + frameSize));
 			ci::gl::color(ci::ColorA(0, 0, 0, 1));
-			glu::drawStrokedRectangle(drawPos, drawPos + renderSize, 3);
+			glu::drawStrokedRectangle(framePos, framePos + frameSize, 3);
 
 			if (node == m_historyNode) {
 				// If this frame is selected, outline it gold
 				ci::gl::color(ci::ColorA(1, 1, 0, 1));
-				glu::drawStrokedRectangle(drawPos, drawPos + renderSize, 4);
+				glu::drawStrokedRectangle(framePos, framePos + frameSize, 4);
 			}
-
-		skip:
-			node = node->next();
-			index++;
 		}
 
 		if (windowHeight < (float)totalHeight) {
@@ -491,6 +519,34 @@ namespace frac {
 			} else {
 				m_drawingZoomBox = true;
 				m_showZoomBox	 = false;
+			}
+		}
+
+		// See if mouse is in the history buffer section
+		const json &settings		  = m_renderer.settings();
+		const float historyFrameWidth = settings["menus"]["history"]["frameWidth"];
+		const float historyFrameSep	  = settings["menus"]["history"]["frameSep"];
+		const std::vector<std::tuple<lrc::Vec2f, lrc::Vec2f, HistoryNode *>> frames =
+		  getHistoryFrameLocations();
+		const auto windowWidth	= (float)getWindowWidth();
+		const auto windowHeight = (float)getWindowHeight();
+		float boxLeft			= windowWidth - historyFrameWidth - historyFrameSep * 2;
+		if (m_mouseDownPos.x() > boxLeft && m_mouseDownPos.x() < windowWidth) {
+			// Iterate over frames to see if any contain the mouse
+			for (const auto &frame : frames) {
+				const lrc::Vec2i framePos  = std::get<0>(frame);
+				const lrc::Vec2i frameSize = std::get<1>(frame);
+				HistoryNode *node		   = std::get<2>(frame);
+
+				if (m_mouseDownPos.x() >= framePos.x() &&
+					m_mouseDownPos.x() < framePos.x() + frameSize.x() &&
+					m_mouseDownPos.y() >= framePos.y() &&
+					m_mouseDownPos.y() < framePos.y() + frameSize.y()) {
+					// Mouse was within this frame, so set it as current
+					m_historyNode		= node;
+					m_renderer.config() = node->config();
+					renderFractal(false); // Re-render the fractal
+				}
 			}
 		}
 	}
