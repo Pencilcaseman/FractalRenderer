@@ -22,6 +22,8 @@ namespace frac {
 
 		LIBRAPID_NODISCARD size_t supportedOptimisations() const override;
 
+		LIBRAPID_NODISCARD std::string name() const override;
+
 		LIBRAPID_NODISCARD
 		std::unordered_map<std::string, coloring::ColorFuncLow>
 		getLowPrecColoringAlgorithms() const override;

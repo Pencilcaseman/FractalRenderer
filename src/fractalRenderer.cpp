@@ -35,15 +35,6 @@ namespace frac {
 			  m_settings["renderConfig"]["draftRender"].get<bool>(),
 			  m_settings["renderConfig"]["draftInc"].get<int64_t>()};
 
-			/*
-			 lrc::Vec<HighPrecision, 2>(
-			   m_settings["renderConfig"]["fracTopLeft"]["Re"].get<float>(),
-			   m_settings["renderConfig"]["fracTopLeft"]["Im"].get<float>()),
-			 lrc::Vec<HighPrecision, 2>(
-			   m_settings["renderConfig"]["fracSize"]["Re"].get<float>(),
-			   m_settings["renderConfig"]["fracSize"]["Im"].get<float>()),
-			 */
-
 			for (const auto &fractal : m_settings["renderConfig"]["fractals"]) {
 				if (m_renderConfig.fracSize.x() == 0 ||
 					m_renderConfig.fracSize.y() == 0) {
@@ -439,6 +430,8 @@ namespace frac {
 
 	const RenderConfig &FractalRenderer::config() const { return m_renderConfig; }
 	RenderConfig &FractalRenderer::config() { return m_renderConfig; }
+
+	const std::string &FractalRenderer::paletteName() const { return m_paletteName; }
 
 	const std::vector<RenderBox> &FractalRenderer::renderBoxes() const {
 		return m_renderBoxes;

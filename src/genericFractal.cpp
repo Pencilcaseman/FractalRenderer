@@ -11,6 +11,8 @@ namespace frac {
 		return 0; // By default, assume no optimisations are valid
 	}
 
+	std::string Fractal::name() const { return "Generic Fractal"; }
+
 	ci::ColorA Fractal::getColorLow(const lrc::Complex<LowPrecision> &coord,
 									int64_t iters, const ColorPalette &palette,
 									const coloring::ColorFuncLow &colorFunc) const {

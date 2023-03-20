@@ -123,6 +123,8 @@ namespace frac {
 		/// \return Render configuration
 		LIBRAPID_NODISCARD RenderConfig &config();
 
+		LIBRAPID_NODISCARD const std::string &paletteName() const;
+
 		/// Constant getter method for the internal render box vector
 		/// \return Render box vector
 		LIBRAPID_NODISCARD const std::vector<RenderBox> &renderBoxes() const;

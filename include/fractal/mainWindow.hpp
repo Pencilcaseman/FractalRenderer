@@ -24,6 +24,8 @@ namespace frac {
 
 		void appendConfigToHistory();
 
+		void setFractalType(const std::string &name);
+
 		std::vector<std::tuple<lrc::Vec2f, lrc::Vec2f, HistoryNode *>>
 		getHistoryFrameLocations() const;
 
@@ -51,6 +53,22 @@ namespace frac {
 		/// Update the most recent history item with the current fractal configuration
 		/// and surface
 		void updateHistoryItem();
+
+		template<typename T>
+		LIBRAPID_NODISCARD lrc::Vec<T, 2>
+		screenToImageSpace(const lrc::Vec<T, 2> &coord) {
+			double scalingFactor =
+			  (double)m_renderer.config().imageSize.y() / (double)getWindowHeight();
+			return coord * scalingFactor;
+		}
+
+		template<typename T>
+		LIBRAPID_NODISCARD lrc::Vec<T, 2>
+		imageToScreenSpace(const lrc::Vec<T, 2> &coord) {
+			double scalingFactor =
+			  (double)getWindowHeight() / (double)m_renderer.config().imageSize.y();
+			return coord * scalingFactor;
+		}
 
 		/// Move the top left corner of the fractal and set a new size
 		/// \param topLeft Top-left corner (complex coordinate)

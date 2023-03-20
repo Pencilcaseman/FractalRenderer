@@ -21,6 +21,8 @@ namespace frac {
 		/// \return Unsigned 64-bit integer
 		LIBRAPID_NODISCARD virtual size_t supportedOptimisations() const;
 
+		LIBRAPID_NODISCARD virtual std::string name() const;
+
 		LIBRAPID_NODISCARD virtual std::unordered_map<std::string, coloring::ColorFuncLow>
 		getLowPrecColoringAlgorithms() const = 0;
 

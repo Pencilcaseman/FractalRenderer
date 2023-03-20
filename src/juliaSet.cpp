@@ -8,6 +8,8 @@ namespace frac {
 		return optimisations::OUTLINE_OPTIMISATION;
 	}
 
+	std::string JuliaSet::name() const { return "Julia Set"; }
+
 	std::unordered_map<std::string, coloring::ColorFuncLow>
 	JuliaSet::getLowPrecColoringAlgorithms() const {
 		return {{"Logarithmic Scaling",

@@ -20,6 +20,8 @@ namespace frac {
 
 		~NewtonFractal() override = default;
 
+		LIBRAPID_NODISCARD std::string name() const override;
+
 		size_t supportedOptimisations() const override;
 
 		LIBRAPID_NODISCARD

@@ -68,6 +68,27 @@ namespace frac {
 		m_historyNode = m_history.last();
 	}
 
+	void MainWindow::setFractalType(const std::string &name) {
+		std::shared_ptr<Fractal> newFracPtr;
+
+		if (name == "Mandelbrot") {
+			newFracPtr = std::make_shared<Mandelbrot>(m_renderer.config());
+		} else if (name == "Julia Set") {
+			newFracPtr = std::make_shared<JuliaSet>(m_renderer.config());
+		} else if (name == "Newton's Fractal") {
+			newFracPtr = std::make_shared<NewtonFractal>(m_renderer.config());
+		} else {
+			newFracPtr = std::make_shared<Mandelbrot>(m_renderer.config());
+		}
+
+		// If changing the fractal, clear the hisotry, since it is no longer
+		// valid
+		m_history.first()->killChildren();
+		m_historyNode = m_history.first();
+
+		m_renderer.updateFractalType(newFracPtr);
+	}
+
 	std::vector<std::tuple<lrc::Vec2f, lrc::Vec2f, HistoryNode *>>
 	MainWindow::getHistoryFrameLocations() const {
 		std::vector<std::tuple<lrc::Vec2f, lrc::Vec2f, HistoryNode *>> ret;
@@ -161,9 +182,8 @@ namespace frac {
 					break;
 			}
 
-			ci::ivec2 boxPos  = box.topLeft;
-			ci::ivec2 boxSize = box.dimensions;
-			boxPos.y += getWindowHeight() - config.imageSize.y();
+			ci::ivec2 boxPos  = imageToScreenSpace(box.topLeft);
+			ci::ivec2 boxSize = imageToScreenSpace(box.dimensions);
 			ci::gl::drawStrokedRect(ci::Rectf(boxPos, boxPos + boxSize), 1);
 		}
 	}
@@ -410,32 +430,7 @@ namespace frac {
 								 +getter,
 								 &fractalNames,
 								 fractalNames.size())) {
-					std::shared_ptr<Fractal> newFracPtr;
-					switch (currentFractalType) {
-						case 0: {
-							newFracPtr = std::make_shared<Mandelbrot>(config);
-							break;
-						}
-						case 1: {
-							newFracPtr = std::make_shared<JuliaSet>(config);
-							break;
-						}
-						case 2: {
-							newFracPtr = std::make_shared<NewtonFractal>(config);
-							break;
-						}
-						default: {
-							newFracPtr = std::make_shared<Mandelbrot>(config);
-							break;
-						}
-					}
-
-					// If changing the fractal, clear the hisotry, since it is no longer
-					// valid
-					m_history.first()->killChildren();
-					m_historyNode = m_history.first();
-
-					m_renderer.updateFractalType(newFracPtr);
+					setFractalType(fractalNames[currentFractalType]);
 					renderFractal();
 				}
 			}
@@ -451,6 +446,7 @@ namespace frac {
 								 +getter,
 								 &coloringFuncs,
 								 coloringFuncs.size())) {
+					stopRender();
 					m_renderer.setColorFunc(coloringFuncs[currentColoringFunc]);
 					renderFractal();
 				}
@@ -467,17 +463,32 @@ namespace frac {
 								 +getter,
 								 &paletteNames,
 								 paletteNames.size())) {
+					stopRender();
 					m_renderer.setPaletteName(paletteNames[currentPalette]);
 					renderFractal();
 				}
 			}
 
-			// -------------------- Reset Configuration --------------------
+			// -------------------- Reset Fractal --------------------
 			{
-				if (ImGui::Button("Reset Configuration")) {
-					m_renderer.config() =
-					  m_renderer.settings()["fractalConfig"]["fractals"]
-										   [m_renderer.getFractalName()];
+				if (ImGui::Button("Reset Fractal")) {
+					stopRender();
+					const std::string &fractalName = m_renderer.getFractalName();
+					const auto &fractalSettings =
+					  m_renderer.settings()["renderConfig"]["fractals"][fractalName];
+					float bail = fractalSettings["bail"];
+					HighVec2 topLeft, size;
+
+					topLeft.x(fractalSettings["fracTopLeft"]["Re"].get<double>());
+					topLeft.y(fractalSettings["fracTopLeft"]["Im"].get<double>());
+
+					size.x(fractalSettings["fracSize"]["Re"].get<double>());
+					size.y(fractalSettings["fracSize"]["Im"].get<double>());
+
+					config.bail		   = bail;
+					config.fracTopLeft = topLeft;
+					config.fracSize	   = size;
+					renderFractal();
 				}
 			}
 		}
@@ -551,16 +562,28 @@ namespace frac {
 
 		FRAC_LOG("Moving Fractal...");
 		FRAC_LOG(fmt::format("Pixel Coordinates: {} -> {}", pixTopLeft, pixBottomRight));
+
+		// Calculate image-space coordinates (allows for resizing the window)
+		// It is known that the image is drawn at (0, 0) and that the aspect ratio remains
+		// constant, so it is safe to multiply by a scaling factor. It is also known that
+		// the image is drawn to the full height of the window.
+
 		updateHistoryItem();
 
 		RenderConfig &config = m_renderer.config();
 		ci::Surface &surface = m_renderer.surface();
 
+		lrc::Vec2i imagePixTopLeft	   = screenToImageSpace(pixTopLeft);
+		lrc::Vec2i imagePixBottomRight = screenToImageSpace(pixBottomRight);
+
+		FRAC_LOG(fmt::format(
+		  "Image Coordinates: {} -> {}", imagePixTopLeft, imagePixBottomRight));
+
 		// Resize the fractal area
 		HighVec2 imageSize	= config.imageSize;
-		HighVec2 pixelDelta = pixBottomRight - pixTopLeft;
+		HighVec2 pixelDelta = imagePixBottomRight - imagePixTopLeft;
 
-		HighVec2 newFracPos = lrc::map(HighVec2(pixTopLeft),
+		HighVec2 newFracPos = lrc::map(HighVec2(imagePixTopLeft),
 									   HighVec2(0, 0),
 									   imageSize,
 									   config.fracTopLeft,
@@ -573,26 +596,19 @@ namespace frac {
 		// A temporary buffer is required here because, at some point, the loop
 		// would be writing to the same pixels it is reading from, resulting in
 		// strange visual glitches.
+
 		int64_t imgWidth  = config.imageSize.x();
 		int64_t imgHeight = config.imageSize.y();
 		int64_t index	  = 0;
 		std::vector<ci::ColorA> newPixels(imgWidth * imgHeight);
-		auto mouseStartInImageLow =
-		  pixTopLeft - lrc::Vec2i {0, getWindowHeight() - config.imageSize.y()};
 		for (int64_t y = 0; y < imgHeight; ++y) {
 			for (int64_t x = 0; x < imgWidth; ++x) {
-				int64_t pixX = lrc::map(x,
-										0.f,
-										imgWidth,
-										mouseStartInImageLow.x(),
-										mouseStartInImageLow.x() + (float)pixelDelta.x());
-				int64_t pixY = lrc::map(y,
-										0.f,
-										imgHeight,
-										mouseStartInImageLow.y(),
-										mouseStartInImageLow.y() + (float)pixelDelta.y());
-
-				newPixels[index++] = surface.getPixel({pixX, pixY});
+				lrc::Vec2i pixPos  = lrc::map(lrc::Vec2f(x, y),
+											  lrc::Vec2f(0, 0),
+											  lrc::Vec2f(imgWidth, imgHeight),
+											  lrc::Vec2f(imagePixTopLeft),
+											  lrc::Vec2f(imagePixBottomRight));
+				newPixels[index++] = surface.getPixel(pixPos);
 			}
 		}
 

@@ -16,6 +16,8 @@ namespace frac {
 		return optimisations::OUTLINE_OPTIMISATION;
 	}
 
+	std::string Mandelbrot::name() const { return "Mandelbrot"; }
+
 	std::unordered_map<std::string, coloring::ColorFuncLow>
 	Mandelbrot::getLowPrecColoringAlgorithms() const {
 		return {{"Logarithmic Scaling",

@@ -7,6 +7,8 @@ namespace frac {
 		return 0; // No optimisations supported (currently)
 	}
 
+	std::string NewtonFractal::name() const { return "Newton's Fractal"; }
+
 	std::unordered_map<std::string, coloring::ColorFuncLow>
 	NewtonFractal::getLowPrecColoringAlgorithms() const {
 		return {{"Fixed Iteration Palette",
