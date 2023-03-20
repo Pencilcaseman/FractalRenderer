@@ -105,6 +105,10 @@ namespace frac {
 		/// \return Statistics
 		LIBRAPID_NODISCARD RenderBoxTimeStats boxTimeStats() const;
 
+		LIBRAPID_NODISCARD std::string getFractalName() const {
+			return m_fractal->name();
+		}
+
 		LIBRAPID_NODISCARD std::vector<std::string> getColorFuncs() const;
 		void setColorFunc(const std::string &func);
 

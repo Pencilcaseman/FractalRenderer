@@ -3,7 +3,6 @@
 		"numThreads": 8,
 		"maxIters": 500,
 		"precision": 64,
-		"bail": 65536,
 		"antiAlias": 2,
 		"imageSize": {
 			"width": 800,
@@ -13,14 +12,20 @@
 			"width": 15,
 			"height": 15
 		},
-		"fracTopLeft": {
-			"Re": -2.2,
-			"Im": -1.4
-		},
-		"fracSize": {
-			"Re": 3.2,
-			"Im": 2.66666666666
-		},
+		"fractals": [
+			{
+				"name": "Mandelbrot",
+				"bail": 128.0,
+				"fracTopLeft": {
+					"Re": -2.5,
+					"Im": -1.53125
+				},
+				"fracSize": {
+					"Re": 3.5,
+					"Im": 3.0625
+				}
+			}
+		],
 		"colorPalettes": [
 			{
 				"name": "Bright",
@@ -413,6 +418,53 @@
 						"red": 0.84313725,
 						"green": 0.95294118,
 						"blue": 0.72941176,
+						"alpha": 1.0
+					}
+				]
+			},
+			{
+				"name": "Inferno",
+				"colors": [
+					{
+						"red": 0.76078431,
+						"green": 0.21176471,
+						"blue": 0.13725490,
+						"alpha": 1.0
+					},
+					{
+						"red": 0.87058824,
+						"green": 0.32156863,
+						"blue": 0.14901961,
+						"alpha": 1.0
+					},
+					{
+						"red": 0.96470588,
+						"green": 0.43137255,
+						"blue": 0.16470588,
+						"alpha": 1.0
+					},
+					{
+						"red": 0.94117647,
+						"green": 0.57254902,
+						"blue": 0.25490196,
+						"alpha": 1.0
+					},
+					{
+						"red": 0.87843137,
+						"green": 0.72549020,
+						"blue": 0.34901961,
+						"alpha": 1.0
+					},
+					{
+						"red": 0.81176471,
+						"green": 0.39607843,
+						"blue": 0.30196078,
+						"alpha": 1.0
+					},
+					{
+						"red": 0.62352941,
+						"green": 0.24313725,
+						"blue": 0.20000000,
 						"alpha": 1.0
 					}
 				]

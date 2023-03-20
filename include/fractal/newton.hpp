@@ -32,12 +32,28 @@ namespace frac {
 
 		template<typename T>
 		lrc::Complex<T> f(const lrc::Complex<T> &z) const {
-			return lrc::pow(z, 3) - 1;
+			// return lrc::pow(z, 3) - 1;
+
+			// a^3 + i 3 a^2 b - 3 a b^2 - i b^3 - 1
+			auto real  = z.real();
+			auto imag  = z.imag();
+			auto real2 = real * real;
+			auto imag2 = imag * imag;
+			return lrc::Complex<T>(1, 0) * real2 * real +
+				   lrc::Complex<T>(0, 3) * real2 * imag -
+				   lrc::Complex<T>(3, 0) * real * imag2 -
+				   lrc::Complex<T>(0, 1) * imag2 * imag - 1;
 		}
 
 		template<typename T>
 		lrc::Complex<T> df(const lrc::Complex<T> &z) const {
-			return 3 * lrc::pow(z, 2);
+			// return 3 * lrc::pow(z, 2);
+			// a^2 + i 2 a b - b^2
+			auto real = z.real();
+			auto imag = z.imag();
+			return lrc::Complex<T>(3, 0) * real * real +
+				   lrc::Complex<T>(0, 6) * real * imag -
+				   lrc::Complex<T>(3, 0) * imag * imag;
 		}
 
 		LIBRAPID_NODISCARD std::pair<int64_t, lrc::Complex<LowPrecision>>

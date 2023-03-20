@@ -50,20 +50,24 @@
 \contentsline {subsection}{\numberline {3.5}Fractal Base Class Implementation (\texttt {fractal.hpp})}{42}{subsection.3.5}%
 \contentsline {subsection}{\numberline {3.6}Fractal Renderer Definition (\texttt {fractalRenderer.hpp})}{43}{subsection.3.6}%
 \contentsline {subsection}{\numberline {3.7}Fractal Renderer Implementation (\texttt {fractalRenderer.cpp})}{47}{subsection.3.7}%
-\contentsline {subsection}{\numberline {3.8}Generic Fractal Definition (\texttt {genericFractal.hpp})}{59}{subsection.3.8}%
-\contentsline {subsection}{\numberline {3.9}Generic Fractal Implementation (\texttt {genericFractal.cpp})}{60}{subsection.3.9}%
-\contentsline {subsection}{\numberline {3.10}History Definition(\texttt {history.hpp})}{62}{subsection.3.10}%
-\contentsline {subsection}{\numberline {3.11}History Implementation (\texttt {history.cpp})}{65}{subsection.3.11}%
-\contentsline {subsection}{\numberline {3.12}Main Window Definition (\texttt {mainWindow.hpp})}{68}{subsection.3.12}%
-\contentsline {subsection}{\numberline {3.13}Main Window Implementation (\texttt {mainWindow.cpp})}{71}{subsection.3.13}%
-\contentsline {subsection}{\numberline {3.14}Mandelbrot Fractal Definition (\texttt {mandelbrot.hpp})}{91}{subsection.3.14}%
-\contentsline {subsection}{\numberline {3.15}Mandelbrot Fractal Implementation (\texttt {mandelbrot.cpp})}{92}{subsection.3.15}%
-\contentsline {subsection}{\numberline {3.16}OpenGL Utilities Definition (\texttt {openglUtils.hpp})}{97}{subsection.3.16}%
-\contentsline {subsection}{\numberline {3.17}OpenGL Utilities Implementation (\texttt {openglUtils.cpp})}{97}{subsection.3.17}%
-\contentsline {subsection}{\numberline {3.18}Render Configuration Definition (\texttt {renderConfig.hpp})}{99}{subsection.3.18}%
-\contentsline {subsection}{\numberline {3.19}Render Configuration Implementation (\texttt {renderConfig.cpp})}{100}{subsection.3.19}%
-\contentsline {subsection}{\numberline {3.20}Colouring Algorithm Definitions (\texttt {coloringAlgorithms.hpp})}{101}{subsection.3.20}%
-\contentsline {subsection}{\numberline {3.21}Colouring Algorithm Implementations \\ (\texttt {coloringAlgorithms.cpp})}{102}{subsection.3.21}%
-\contentsline {subsection}{\numberline {3.22}CMake File (\texttt {CMakeLists.txt})}{103}{subsection.3.22}%
-\contentsline {subsection}{\numberline {3.23}Main File (\texttt {main.cpp})}{103}{subsection.3.23}%
-\contentsline {subsection}{\numberline {3.24}Default Settings (\texttt {settings.json})}{104}{subsection.3.24}%
+\contentsline {subsection}{\numberline {3.8}Generic Fractal Definition (\texttt {genericFractal.hpp})}{60}{subsection.3.8}%
+\contentsline {subsection}{\numberline {3.9}Generic Fractal Implementation (\texttt {genericFractal.cpp})}{61}{subsection.3.9}%
+\contentsline {subsection}{\numberline {3.10}History Definition(\texttt {history.hpp})}{63}{subsection.3.10}%
+\contentsline {subsection}{\numberline {3.11}History Implementation (\texttt {history.cpp})}{66}{subsection.3.11}%
+\contentsline {subsection}{\numberline {3.12}Main Window Definition (\texttt {mainWindow.hpp})}{69}{subsection.3.12}%
+\contentsline {subsection}{\numberline {3.13}Main Window Implementation (\texttt {mainWindow.cpp})}{72}{subsection.3.13}%
+\contentsline {subsection}{\numberline {3.14}Mandelbrot Fractal Definition (\texttt {mandelbrot.hpp})}{93}{subsection.3.14}%
+\contentsline {subsection}{\numberline {3.15}Mandelbrot Fractal Implementation (\texttt {mandelbrot.cpp})}{94}{subsection.3.15}%
+\contentsline {subsection}{\numberline {3.16}Julia Set Definition (\texttt {juliaSet.hpp})}{99}{subsection.3.16}%
+\contentsline {subsection}{\numberline {3.17}Juila Set Implementation (\texttt {juliaSet.cpp})}{100}{subsection.3.17}%
+\contentsline {subsection}{\numberline {3.18}Newton's Fractal Definition (\texttt {newton.hpp})}{104}{subsection.3.18}%
+\contentsline {subsection}{\numberline {3.19}Newton's Fractal Implementation (\texttt {newton.cpp})}{105}{subsection.3.19}%
+\contentsline {subsection}{\numberline {3.20}OpenGL Utilities Definition (\texttt {openglUtils.hpp})}{108}{subsection.3.20}%
+\contentsline {subsection}{\numberline {3.21}OpenGL Utilities Implementation (\texttt {openglUtils.cpp})}{108}{subsection.3.21}%
+\contentsline {subsection}{\numberline {3.22}Render Configuration Definition (\texttt {renderConfig.hpp})}{110}{subsection.3.22}%
+\contentsline {subsection}{\numberline {3.23}Render Configuration Implementation (\texttt {renderConfig.cpp})}{111}{subsection.3.23}%
+\contentsline {subsection}{\numberline {3.24}Colouring Algorithm Definitions (\texttt {coloringAlgorithms.hpp})}{112}{subsection.3.24}%
+\contentsline {subsection}{\numberline {3.25}Colouring Algorithm Implementations \\ (\texttt {coloringAlgorithms.cpp})}{113}{subsection.3.25}%
+\contentsline {subsection}{\numberline {3.26}CMake File (\texttt {CMakeLists.txt})}{114}{subsection.3.26}%
+\contentsline {subsection}{\numberline {3.27}Main File (\texttt {main.cpp})}{114}{subsection.3.27}%
+\contentsline {subsection}{\numberline {3.28}Default Settings (\texttt {settings.json})}{115}{subsection.3.28}%

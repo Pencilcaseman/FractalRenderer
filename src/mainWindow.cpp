@@ -399,8 +399,9 @@ namespace frac {
 			{
 				static int currentFractalType		  = 0;
 				std::vector<std::string> fractalNames = {
-				  "Mandelbrot", // 0
-				  "Newton"		// 1
+				  "Mandelbrot",		 // 0
+				  "Julia Set",		 // 1
+				  "Newton's Fractal" // 2
 				};
 
 				ImGui::PushItemWidth(labelledItemWidth);
@@ -416,6 +417,10 @@ namespace frac {
 							break;
 						}
 						case 1: {
+							newFracPtr = std::make_shared<JuliaSet>(config);
+							break;
+						}
+						case 2: {
 							newFracPtr = std::make_shared<NewtonFractal>(config);
 							break;
 						}
@@ -424,6 +429,12 @@ namespace frac {
 							break;
 						}
 					}
+
+					// If changing the fractal, clear the hisotry, since it is no longer
+					// valid
+					m_history.first()->killChildren();
+					m_historyNode = m_history.first();
+
 					m_renderer.updateFractalType(newFracPtr);
 					renderFractal();
 				}
@@ -458,6 +469,15 @@ namespace frac {
 								 paletteNames.size())) {
 					m_renderer.setPaletteName(paletteNames[currentPalette]);
 					renderFractal();
+				}
+			}
+
+			// -------------------- Reset Configuration --------------------
+			{
+				if (ImGui::Button("Reset Configuration")) {
+					m_renderer.config() =
+					  m_renderer.settings()["fractalConfig"]["fractals"]
+										   [m_renderer.getFractalName()];
 				}
 			}
 		}

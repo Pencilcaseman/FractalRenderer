@@ -24,13 +24,14 @@ namespace frac::coloring {
 										  int64_t iters, const ColorPalette &palette) {
 		using Col = ColorPalette::ColorType;
 
-		float logZN =
-		  lrc::log(lrc::abs(lrc::Complex<float>(coord.real(), coord.imag()))) / 2;
-		float nu		= lrc::log(logZN / lrc::LN2) / lrc::LN2;
-		float iteration = static_cast<float>(iters) + 1 - nu;
-		Col color1		= palette[static_cast<size_t>(iteration) % palette.size()];
-		Col color2		= palette[(static_cast<size_t>(iteration) + 1) % palette.size()];
-		Col merged		= ColorPalette::merge(color1, color2, lrc::mod(iteration, 1.0f));
+		float escapeTime = (float)coord.real() * (float)coord.real() +
+							(float)coord.imag() * (float)coord.imag();
+		float smoothValue = iters + 1 - log2(log2(escapeTime));
+
+		float s1 = smoothValue + 4;
+		Col color1 = palette[static_cast<size_t>(s1) % palette.size()];
+		Col color2 = palette[(static_cast<size_t>(s1) + 1) % palette.size()];
+		Col merged = ColorPalette::merge(color1, color2, lrc::mod(s1, 1.0f));
 		return {merged.x(), merged.y(), merged.z(), 1};
 	}
 
@@ -47,6 +48,4 @@ namespace frac::coloring {
 		auto col = palette[iters % palette.size()];
 		return {col.x(), col.y(), col.z(), 1};
 	}
-
-
 } // namespace frac::coloring

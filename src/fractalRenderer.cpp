@@ -16,7 +16,7 @@ namespace frac {
 			  m_settings["renderConfig"]["numThreads"].get<int64_t>(),
 			  m_settings["renderConfig"]["maxIters"].get<int64_t>(),
 			  m_settings["renderConfig"]["precision"].get<int64_t>(),
-			  m_settings["renderConfig"]["bail"].get<LowPrecision>(),
+			  0, // Bailout value -- Defaults set below. Can be reset from the GUI
 			  m_settings["renderConfig"]["antiAlias"].get<int>(),
 
 			  lrc::Vec2i(
@@ -25,18 +25,41 @@ namespace frac {
 			  lrc::Vec2i(m_settings["renderConfig"]["boxSize"]["width"].get<int64_t>(),
 						 m_settings["renderConfig"]["boxSize"]["height"].get<int64_t>()),
 
-			  lrc::Vec<HighPrecision, 2>(
-				m_settings["renderConfig"]["fracTopLeft"]["Re"].get<float>(),
-				m_settings["renderConfig"]["fracTopLeft"]["Im"].get<float>()),
-			  lrc::Vec<HighPrecision, 2>(
-				m_settings["renderConfig"]["fracSize"]["Re"].get<float>(),
-				m_settings["renderConfig"]["fracSize"]["Im"].get<float>()),
+			  {0, 0}, // Null coordinates and dimensions -- Defaults are set below and
+			  {0, 0}, // can be reset from the GUI
+
 			  lrc::Vec<HighPrecision, 2>(0, 0),
 
 			  {}, // Default for now -- colors added later
 
 			  m_settings["renderConfig"]["draftRender"].get<bool>(),
 			  m_settings["renderConfig"]["draftInc"].get<int64_t>()};
+
+			/*
+			 lrc::Vec<HighPrecision, 2>(
+			   m_settings["renderConfig"]["fracTopLeft"]["Re"].get<float>(),
+			   m_settings["renderConfig"]["fracTopLeft"]["Im"].get<float>()),
+			 lrc::Vec<HighPrecision, 2>(
+			   m_settings["renderConfig"]["fracSize"]["Re"].get<float>(),
+			   m_settings["renderConfig"]["fracSize"]["Im"].get<float>()),
+			 */
+
+			for (const auto &fractal : m_settings["renderConfig"]["fractals"]) {
+				if (m_renderConfig.fracSize.x() == 0 ||
+					m_renderConfig.fracSize.y() == 0) {
+					// Configure the default fractal to be the first one in the list
+
+					m_renderConfig.bail = fractal["bail"].get<float>();
+
+					m_renderConfig.fracTopLeft = lrc::Vec<HighPrecision, 2>(
+					  fractal["fracTopLeft"]["Re"].get<float>(),
+					  fractal["fracTopLeft"]["Im"].get<float>());
+
+					m_renderConfig.fracSize =
+					  lrc::Vec<HighPrecision, 2>(fractal["fracSize"]["Re"].get<float>(),
+												 fractal["fracSize"]["Im"].get<float>());
+				}
+			}
 
 			m_renderConfig.originalFracSize = m_renderConfig.fracSize;
 
@@ -63,8 +86,8 @@ namespace frac {
 			  m_fractal->getHighPrecColoringAlgorithms()["Logarithmic Scaling"];
 
 			// m_fractal = std::make_unique<NewtonFractal>(m_renderConfig);
-			// m_colorFuncLow = m_fractal->getLowPrecColoringAlgorithms()["Fixed Iteration
-			// Palette"]; m_colorFuncHigh =
+			// m_colorFuncLow = m_fractal->getLowPrecColoringAlgorithms()["Fixed
+			// Iteration Palette"]; m_colorFuncHigh =
 			// m_fractal->getHighPrecColoringAlgorithms()["Fixed Iteration Palette"];
 		} catch (std::exception &e) {
 			FRAC_LOG(fmt::format("Failed to load settings: {}", e.what()));
@@ -393,9 +416,7 @@ namespace frac {
 	std::vector<std::string> FractalRenderer::getColorFuncs() const {
 		const auto &colorFuncs = m_fractal->getLowPrecColoringAlgorithms();
 		std::vector<std::string> ret;
-		for (const auto &[name, palette] : colorFuncs) {
-			ret.push_back(name);
-		}
+		for (const auto &[name, palette] : colorFuncs) { ret.push_back(name); }
 		return ret;
 	}
 
