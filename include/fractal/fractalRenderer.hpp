@@ -93,6 +93,8 @@ namespace frac {
 		/// Update the render configuration of the internal fractal pointer
 		void updateRenderConfig();
 
+		void updateFractalType(const std::shared_ptr<Fractal> &fractal);
+
 		/// Ensure all values are using the highest precision possible
 		void updateConfigPrecision();
 
@@ -102,6 +104,12 @@ namespace frac {
 		/// Getter method for the render box time statistics
 		/// \return Statistics
 		LIBRAPID_NODISCARD RenderBoxTimeStats boxTimeStats() const;
+
+		LIBRAPID_NODISCARD std::vector<std::string> getColorFuncs() const;
+		void setColorFunc(const std::string &func);
+
+		LIBRAPID_NODISCARD std::vector<std::string> getPaletteNames() const;
+		void setPaletteName(const std::string &palette);
 
 		/// Constant getter method for the render configuration
 		/// \return Render configuration
@@ -139,8 +147,13 @@ namespace frac {
 		RenderConfig m_renderConfig;		// The settings for the fractal renderer
 		ci::Surface m_fractalSurface;		// The surface that the fractal is rendered to
 		json m_settings;					// The settings for the fractal
-		std::unique_ptr<Fractal> m_fractal; // The fractal to render
+		std::shared_ptr<Fractal> m_fractal; // The fractal to render
 		ThreadPool m_threadPool;			// Pool for render threads
+
+		// Colouring functions for the fractal
+		coloring::ColorFuncLow m_colorFuncLow;
+		coloring::ColorFuncHigh m_colorFuncHigh;
+		std::string m_paletteName;
 
 		std::vector<RenderBox> m_renderBoxes; // The state of each render box
 

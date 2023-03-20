@@ -252,6 +252,40 @@ The \codeword{loadConfiguration} method also enables the configuration to be cha
 
 The fractal renderer is responsible for creating an image buffer and setting the colour of each pixel in that image to represent the fractal at that location. Doing this efficiently is difficult, so the process is split into many small functions, providing fine-grained control over the algorithm.
 
+\vspace{0.5cm}
+\noindent
+The following flowchart outlines the \codeword{renderFractal} method, which is explained in more detail below.
+\vspace{0.5cm}
+
+\begin{center}
+	\begin{tikzpicture}[
+		block/.style={rectangle, draw, text width=3.5cm, align=center, rounded corners},
+		arrow/.style={->, >=stealth},
+		node distance=0.75cm and 1cm
+		]
+		
+		\node[block] (check) {Check if render already in progress};
+		\node[block, below=of check] (halt) {Halt and wait for tasks to finish};
+		\node[block, below=of halt] (log) {Write information to Log file};
+		\node[block, below=of log] (reset) {Reset thread pool and clear render boxes};
+		\node[block, below=of reset] (config) {Configure render parameters};
+		\node[block, below=of config] (iterate) {Iterate over all boxes};
+		\node[block, right=1cm of iterate] (createBox) {Create RenderBox};
+		\node[block, right=1cm of createBox] (pushTask) {Push task to thread pool};
+		\node[block, below=of iterate] (complete) {Render successfully started};
+		
+		\draw[arrow] (check) -- (halt);
+		\draw[arrow] (halt) -- (log);
+		\draw[arrow] (log) -- (reset);
+		\draw[arrow] (reset) -- (config);
+		\draw[arrow] (config) -- (iterate);
+		\draw[arrow] (iterate) to [bend right] (createBox);
+		\draw[arrow] (createBox) to [bend right] (pushTask);
+		\draw[arrow] (pushTask) to [bend right] (iterate);
+		\draw[arrow] (iterate) -- (complete);
+	\end{tikzpicture}
+\end{center}
+
 Upon requesting the renderer to re-render the image, any existing render threads are halted, dependent image settings are recalculated, and the render-box queue is cleared.
 
 Next, the render boxes are recalculated and pushed back to the render queue. Each box is dequeued by a thread in a thread pool and runs in parallel.
@@ -259,6 +293,8 @@ Next, the render boxes are recalculated and pushed back to the render queue. Eac
 To optimise the rendering of each box, we can use the fact that if an outline can be drawn where every point is in the set, every point contained within that outline must also be within the set. Outlining each box before calculating the inner area makes it possible to check whether all points were in the set. If they were, we can quickly fill the rest of the box without calculating the colour of each pixel.
 
 To calculate the colour of each pixel, we first call the \codeword{iterCoord} method of the fractal pointer stored to get the number of iterations required to exceed the bailout value (if it is exceeded at all), as well as the first point at which this occurs. This information is then passed to the fractal's colouring algorithm to generate a colour for the pixel. If anti-aliasing is enabled, this process is repeated for multiple points within the pixel, and the resulting colours are averaged. Anti-aliasing produces smoother images that appear to be higher resolution, allowing for faster render times with high-quality results.
+
+\vspace{0.5cm}
 
 The fractal renderer class also implements routines to change the fractal-space coordinates to render. This is used to move the fractal when zooming in or out. For different use cases, there are methods to set the top left coordinate or the image's centre.
 
@@ -283,7 +319,7 @@ When the application is requested to close, the \codeword{cleanup} routine is ca
 
 The window also has a variety of callback functions which are called when specific triggers occur. For example, functions are called every time the mouse is moved, dragged or pressed.
 
-\subsection{Supporting Multiple Fractals}
+\subsection{Supporting Multiple Fractals and Colouring Algorithms}
 
 Adding support for more fractal types and colouring algorithms is quite complicated, and requires a significant rewrite of the current program. The reasons for this are non-trivial but, in essence, it's mainly due to the iterative equations and colouring algorithms required for each fractal type. For example, the Mandelbrot set can be optimised in ways that Newton's fractal cannot, and is generally coloured with completely different methods.
 
@@ -311,7 +347,9 @@ const bool supportsOutlining =
 
 \subsubsection{Enabling Custom Colouring Algorithms}
 
-Using the previous example of Newton's fractal and the Mandelbrot set, it is clear that the algorithms used to colour them are very different. 
+Using the previous example of Newton's fractal and the Mandelbrot set, it is clear that the algorithms used to colour them are very different. Unfortunately, this means that the class structure outlined previously will not work. Instead of the \codeword{Fractal} class implementing colouring algorithms, they will instead implement a method which returns a dictionary of valid algorithms for each fractal. They key will be the name of the algorithm, and the key will be a function pointer or lambda. This way, it is easy to create an ImGui window to change the algorithm at runtime.
+
+
 
 \subsection{Additional Features}
 
@@ -393,7 +431,7 @@ To show the user the current history, a small tab is rendered on the right side 
 
 Mouse events within this tab are also supported, such as scrolling and clicking on frames to select items in the history.
 
-Scrolling is implemented with a single offset which is increased or decreased as the mouse wheel is moved. The rate at which the window scrolls is defined by the \codeword{settings[``menus''][``history''][``scrollSpeed'']} value in the settings JSON file.
+Scrolling is implemented with a single offset which is increased or decreased as the mouse wheel is moved. The rate at which the window scrolls is defined by the \codeword{settings[`menus'][`history'][`scrollSpeed']} value in the settings JSON file.
 
 \subsubsection{Improved Selection Area}
 

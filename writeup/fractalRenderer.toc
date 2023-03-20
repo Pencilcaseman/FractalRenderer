@@ -35,32 +35,35 @@
 \contentsline {subsubsection}{\numberline {2.6.1}Configuration, Getters, Setters and Statistics}{22}{subsubsection.2.6.1}%
 \contentsline {subsubsection}{\numberline {2.6.2}Constructors and Configurations}{24}{subsubsection.2.6.2}%
 \contentsline {subsubsection}{\numberline {2.6.3}Rendering Algorithms}{25}{subsubsection.2.6.3}%
-\contentsline {subsection}{\numberline {2.7}The Main Window}{27}{subsection.2.7}%
-\contentsline {subsection}{\numberline {2.8}Supporting Multiple Fractals}{28}{subsection.2.8}%
-\contentsline {subsubsection}{\numberline {2.8.1}Altering the Main Rendering Loop}{28}{subsubsection.2.8.1}%
-\contentsline {subsubsection}{\numberline {2.8.2}Enabling Custom Colouring Algorithms}{29}{subsubsection.2.8.2}%
-\contentsline {subsection}{\numberline {2.9}Additional Features}{29}{subsection.2.9}%
-\contentsline {subsubsection}{\numberline {2.9.1}Movement History}{29}{subsubsection.2.9.1}%
-\contentsline {subsubsection}{\numberline {2.9.2}Improved Selection Area}{31}{subsubsection.2.9.2}%
-\contentsline {section}{\numberline {3}Technical Solution}{33}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Color Palette (\texttt {colorPalette.hpp})}{33}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Color Palette (\texttt {colorPalette.cpp})}{34}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Debug Logger (\texttt {debug.hpp})}{35}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}Debug Logger (\texttt {debug.cpp})}{36}{subsection.3.4}%
-\contentsline {subsection}{\numberline {3.5}Fractal Base Class Implementation (\texttt {fractal.hpp})}{39}{subsection.3.5}%
-\contentsline {subsection}{\numberline {3.6}Fractal Renderer Definition (\texttt {fractalRenderer.hpp})}{40}{subsection.3.6}%
-\contentsline {subsection}{\numberline {3.7}Fractal Renderer Implementation (\texttt {fractalRenderer.cpp})}{43}{subsection.3.7}%
-\contentsline {subsection}{\numberline {3.8}Generic Fractal Definition (\texttt {genericFractal.hpp})}{54}{subsection.3.8}%
-\contentsline {subsection}{\numberline {3.9}Generic Fractal Implementation (\texttt {genericFractal.cpp})}{55}{subsection.3.9}%
-\contentsline {subsection}{\numberline {3.10}History Definition(\texttt {history.hpp})}{58}{subsection.3.10}%
-\contentsline {subsection}{\numberline {3.11}History Implementation (\texttt {history.cpp})}{61}{subsection.3.11}%
-\contentsline {subsection}{\numberline {3.12}Main Window Definition (\texttt {mainWindow.hpp})}{64}{subsection.3.12}%
-\contentsline {subsection}{\numberline {3.13}Main Window Implementation (\texttt {mainWindow.cpp})}{67}{subsection.3.13}%
-\contentsline {subsection}{\numberline {3.14}Mandelbrot Fractal Definition (\texttt {mandelbrot.hpp})}{85}{subsection.3.14}%
-\contentsline {subsection}{\numberline {3.15}Mandelbrot Fractal Implementation (\texttt {mandelbrot.cpp})}{85}{subsection.3.15}%
-\contentsline {subsection}{\numberline {3.16}OpenGL Utilities Definition (\texttt {openglUtils.hpp})}{88}{subsection.3.16}%
-\contentsline {subsection}{\numberline {3.17}OpenGL Utilities Implementation (\texttt {openglUtils.cpp})}{88}{subsection.3.17}%
-\contentsline {subsection}{\numberline {3.18}Render Configuration Definition (\texttt {renderConfig.hpp})}{90}{subsection.3.18}%
-\contentsline {subsection}{\numberline {3.19}Render Configuration Implementation (\texttt {renderConfig.cpp})}{91}{subsection.3.19}%
-\contentsline {subsection}{\numberline {3.20}CMake File (\texttt {CMakeLists.txt})}{92}{subsection.3.20}%
-\contentsline {subsection}{\numberline {3.21}Main File (\texttt {main.cpp})}{92}{subsection.3.21}%
+\contentsline {subsection}{\numberline {2.7}The Main Window}{28}{subsection.2.7}%
+\contentsline {subsection}{\numberline {2.8}Supporting Multiple Fractals and Colouring Algorithms}{30}{subsection.2.8}%
+\contentsline {subsubsection}{\numberline {2.8.1}Altering the Main Rendering Loop}{30}{subsubsection.2.8.1}%
+\contentsline {subsubsection}{\numberline {2.8.2}Enabling Custom Colouring Algorithms}{31}{subsubsection.2.8.2}%
+\contentsline {subsection}{\numberline {2.9}Additional Features}{31}{subsection.2.9}%
+\contentsline {subsubsection}{\numberline {2.9.1}Movement History}{32}{subsubsection.2.9.1}%
+\contentsline {subsubsection}{\numberline {2.9.2}Improved Selection Area}{34}{subsubsection.2.9.2}%
+\contentsline {section}{\numberline {3}Technical Solution}{36}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Color Palette (\texttt {colorPalette.hpp})}{36}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Color Palette (\texttt {colorPalette.cpp})}{37}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Debug Logger (\texttt {debug.hpp})}{38}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Debug Logger (\texttt {debug.cpp})}{39}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Fractal Base Class Implementation (\texttt {fractal.hpp})}{42}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Fractal Renderer Definition (\texttt {fractalRenderer.hpp})}{43}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}Fractal Renderer Implementation (\texttt {fractalRenderer.cpp})}{47}{subsection.3.7}%
+\contentsline {subsection}{\numberline {3.8}Generic Fractal Definition (\texttt {genericFractal.hpp})}{59}{subsection.3.8}%
+\contentsline {subsection}{\numberline {3.9}Generic Fractal Implementation (\texttt {genericFractal.cpp})}{60}{subsection.3.9}%
+\contentsline {subsection}{\numberline {3.10}History Definition(\texttt {history.hpp})}{62}{subsection.3.10}%
+\contentsline {subsection}{\numberline {3.11}History Implementation (\texttt {history.cpp})}{65}{subsection.3.11}%
+\contentsline {subsection}{\numberline {3.12}Main Window Definition (\texttt {mainWindow.hpp})}{68}{subsection.3.12}%
+\contentsline {subsection}{\numberline {3.13}Main Window Implementation (\texttt {mainWindow.cpp})}{71}{subsection.3.13}%
+\contentsline {subsection}{\numberline {3.14}Mandelbrot Fractal Definition (\texttt {mandelbrot.hpp})}{91}{subsection.3.14}%
+\contentsline {subsection}{\numberline {3.15}Mandelbrot Fractal Implementation (\texttt {mandelbrot.cpp})}{92}{subsection.3.15}%
+\contentsline {subsection}{\numberline {3.16}OpenGL Utilities Definition (\texttt {openglUtils.hpp})}{97}{subsection.3.16}%
+\contentsline {subsection}{\numberline {3.17}OpenGL Utilities Implementation (\texttt {openglUtils.cpp})}{97}{subsection.3.17}%
+\contentsline {subsection}{\numberline {3.18}Render Configuration Definition (\texttt {renderConfig.hpp})}{99}{subsection.3.18}%
+\contentsline {subsection}{\numberline {3.19}Render Configuration Implementation (\texttt {renderConfig.cpp})}{100}{subsection.3.19}%
+\contentsline {subsection}{\numberline {3.20}Colouring Algorithm Definitions (\texttt {coloringAlgorithms.hpp})}{101}{subsection.3.20}%
+\contentsline {subsection}{\numberline {3.21}Colouring Algorithm Implementations \\ (\texttt {coloringAlgorithms.cpp})}{102}{subsection.3.21}%
+\contentsline {subsection}{\numberline {3.22}CMake File (\texttt {CMakeLists.txt})}{103}{subsection.3.22}%
+\contentsline {subsection}{\numberline {3.23}Main File (\texttt {main.cpp})}{103}{subsection.3.23}%
+\contentsline {subsection}{\numberline {3.24}Default Settings (\texttt {settings.json})}{104}{subsection.3.24}%

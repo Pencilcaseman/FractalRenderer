@@ -16,6 +16,62 @@ namespace frac {
 		return optimisations::OUTLINE_OPTIMISATION;
 	}
 
+	std::unordered_map<std::string, coloring::ColorFuncLow>
+	Mandelbrot::getLowPrecColoringAlgorithms() const {
+		return {{"Logarithmic Scaling",
+				 std::function([](const lrc::Complex<LowPrecision> &coord,
+								  int64_t iters,
+								  const ColorPalette &palette) -> ci::ColorA {
+					 return coloring::logarithmicScaling(coord, iters, palette);
+				 })},
+				{"Paletted Logarithmic Scaling",
+				 std::function([](const lrc::Complex<LowPrecision> &coord,
+								  int64_t iters,
+								  const ColorPalette &palette) -> ci::ColorA {
+					 return coloring::palettedLogarithmicScaling(coord, iters, palette);
+				 })},
+				{"Stepped Gradients",
+				 std::function([](const lrc::Complex<LowPrecision> &coord,
+								  int64_t iters,
+								  const ColorPalette &palette) -> ci::ColorA {
+					 return coloring::steppedGradients(coord, iters, palette);
+				 })},
+				{"Fixed Iteration Palette",
+				 std::function([](const lrc::Complex<LowPrecision> &coord,
+								  int64_t iters,
+								  const ColorPalette &palette) -> ci::ColorA {
+					 return coloring::fixedIterPalette(coord, iters, palette);
+				 })}};
+	}
+
+	std::unordered_map<std::string, coloring::ColorFuncHigh>
+	Mandelbrot::getHighPrecColoringAlgorithms() const {
+		return {{"Logarithmic Scaling",
+				 std::function([](const lrc::Complex<HighPrecision> &coord,
+								  int64_t iters,
+								  const ColorPalette &palette) -> ci::ColorA {
+					 return coloring::fixedIterPalette(coord, iters, palette);
+				 })},
+				{"Paletted Logarithmic Scaling",
+				 std::function([](const lrc::Complex<HighPrecision> &coord,
+								  int64_t iters,
+								  const ColorPalette &palette) -> ci::ColorA {
+					 return coloring::palettedLogarithmicScaling(coord, iters, palette);
+				 })},
+				{"Stepped Gradients",
+				 std::function([](const lrc::Complex<HighPrecision> &coord,
+								  int64_t iters,
+								  const ColorPalette &palette) -> ci::ColorA {
+					 return coloring::steppedGradients(coord, iters, palette);
+				 })},
+				{"Fixed Iteration Palette",
+				 std::function([](const lrc::Complex<HighPrecision> &coord,
+								  int64_t iters,
+								  const ColorPalette &palette) -> ci::ColorA {
+					 return coloring::fixedIterPalette(coord, iters, palette);
+				 })}};
+	}
+
 	std::pair<int64_t, lrc::Complex<LowPrecision>>
 	Mandelbrot::iterCoordLow(const lrc::Complex<LowPrecision> &coord) const {
 		LowPrecision re_0 = lrc::real(coord); // Real component (initial)
@@ -35,14 +91,6 @@ namespace frac {
 		}
 
 		return {iteration, lrc::Complex<LowPrecision>(re, im)};
-
-		// lrc::Complex<LowPrecision> tempVarThing = coord;
-		// while (lrc::abs(tempVarThing) <= bailout && iteration < Fractal::m_renderConfig.maxIters) {
-		// 	tempVarThing = lrc::pow(tempVarThing, LowPrecision(4)) + coord;
-		// 	++iteration;
-		// }
-
-		// return {iteration, tempVarThing};
 	}
 
 	std::pair<int64_t, lrc::Complex<HighPrecision>>
@@ -56,7 +104,8 @@ namespace frac {
 		// Bail when larger than this
 		double bailout = 1 << 16;
 
-		while (re * re + im * im <= bailout && iteration < Fractal::m_renderConfig.maxIters) {
+		while (re * re + im * im <= bailout &&
+			   iteration < Fractal::m_renderConfig.maxIters) {
 			tmp = re * re - im * im + re_0;
 			im	= 2 * re * im + im_0;
 			re	= tmp;
@@ -64,5 +113,24 @@ namespace frac {
 		}
 
 		return {iteration, lrc::Complex<HighPrecision>(re, im)};
+	}
+
+	ci::ColorA Mandelbrot::getColorLow(
+	  const lrc::Complex<LowPrecision> &coord, int64_t iters, const ColorPalette &palette,
+	  const std::function<ci::ColorA(const lrc::Complex<LowPrecision> &, int64_t,
+									 const ColorPalette &)> &colorFunc) const {
+		if (coord.real() * coord.real() + coord.imag() * coord.imag() < 4)
+			return {0, 0, 0, 1};
+		return colorFunc(coord, iters, palette);
+	}
+
+	ci::ColorA Mandelbrot::getColorHigh(
+	  const lrc::Complex<HighPrecision> &coord, int64_t iters,
+	  const ColorPalette &palette,
+	  const std::function<ci::ColorA(const lrc::Complex<HighPrecision> &, int64_t,
+									 const ColorPalette &)> &colorFunc) const {
+		if (coord.real() * coord.real() + coord.imag() * coord.imag() < 4)
+			return {0, 0, 0, 1};
+		return colorFunc(coord, iters, palette);
 	}
 } // namespace frac

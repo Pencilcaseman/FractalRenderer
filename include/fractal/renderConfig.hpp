@@ -43,7 +43,7 @@ namespace frac {
 		lrc::Vec<HighPrecision, 2> fracSize; // The width and height of the fractal space
 		lrc::Vec<HighPrecision, 2> originalFracSize; // Original size
 
-		ColorPalette palette; // The palette to use for rendering the fractal
+		std::unordered_map<std::string, ColorPalette> palettes; // Colour palettes
 
 		bool draftRender; // Whether to render the fractal in draft mode
 		int64_t draftInc; // Increment for draft rendering

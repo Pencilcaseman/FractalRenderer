@@ -191,7 +191,7 @@ namespace frac {
 
 	void MainWindow::drawImGui() {
 		// Ensure there is space for the labels in the ImGui windows
-		constexpr int64_t labelledItemWidth = -120;
+		constexpr int64_t labelledItemWidth = -150;
 
 		RenderConfig &config = m_renderer.config();
 		const json &settings = m_renderer.settings();
@@ -376,6 +376,90 @@ namespace frac {
 						fmt::format("{:.3f}", stats.average).c_str());
 			ImGui::Text("Estimated Time Remaining: %s",
 						lrc::formatTime(stats.remainingTime).c_str());
+		}
+		ImGui::End();
+
+		json fractalMenu = settings["menus"]["fractalSettings"];
+		ImGui::SetNextWindowPos({(float)fractalMenu["posX"], (float)fractalMenu["posY"]},
+								ImGuiCond_Once);
+		ImGui::SetNextWindowSize(
+		  {(float)fractalMenu["width"], (float)fractalMenu["height"]}, ImGuiCond_Once);
+
+		ImGui::Begin("Fractal Settings");
+		{
+			// Helper function for ImGui::Combo
+			static auto getter = [](void *vec, int idx, const char **out_text) {
+				auto &vector = *static_cast<std::vector<std::string> *>(vec);
+				if (idx < 0 || idx >= static_cast<int>(vector.size())) { return false; }
+				*out_text = vector.at(idx).c_str();
+				return true;
+			};
+
+			// -------------------- Fractal Type --------------------
+			{
+				static int currentFractalType		  = 0;
+				std::vector<std::string> fractalNames = {
+				  "Mandelbrot", // 0
+				  "Newton"		// 1
+				};
+
+				ImGui::PushItemWidth(labelledItemWidth);
+				if (ImGui::Combo("Fractal",
+								 &currentFractalType,
+								 +getter,
+								 &fractalNames,
+								 fractalNames.size())) {
+					std::shared_ptr<Fractal> newFracPtr;
+					switch (currentFractalType) {
+						case 0: {
+							newFracPtr = std::make_shared<Mandelbrot>(config);
+							break;
+						}
+						case 1: {
+							newFracPtr = std::make_shared<NewtonFractal>(config);
+							break;
+						}
+						default: {
+							newFracPtr = std::make_shared<Mandelbrot>(config);
+							break;
+						}
+					}
+					m_renderer.updateFractalType(newFracPtr);
+					renderFractal();
+				}
+			}
+
+			// -------------------- Coloring Algorithm --------------------
+			{
+				static int currentColoringFunc		   = 0;
+				std::vector<std::string> coloringFuncs = m_renderer.getColorFuncs();
+
+				ImGui::PushItemWidth(labelledItemWidth);
+				if (ImGui::Combo("Colouring Algorithm",
+								 &currentColoringFunc,
+								 +getter,
+								 &coloringFuncs,
+								 coloringFuncs.size())) {
+					m_renderer.setColorFunc(coloringFuncs[currentColoringFunc]);
+					renderFractal();
+				}
+			}
+
+			// -------------------- Color Palette --------------------
+			{
+				static int currentPalette			  = 0;
+				std::vector<std::string> paletteNames = m_renderer.getPaletteNames();
+
+				ImGui::PushItemWidth(labelledItemWidth);
+				if (ImGui::Combo("Colour Palette",
+								 &currentPalette,
+								 +getter,
+								 &paletteNames,
+								 paletteNames.size())) {
+					m_renderer.setPaletteName(paletteNames[currentPalette]);
+					renderFractal();
+				}
+			}
 		}
 		ImGui::End();
 	}

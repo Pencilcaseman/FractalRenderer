@@ -7,6 +7,26 @@ namespace frac {
 		return 0; // No optimisations supported (currently)
 	}
 
+	std::unordered_map<std::string, coloring::ColorFuncLow>
+	NewtonFractal::getLowPrecColoringAlgorithms() const {
+		return {{"Fixed Iteration Palette",
+				 std::function([](const lrc::Complex<LowPrecision> &coord,
+								  int64_t iters,
+								  const ColorPalette &palette) -> ci::ColorA {
+					 return coloring::fixedIterPalette(coord, iters, palette);
+				 })}};
+	}
+
+	std::unordered_map<std::string, coloring::ColorFuncHigh>
+	NewtonFractal::getHighPrecColoringAlgorithms() const {
+		return {{"Fixed Iteration Palette",
+				 std::function([](const lrc::Complex<HighPrecision> &coord,
+								  int64_t iters,
+								  const ColorPalette &palette) -> ci::ColorA {
+					 return coloring::fixedIterPalette(coord, iters, palette);
+				 })}};
+	}
+
 	std::pair<int64_t, lrc::Complex<LowPrecision>>
 	NewtonFractal::iterCoordLow(const lrc::Complex<LowPrecision> &coord) const {
 		// Roots (solutions) of the polynomial
@@ -57,21 +77,5 @@ namespace frac {
 		}
 
 		return {iteration, lrc::Complex<HighPrecision>(re, im)};
-	}
-
-	ci::ColorA NewtonFractal::getColorLow(const lrc::Complex<LowPrecision> &coord,
-										  int64_t iters) const {
-		if (iters == 0) { return ci::ColorA(1, 0, 0, 1); }
-		if (iters == 1) { return ci::ColorA(0, 1, 0, 1); }
-		if (iters == 2) { return ci::ColorA(0, 0, 1, 1); }
-		return ci::ColorA(1, 1, 1, 1);
-	}
-
-	ci::ColorA NewtonFractal::getColorHigh(const lrc::Complex<HighPrecision> &coord,
-										   int64_t iters) const {
-		if (iters == 0) { return ci::ColorA(1, 0, 0, 1); }
-		if (iters == 1) { return ci::ColorA(0, 1, 0, 1); }
-		if (iters == 2) { return ci::ColorA(0, 0, 1, 1); }
-		return ci::ColorA(1, 1, 1, 1);
 	}
 } // namespace frac

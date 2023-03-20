@@ -33,24 +33,39 @@ namespace frac {
 				m_settings["renderConfig"]["fracSize"]["Im"].get<float>()),
 			  lrc::Vec<HighPrecision, 2>(0, 0),
 
-			  ColorPalette(), // Default for now -- colors added later
+			  {}, // Default for now -- colors added later
 
 			  m_settings["renderConfig"]["draftRender"].get<bool>(),
 			  m_settings["renderConfig"]["draftInc"].get<int64_t>()};
 
 			m_renderConfig.originalFracSize = m_renderConfig.fracSize;
 
-			// Load the colour palette from the JSON object
-			for (const auto &color : m_settings["renderConfig"]["colorPalette"]) {
-				m_renderConfig.palette.addColor(
-				  ColorPalette::ColorType(color["red"].get<float>(),
-										  color["green"].get<float>(),
-										  color["blue"].get<float>(),
-										  color["alpha"].get<float>()));
+			// Load the colour palettes from the JSON object
+			for (const auto &palette : m_settings["renderConfig"]["colorPalettes"]) {
+				// If no palette name has been set, set it to the first palette in the
+				// list
+				if (m_paletteName.length() == 0) m_paletteName = palette["name"];
+
+				ColorPalette tmp;
+				for (const auto &color : palette["colors"]) {
+					tmp.addColor(ColorPalette::ColorType(color["red"].get<float>(),
+														 color["green"].get<float>(),
+														 color["blue"].get<float>(),
+														 color["alpha"].get<float>()));
+				}
+				m_renderConfig.palettes[palette["name"]] = tmp;
 			}
 
-			// m_fractal = std::make_unique<Mandelbrot>(m_renderConfig);
-			m_fractal = std::make_unique<NewtonFractal>(m_renderConfig);
+			m_fractal = std::make_unique<Mandelbrot>(m_renderConfig);
+			m_colorFuncLow =
+			  m_fractal->getLowPrecColoringAlgorithms()["Logarithmic Scaling"];
+			m_colorFuncHigh =
+			  m_fractal->getHighPrecColoringAlgorithms()["Logarithmic Scaling"];
+
+			// m_fractal = std::make_unique<NewtonFractal>(m_renderConfig);
+			// m_colorFuncLow = m_fractal->getLowPrecColoringAlgorithms()["Fixed Iteration
+			// Palette"]; m_colorFuncHigh =
+			// m_fractal->getHighPrecColoringAlgorithms()["Fixed Iteration Palette"];
 		} catch (std::exception &e) {
 			FRAC_LOG(fmt::format("Failed to load settings: {}", e.what()));
 			stopRender();
@@ -247,7 +262,7 @@ namespace frac {
 					pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
 				}
 
-				if (pix.r != 0 && pix.g != 0 && pix.b != 0) { edgesInSet = false; }
+				if (pix.r != 0 || pix.g != 0 || pix.b != 0) edgesInSet = false;
 
 				m_fractalSurface.setPixel(lrc::Vec2i(box.topLeft.x() + px, py), pix);
 			}
@@ -268,7 +283,7 @@ namespace frac {
 					pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
 				}
 
-				if (pix.r != 0 && pix.g != 0 && pix.b != 0) { edgesInSet = false; }
+				if (pix.r != 0 || pix.g != 0 || pix.b != 0) edgesInSet = false;
 
 				m_fractalSurface.setPixel(lrc::Vec2i(px, box.topLeft.y() + py), pix);
 			}
@@ -281,13 +296,18 @@ namespace frac {
 											  const LowVec2 &aliasStepCorrect) {
 		ci::ColorA pix(0, 0, 0, 1);
 
+		// const auto colorFunc =
+		//   m_fractal->getLowPrecColoringAlgorithms()["Fixed Iteration Palette"];
+
+		const ColorPalette &palette = m_renderConfig.palettes[m_paletteName];
+
 		for (int64_t aliasY = 0; aliasY < aliasFactor; ++aliasY) {
 			for (int64_t aliasX = 0; aliasX < aliasFactor; ++aliasX) {
 				auto pos = pixPos + step * LowVec2(aliasX, aliasY) * aliasStepCorrect;
 
 				auto [iters, endPoint] =
 				  m_fractal->iterCoordLow(lrc::Complex<LowPrecision>(pos.x(), pos.y()));
-				pix += m_fractal->getColorLow(endPoint, iters);
+				pix += m_fractal->getColorLow(endPoint, iters, palette, m_colorFuncLow);
 			}
 		}
 
@@ -299,13 +319,14 @@ namespace frac {
 											   const HighVec2 &aliasStepCorrect) {
 		ci::ColorA pix(0, 0, 0, 1);
 
+		const ColorPalette &palette = m_renderConfig.palettes[m_paletteName];
+
 		for (int64_t aliasY = 0; aliasY < aliasFactor; ++aliasY) {
 			for (int64_t aliasX = 0; aliasX < aliasFactor; ++aliasX) {
 				auto pos = pixPos + step * HighVec2(aliasX, aliasY) * aliasStepCorrect;
-
 				auto [iters, endPoint] =
 				  m_fractal->iterCoordHigh(lrc::Complex<HighPrecision>(pos.x(), pos.y()));
-				pix += m_fractal->getColorHigh(endPoint, iters);
+				pix += m_fractal->getColorHigh(endPoint, iters, palette, m_colorFuncHigh);
 			}
 		}
 
@@ -322,6 +343,11 @@ namespace frac {
 		int64_t h		 = m_renderConfig.imageSize.y();
 		m_fractalSurface = ci::Surface((int32_t)w, (int32_t)h, true);
 		FRAC_LOG("Surface regenerated");
+	}
+
+	void FractalRenderer::updateFractalType(const std::shared_ptr<Fractal> &fractal) {
+		m_fractal = fractal;
+		m_fractal->updateRenderConfig(m_renderConfig);
 	}
 
 	void FractalRenderer::updateConfigPrecision() {
@@ -362,6 +388,32 @@ namespace frac {
 		  ((double)remainingBoxes * average) / (double)m_renderConfig.numThreads;
 
 		return {min, max, average, remainingTime};
+	}
+
+	std::vector<std::string> FractalRenderer::getColorFuncs() const {
+		const auto &colorFuncs = m_fractal->getLowPrecColoringAlgorithms();
+		std::vector<std::string> ret;
+		for (const auto &[name, palette] : colorFuncs) {
+			ret.push_back(name);
+		}
+		return ret;
+	}
+
+	void FractalRenderer::setColorFunc(const std::string &name) {
+		m_colorFuncLow	= m_fractal->getLowPrecColoringAlgorithms().at(name);
+		m_colorFuncHigh = m_fractal->getHighPrecColoringAlgorithms().at(name);
+	}
+
+	std::vector<std::string> FractalRenderer::getPaletteNames() const {
+		std::vector<std::string> ret;
+		for (const auto &[name, palette] : m_renderConfig.palettes) {
+			ret.push_back(name);
+		}
+		return ret;
+	}
+
+	void FractalRenderer::setPaletteName(const std::string &name) {
+		m_paletteName = name;
 	}
 
 	const RenderConfig &FractalRenderer::config() const { return m_renderConfig; }

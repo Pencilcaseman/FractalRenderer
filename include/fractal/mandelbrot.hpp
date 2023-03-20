@@ -20,12 +20,30 @@ namespace frac {
 
 		~Mandelbrot() override = default;
 
-		size_t supportedOptimisations() const;
+		LIBRAPID_NODISCARD size_t supportedOptimisations() const override;
+
+		LIBRAPID_NODISCARD
+		std::unordered_map<std::string, coloring::ColorFuncLow>
+		getLowPrecColoringAlgorithms() const override;
+
+		LIBRAPID_NODISCARD
+		std::unordered_map<std::string, coloring::ColorFuncHigh>
+		getHighPrecColoringAlgorithms() const override;
 
 		LIBRAPID_NODISCARD std::pair<int64_t, lrc::Complex<LowPrecision>>
 		iterCoordLow(const lrc::Complex<LowPrecision> &coord) const override;
 
 		LIBRAPID_NODISCARD std::pair<int64_t, lrc::Complex<HighPrecision>>
 		iterCoordHigh(const lrc::Complex<HighPrecision> &coord) const override;
+
+		LIBRAPID_NODISCARD ci::ColorA
+		getColorLow(const lrc::Complex<LowPrecision> &coord, int64_t iters,
+					const ColorPalette &palette,
+					const coloring::ColorFuncLow &colorFunc) const override;
+
+		LIBRAPID_NODISCARD ci::ColorA
+		getColorHigh(const lrc::Complex<HighPrecision> &coord, int64_t iters,
+					 const ColorPalette &palette,
+					 const coloring::ColorFuncHigh &colorFunc) const override;
 	};
 } // namespace frac
