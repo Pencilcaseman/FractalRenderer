@@ -44,7 +44,7 @@ namespace frac {
 				 std::function([](const lrc::Complex<HighPrecision> &coord,
 								  int64_t iters,
 								  const ColorPalette &palette) -> ci::ColorA {
-					 return coloring::fixedIterPalette(coord, iters, palette);
+					 return coloring::logarithmicScaling(coord, iters, palette);
 				 })},
 				{"Paletted Logarithmic Scaling",
 				 std::function([](const lrc::Complex<HighPrecision> &coord,

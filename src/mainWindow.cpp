@@ -491,6 +491,17 @@ namespace frac {
 					renderFractal();
 				}
 			}
+
+			// ------------------ Reset Image Size --------------------
+			{
+				ImGui::SameLine();
+				if (ImGui::Button("Reset Image Size")) {
+					stopRender();
+					config.imageSize = imageToScreenSpace(config.imageSize);
+					m_renderer.regenerateSurface();
+					renderFractal();
+				}
+			}
 		}
 		ImGui::End();
 	}
@@ -628,8 +639,6 @@ namespace frac {
 
 	void MainWindow::renderFractal(bool amendHistory) {
 		m_renderer.renderFractal();
-
-		// m_history.append(m_renderer.config(), m_renderer.surface());
 		if (amendHistory) appendConfigToHistory();
 	}
 
@@ -650,11 +659,11 @@ namespace frac {
 		m_mouseDown	   = true;
 		m_mouseDownPos = event.getPos();
 
+		lrc::Vec2i imageSpacePos = imageToScreenSpace(m_renderer.config().imageSize);
+
 		// Ensure mouse is within the image
-		if (m_mouseDownPos.x() >= 0 &&
-			m_mouseDownPos.x() < m_renderer.config().imageSize.x() &&
-			m_mouseDownPos.y() >= 0 &&
-			m_mouseDownPos.y() < m_renderer.config().imageSize.y()) {
+		if (m_mouseDownPos.x() >= 0 && m_mouseDownPos.x() < imageSpacePos.x() &&
+			m_mouseDownPos.y() >= 0 && m_mouseDownPos.y() < imageSpacePos.y()) {
 			// Check if mouse is inside the box (and it is being shown)
 			if (m_showZoomBox && m_mouseDownPos.x() > m_zoomBoxStart.x() &&
 				m_mouseDownPos.x() < m_zoomBoxEnd.x() &&
