@@ -504,6 +504,67 @@ namespace frac {
 			}
 		}
 		ImGui::End();
+
+		json exportMenu = settings["menus"]["exportSettings"];
+		ImGui::SetNextWindowPos({(float)exportMenu["posX"], (float)exportMenu["posY"]},
+								ImGuiCond_Once);
+		ImGui::SetNextWindowSize(
+		  {(float)fractalMenu["width"], (float)fractalMenu["height"]}, ImGuiCond_Once);
+
+		ImGui::Begin("Import/Export Options");
+		{
+			static std::string filePath;
+			const std::array<std::string, 4> imgExtensions = {
+			  ".png", ".jpg", ".jpeg", ".bmp"};
+			const std::array<std::string, 2> settingsExtensions = {".json", ".txt"};
+
+			ImGui::InputTextWithHint("File Path", "Enter a file path", &filePath);
+
+			// Used once, and only here, so it's simpler to make this a lambda and avoid
+			// confusion
+			auto endsWith = [](const std::string &str, const std::string &suffix) {
+				if (suffix.size() > str.size()) { return false; }
+				for (int64_t i = 0; i < suffix.size(); ++i) {
+					if (str[str.size() - suffix.size() + i] != suffix[i]) {
+						return false;
+					}
+				}
+				return true;
+			};
+
+			bool isValidImagePath = false;
+			for (const auto &ext : imgExtensions) {
+				if (endsWith(filePath, ext)) {
+					isValidImagePath = true;
+					break;
+				}
+			}
+
+			bool isValidSettingsPath = false;
+			for (const auto &ext : settingsExtensions) {
+				if (endsWith(filePath, ext)) {
+					isValidSettingsPath = true;
+					break;
+				}
+			}
+
+			if (!filePath.empty() && isValidImagePath && ImGui::Button("Export Image")) {
+				m_renderer.exportImage(filePath);
+			}
+
+			ImGui::SameLine();
+			if (!filePath.empty() && isValidSettingsPath &&
+				ImGui::Button("Export Settings")) {
+				m_renderer.exportSettings(filePath);
+			}
+
+			ImGui::SameLine();
+			if (!filePath.empty() && isValidSettingsPath &&
+				ImGui::Button("Import Settings")) {
+				// m_renderer.importSettings(filePath);
+			}
+		}
+		ImGui::End();
 	}
 
 	void MainWindow::drawHistory() {

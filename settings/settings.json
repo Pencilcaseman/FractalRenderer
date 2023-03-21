@@ -4,6 +4,14 @@
 		"maxIters": 500,
 		"precision": 64,
 		"antiAlias": 2,
+		"fractalOrigin": {
+			"Re": -0.75,
+			"Im": 0.0
+		},
+		"fractalSize": {
+			"Re": 3.0625,
+			"Im": 3.5
+		},
 		"imageSize": {
 			"width": 800,
 			"height": 700
@@ -525,6 +533,12 @@
 			"scrollSpeed": 20
 		},
 		"fractalSettings": {
+			"width": 400,
+			"height": 150,
+			"posX": 800,
+			"posY": 550
+		},
+		"exportSettings": {
 			"width": 400,
 			"height": 150,
 			"posX": 800,

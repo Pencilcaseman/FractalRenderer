@@ -443,4 +443,41 @@ namespace frac {
 
 	const ci::Surface &FractalRenderer::surface() const { return m_fractalSurface; }
 	ci::Surface &FractalRenderer::surface() { return m_fractalSurface; }
+
+	void FractalRenderer::exportImage(const std::string &path) const {
+		ci::writeImage(path, m_fractalSurface);
+	}
+
+	void FractalRenderer::exportSettings(const std::string &path) const {
+		// All updates to the render configuration must be copied to the settings
+		json settings = m_settings;
+
+		settings["renderConfig"]["numThreads"] = m_renderConfig.numThreads;
+		settings["renderConfig"]["maxIters"]   = m_renderConfig.maxIters;
+		settings["renderConfig"]["precision"]  = m_renderConfig.precision;
+		settings["renderConfig"]["antiAlias"]  = m_renderConfig.antiAlias;
+
+		settings["renderConfig"]["imageSize"]["width"]	= m_renderConfig.imageSize.x();
+		settings["renderConfig"]["imageSize"]["height"] = m_renderConfig.imageSize.y();
+
+		settings["renderConfig"]["boxSize"]["width"]  = m_renderConfig.boxSize.x();
+		settings["renderConfig"]["boxSize"]["height"] = m_renderConfig.boxSize.y();
+
+		settings["renderConfig"]["draftRender"] = m_renderConfig.draftRender;
+		settings["renderConfig"]["draftInc"]	= m_renderConfig.draftInc;
+
+		settings["renderConfig"]["fractalOrigin"]["Re"] =
+		  fmt::format("{}", m_renderConfig.fracTopLeft.x());
+		settings["renderConfig"]["fractalOrigin"]["Im"] =
+		  fmt::format("{}", m_renderConfig.fracTopLeft.y());
+
+		settings["renderConfig"]["fractalSize"]["Re"] =
+		  fmt::format("{}", m_renderConfig.fracSize.x());
+		settings["renderConfig"]["fractalSize"]["Im"] =
+		  fmt::format("{}", m_renderConfig.fracSize.y());
+
+		std::fstream file(path, std::ios::out);
+		file << settings.dump(4);
+		file.close();
+	}
 } // namespace frac

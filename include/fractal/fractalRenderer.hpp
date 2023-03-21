@@ -149,6 +149,9 @@ namespace frac {
 		/// \return Surface
 		LIBRAPID_NODISCARD ci::Surface &surface();
 
+		void exportImage(const std::string &path) const;
+		void exportSettings(const std::string &path) const;
+
 	private:
 		RenderConfig m_renderConfig;		// The settings for the fractal renderer
 		ci::Surface m_fractalSurface;		// The surface that the fractal is rendered to
