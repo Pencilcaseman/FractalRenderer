@@ -44,6 +44,9 @@ namespace frac {
 	void MainWindow::setup() {
 		FRAC_LOG("Setup Called");
 
+		// Set application title
+		ci::app::getWindow()->setTitle("Toby Davis: Fractal Renderer");
+
 		configureSettings();
 		configureWindow();
 		configureImGui();

@@ -52,7 +52,7 @@ namespace frac {
 				 std::function([](const lrc::Complex<HighPrecision> &coord,
 								  int64_t iters,
 								  const ColorPalette &palette) -> ci::ColorA {
-					 return coloring::fixedIterPalette(coord, iters, palette);
+					 return coloring::logarithmicScaling(coord, iters, palette);
 				 })},
 				{"Paletted Logarithmic Scaling",
 				 std::function([](const lrc::Complex<HighPrecision> &coord,
@@ -85,7 +85,8 @@ namespace frac {
 		// Bail when larger than this
 		double bailout = Fractal::m_renderConfig.bail;
 
-		while (re * re + im * im <= bailout && iteration < Fractal::m_renderConfig.maxIters) {
+		while (re * re + im * im <= bailout &&
+			   iteration < Fractal::m_renderConfig.maxIters) {
 			tmp = re * re - im * im + re_0;
 			im	= 2 * re * im + im_0;
 			re	= tmp;

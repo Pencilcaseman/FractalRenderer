@@ -148,12 +148,12 @@ The Fractal Foundation \textit{XaoS} fractal renderer is a much more advanced, o
 \subsection{Program Requirements}
 
 \begin{enumerate}
-    \item Rendering
-    \item Configuration
-    \item Interface and Movement
-    \item Import and Export
-    \item Installation
-    \item Performance
+    \item Rendering \label{req_rendering}
+    \item Configuration \label{req_configuration}
+    \item Interface and Movement \label{req_interface}
+    \item Import and Export \label{req_import_export}
+    \item Installation \label{req_install}
+    \item Performance \label{req_performance}
 \end{enumerate}
 
 
@@ -167,124 +167,124 @@ The Fractal Foundation \textit{XaoS} fractal renderer is a much more advanced, o
     \hline
     \text{ID} & \text{Description} & \text{Importance}  \\
     \hline \hline
-    1.1 & The program can render a fractal correctly & \highPriority \\
+    1.1 \label{req_1_1} & The program can render a fractal correctly & \highPriority \\
     \hline
-    1.2 & Fractals can be rendered at high resolutions without artifacting & \highPriority \\
+    1.2 \label{req_1_2} & Fractals can be rendered at high resolutions without artifacting & \highPriority \\
     \hline
-    1.3 & The fractal can be coloured to bring out details & \highPriority \\
+    1.3 \label{req_1_3} & The fractal can be coloured to bring out details & \highPriority \\
     \hline
-    1.4 & Colouring algorithms can be isolated from the fractal rendering process, allowing different algorithms to be 
+    1.4 \label{req_1_4} & Colouring algorithms can be isolated from the fractal rendering process, allowing different algorithms to be 
     implemented more easily & \highPriority \\
     \hline
-    1.5 & Anti-aliasing can be used to reduce noise and produce a cleaner image & \mediumPriority \\
+    1.5 \label{req_1_5} & Anti-aliasing can be used to reduce noise and produce a cleaner image & \mediumPriority \\
     \hline
-    1.6 & The background colour of the fractal can be changed & \lowPriority \\
+    1.6 \label{req_1_6} & The image size can be adjusted to produce higher or lower resolution renders & \lowPriority \\
     \hline
-    1.7 & Fractal algorithms are optimised for the data type used & \mediumPriority \\
+    1.7 \label{req_1_7} & Fractal algorithms are optimised for the data type used & \mediumPriority \\
     \hline
-    1.8 & Simple optimisations are made to accelerate the rate at which fractals are rendered & \mediumPriority \\
+    1.8 \label{req_1_8} & Simple optimisations are made to accelerate the rate at which fractals are rendered & \mediumPriority \\
     \hline
-    1.9 & Images can be rendered with high-precision floating point types, allowing for ``infinite'' zooms & \highPriority 
+    1.9 \label{req_1_9} & Images can be rendered with high-precision floating point types, allowing for ``infinite'' zooms & \highPriority 
     \\\hline
     
-    2.1 & The area of the fractal currently being rendered, as well as the zoom factor, can be changed & \highPriority \\
+    2.1 \label{req_2_1} & The area of the fractal currently being rendered, as well as the zoom factor, can be changed & \highPriority \\
     \hline
-    2.2 & The number of threads used to render the fractal can be changed & \mediumPriority \\
+    2.2 \label{req_2_2} & The number of threads used to render the fractal can be changed & \mediumPriority \\
     \hline
-    2.3 & The maximum number of iterations allowed can be changed & \highPriority \\
+    2.3 \label{req_2_3} & The maximum number of iterations allowed can be changed & \highPriority \\
     \hline
-    2.4 & The bailout value can be changed & \lowPriority \\
+    2.4 \label{req_2_4} & The bailout value can be changed & \lowPriority \\
     \hline
-    2.5 & The anti-aliasing factor can be changed & \highPriority \\
+    2.5 \label{req_2_5} & The anti-aliasing factor can be changed & \highPriority \\
     \hline
-    2.6 & The image size can be changed independently of the image resolution & \highPriority \\
+    2.6 \label{req_2_6} & The image size can be changed independently of the image resolution & \highPriority \\
     \hline
-    2.7 & The image resolution can be changed & \highPriority \\
+    2.7 \label{req_2_7} & The image resolution can be changed & \highPriority \\
     \hline
-    2.8 & The colouring algorithm can be changed and customised & \mediumPriority \\
+    2.8 \label{req_2_8} & The colouring algorithm can be changed and customised & \mediumPriority \\
     \hline
-    2.9 & Settings can be reset to default values & \highPriority \\
+    2.9 \label{req_2_9} & Settings can be reset to default values & \highPriority \\
     \hline
-    2.10 & The option to undo/redo changes to settings & \lowPriority \\
+    2.10 \label{req_2_10} & The option to undo/redo changes to settings & \lowPriority \\
     \hline
-    2.11 & Floating point precision can be customised & \highPriority \\
+    2.11 \label{req_2_11} & Floating point precision can be customised & \highPriority \\
     \hline
-    2.12 & Different fractals can be rendered & \mediumPriority \\
+    2.12 \label{req_2_12} & Different fractals can be rendered & \mediumPriority \\
     \hline
-    2.13 & Each fractal has predefined default settings which are loaded when a new fractal is selected & \lowPriority \\
+    2.13 \label{req_2_13} & Each fractal has predefined default settings which are loaded when a new fractal is selected & \lowPriority \\
     \hline
-    2.14 & Settings are loaded from a JSON file at program startup & \lowPriority \\
+    2.14 \label{req_2_14} & Settings are loaded from a JSON file at program startup & \lowPriority \\
     \hline
-    3.1 & There is a graphical user interface (GUI) & \highPriority \\
+    3.1 \label{req_3_1} & There is a graphical user interface (GUI) & \highPriority \\
     \hline
-    3.2 & The GUI is fast and responsive & \highPriority \\
+    3.2 \label{req_3_2} & The GUI is fast and responsive & \highPriority \\
     \hline
-    3.3 & Similar settings and options are contained in a single window which can be moved around the screen & \mediumPriority \\
+    3.3 \label{req_3_3} & Similar settings and options are contained in a single window which can be moved around the screen & \mediumPriority \\
     \hline
-    3.4 & Input and numeric information fields should handle data to the current precision used by the program & \highPriority \\
+    3.4 \label{req_3_4} & Input and numeric information fields should handle data to the current precision used by the program & \highPriority \\
     \hline
-    3.5 & Not all menus are shown initially, and settings with different complexities can be shown or hidden & \mediumPriority \\
+    3.5 \label{req_3_5} & Not all menus are shown initially, and settings with different complexities can be shown or hidden & \mediumPriority \\
     \hline
-    3.6 & Different workspaces can be selected from a menu, configuring the windows and settings shown for different levels of understanding -- beginner, intermediate, advanced & \lowPriority \\
+    3.6 \label{req_3_6} & Different workspaces can be selected from a menu, configuring the windows and settings shown for different levels of understanding -- beginner, intermediate, advanced & \lowPriority \\
     \hline
-    3.7 & The area to zoom into can be selected with the mouse & \highPriority \\
+    3.7 \label{req_3_7} & The area to zoom into can be selected with the mouse & \highPriority \\
     \hline
-    3.8 & The zoom box does not need to match the aspect ratio of the fractal & \lowPriority \\
+    3.8 \label{req_3_8} & The zoom box does not need to match the aspect ratio of the fractal & \lowPriority \\
     \hline
-    3.9 & The zoom box can be moved and scaled after its creation, with the option to apply the zoom after the user is happy with it & \mediumPriority \\
+    3.9 \label{req_3_9} & The zoom box can be moved and scaled after its creation, with the option to apply the zoom after the user is happy with it & \mediumPriority \\
     \hline
-    3.10 & The current render progress, render time, render speed and estimated time remaining are displayed & \highPriority \\
+    3.10 \label{req_3_10} & The current render progress, render time, render speed and estimated time remaining are displayed & \highPriority \\
     \hline
-    3.11 & There is a history of previous frames rendered which can be reverted to & \lowPriority \\
+    3.11 \label{req_3_11} & There is a history of previous frames rendered which can be reverted to & \lowPriority \\
     \hline
-    3.12 & There is a way to zoom back out of the fractal & \highPriority \\
+    3.12 \label{req_3_12} & There is a way to zoom back out of the fractal & \highPriority \\
     \hline
-    3.13 & The fractal should be rendered progressively, allowing the user to see roughly what is being rendered without having to wait for the full image & \lowPriority \\
+    3.13 \label{req_3_13} & The fractal should be rendered progressively, allowing the user to see roughly what is being rendered without having to wait for the full image & \lowPriority \\
     \hline
-    3.14 & The current location can be copied to the clipboard easily & \lowPriority \\
+    3.14 \label{req_3_14} & The current location can be copied to the clipboard easily & \lowPriority \\
     \hline
-    3.15 & Any numeric input fields should accept scientific input formats & \highPriority \\
+    3.15 \label{req_3_15} & Any numeric input fields should accept scientific input formats & \highPriority \\
     \hline
-    4.1 & The render configuration settings can be loaded from a JSON file at runtime & \mediumPriority \\
+    4.1 \label{req_4_1} & The render configuration settings can be loaded from a JSON file at runtime & \mediumPriority \\
     \hline
-    4.2 & The render configuration settings can be saved to a JSON file, allowing for easy sharing & \mediumPriority \\
+    4.2 \label{req_4_2} & The render configuration settings can be saved to a JSON file, allowing for easy sharing & \mediumPriority \\
     \hline
-    4.3 & Images can be saved to a file & \highPriority \\
+    4.3 \label{req_4_3} & Images can be saved to a file & \highPriority \\
     \hline
-    4.4 & The saved images can have a user-defined filetype, and are not limited to, for example, \texttt{*.png} & \lowPriority \\
+    4.4 \label{req_4_4} & The saved images can have a user-defined filetype, and are not limited to, for example, \texttt{*.png} & \lowPriority \\
     \hline
-    4.5 & Images can be rendered separately from the main GUI, allowing incredibly high-resolution images to be saved & \possibleFeature \\
+    4.5 \label{req_4_5} & Images can be rendered separately from the main GUI, allowing incredibly high-resolution images to be saved & \possibleFeature \\
     \hline
-    5.1 & Program compiles on Windows & \highPriority \\
+    5.1 \label{req_5_1} & Program compiles on Windows & \highPriority \\
     \hline
-    5.2 & Program compiles on MacOS & \highPriority \\
+    5.2 \label{req_5_2} & Program compiles on MacOS & \highPriority \\
     \hline
-    5.3 & Program compiles on Linux & \highPriority \\
+    5.3 \label{req_5_3} & Program compiles on Linux & \highPriority \\
     \hline
-    5.4 & Program compiles with \texttt{msvc} & \highPriority \\
+    5.4 \label{req_5_4} & Program compiles with \texttt{msvc} & \highPriority \\
     \hline
-    5.5 & Program compiles with \texttt{gcc/g++} & \highPriority \\
+    5.5 \label{req_5_5} & Program compiles with \texttt{gcc/g++} & \highPriority \\
     \hline
-    5.6 & Program compiles with \texttt{clang} & \highPriority \\
+    5.6 \label{req_5_6} & Program compiles with \texttt{clang} & \highPriority \\
     \hline
-    5.7 & Program is easy to compile from source with CMake (i.e. \texttt{cmake --build . --config Release}) & \highPriority \\
+    5.7 \label{req_5_7} & Program is easy to compile from source with CMake (i.e. \texttt{cmake --build . --config Release}) & \highPriority \\
     \hline
-    5.8 & Prebuilt executable is available for Windows & \mediumPriority \\
+    5.8\label{req_5_8} & Prebuilt executable is available for Windows & \mediumPriority \\
     \hline
-    5.9 & Prebuilt executable is available for MacOS & \mediumPriority \\
+    5.9 \label{req_5_9} & Prebuilt executable is available for MacOS & \mediumPriority \\
     \hline
-    5.10 & Prebuilt executable is available for Linux & \mediumPriority \\
+    5.10 \label{req_5_10} & Prebuilt executable is available for Linux & \mediumPriority \\
     \hline
-    6.1 & The program can render fractals in a reasonable time (under 2 seconds) on a single thread with machine word precision & \highPriority \\
+    6.1 \label{req_6_1} & The program can render fractals in a reasonable time (under 2 seconds) on a single thread with machine word precision & \highPriority \\
     \hline
-    6.2 & Multiple threads can be used to accelerate the rendering process & \highPriority \\
+    6.2 \label{req_6_2} & Multiple threads can be used to accelerate the rendering process & \highPriority \\
     \hline
-    6.3 & The rendering algorithm runs on a separate thread to the GUI, ensuring the interface continues to refresh quickly & \highPriority \\
+    6.3 \label{req_6_3} & The rendering algorithm runs on a separate thread to the GUI, ensuring the interface continues to refresh quickly & \highPriority \\
     \hline
-    6.4 & Where possible, calculations are optimised to suit the data type being operated on & \lowPriority \\
+    6.4 \label{req_6_4} & Where possible, calculations are optimised to suit the data type being operated on & \lowPriority \\
     \hline
-    6.5 & Some simple optimisations are implemented to accelerate the rendering of the fractals & \mediumPriority \\
+    6.5 \label{req_6_5} & Some simple optimisations are implemented to accelerate the rendering of the fractals & \mediumPriority \\
     \hline
-    6.6 & Low-quality images can be rendered quickly with multi-precision data types & \mediumPriority \\
+    6.6 \label{req_6_6} & Low-quality images can be rendered quickly with multi-precision data types & \mediumPriority \\
     \hline
 \end{longtable}

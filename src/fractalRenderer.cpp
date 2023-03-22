@@ -306,15 +306,11 @@ namespace frac {
 											  const LowVec2 &aliasStepCorrect) {
 		ci::ColorA pix(0, 0, 0, 1);
 
-		// const auto colorFunc =
-		//   m_fractal->getLowPrecColoringAlgorithms()["Fixed Iteration Palette"];
-
 		const ColorPalette &palette = m_renderConfig.palettes[m_paletteName];
 
 		for (int64_t aliasY = 0; aliasY < aliasFactor; ++aliasY) {
 			for (int64_t aliasX = 0; aliasX < aliasFactor; ++aliasX) {
 				auto pos = pixPos + step * LowVec2(aliasX, aliasY) * aliasStepCorrect;
-
 				auto [iters, endPoint] =
 				  m_fractal->iterCoordLow(lrc::Complex<LowPrecision>(pos.x(), pos.y()));
 				pix += m_fractal->getColorLow(endPoint, iters, palette, m_colorFuncLow);
