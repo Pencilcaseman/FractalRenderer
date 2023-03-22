@@ -44,10 +44,13 @@ namespace frac {
 	void MainWindow::setup() {
 		FRAC_LOG("Setup Called");
 
+		// Set application title
+		ci::app::getWindow()->setTitle("Toby Davis: Fractal Renderer");
+
 		configureSettings();
 		configureWindow();
 		configureImGui();
-
+		configureFractalDefault();
 		m_renderer.regenerateSurface();
 		renderFractal();
 
@@ -55,6 +58,21 @@ namespace frac {
 	}
 
 	void MainWindow::stopRender() { m_renderer.stopRender(); }
+
+	void MainWindow::configureFractalDefault() {
+		// Configure the FractalRenderer's default fractal type
+		json renderConfig		= m_renderer.settings()["renderConfig"];
+		std::string fractalType = renderConfig["fractalType"];
+		std::string colorFunc	= renderConfig["colorFunc"];
+		std::string palette		= renderConfig["colorPalette"];
+		float bailoutVal		= renderConfig["fractals"][fractalType]["bail"];
+		setFractalType(fractalType);
+		m_renderer.setColorFunc(colorFunc);
+		m_renderer.setPaletteName(palette);
+		m_renderer.config().bail = bailoutVal;
+		m_renderer.updateConfigPrecision();
+		m_renderer.updateRenderConfig();
+	}
 
 	void MainWindow::appendConfigToHistory() {
 		FRAC_LOG("Appending to history");
@@ -66,6 +84,63 @@ namespace frac {
 
 		m_history.append(m_renderer.config(), m_renderer.surface());
 		m_historyNode = m_history.last();
+	}
+
+	void MainWindow::setFractalType(const std::string &name) {
+		std::shared_ptr<Fractal> newFracPtr;
+
+		if (name == "Mandelbrot") {
+			newFracPtr = std::make_shared<Mandelbrot>(m_renderer.config());
+		} else if (name == "Julia Set") {
+			newFracPtr = std::make_shared<JuliaSet>(m_renderer.config());
+		} else if (name == "Newton's Fractal") {
+			newFracPtr = std::make_shared<NewtonFractal>(m_renderer.config());
+		} else {
+			newFracPtr = std::make_shared<Mandelbrot>(m_renderer.config());
+		}
+
+		// If changing the fractal, clear the history, since it is no longer
+		// valid
+		m_history.first()->killChildren();
+		m_historyNode = m_history.first();
+
+		m_renderer.updateFractalType(newFracPtr);
+	}
+
+	std::vector<std::tuple<lrc::Vec2f, lrc::Vec2f, HistoryNode *>>
+	MainWindow::getHistoryFrameLocations() const {
+		std::vector<std::tuple<lrc::Vec2f, lrc::Vec2f, HistoryNode *>> ret;
+
+		const json &settings		  = m_renderer.settings();
+		const float historyFrameWidth = settings["menus"]["history"]["frameWidth"];
+		const float historyFrameSep	  = settings["menus"]["history"]["frameSep"];
+
+		const auto windowWidth	   = (float)getWindowWidth();
+		const RenderConfig &config = m_renderer.config();
+		size_t historySize		   = m_history.size();
+		HistoryNode *node		   = m_history.first();
+		int64_t index			   = 0;
+		int64_t totalHeight		   = 0;
+
+		while (node) {
+			float aspect = (float)config.imageSize.x() / (float)config.imageSize.y();
+			lrc::Vec2f renderSize(historyFrameWidth, historyFrameWidth / aspect);
+			lrc::Vec2f drawPos(windowWidth - historyFrameWidth - historyFrameSep,
+							   (renderSize.y() + historyFrameSep) *
+								   (float)(historySize - index - 1) +
+								 historyFrameSep);
+
+			totalHeight += (int64_t)(renderSize.y() + historyFrameSep);
+			drawPos.y(drawPos.y() + m_historyScrollTarget);
+
+			ret.emplace_back(std::tuple<lrc::Vec2f, lrc::Vec2f, HistoryNode *>(
+			  drawPos, renderSize, node));
+
+			node = node->next();
+			index++;
+		}
+
+		return ret;
 	}
 
 	void MainWindow::undoLastMove() {
@@ -125,9 +200,8 @@ namespace frac {
 					break;
 			}
 
-			ci::ivec2 boxPos  = box.topLeft;
-			ci::ivec2 boxSize = box.dimensions;
-			boxPos.y += getWindowHeight() - config.imageSize.y();
+			ci::ivec2 boxPos  = imageToScreenSpace(box.topLeft);
+			ci::ivec2 boxSize = imageToScreenSpace(box.dimensions);
 			ci::gl::drawStrokedRect(ci::Rectf(boxPos, boxPos + boxSize), 1);
 		}
 	}
@@ -155,7 +229,7 @@ namespace frac {
 
 	void MainWindow::drawImGui() {
 		// Ensure there is space for the labels in the ImGui windows
-		constexpr int64_t labelledItemWidth = -120;
+		constexpr int64_t labelledItemWidth = -150;
 
 		RenderConfig &config = m_renderer.config();
 		const json &settings = m_renderer.settings();
@@ -201,17 +275,42 @@ namespace frac {
 
 			if (ImGui::Button("Apply")) {
 				HighPrecision re, im, zoom, sizeRe, sizeIm;
-				scn::scan(m_fineMovementRe, "{}", re);
-				scn::scan(m_fineMovementIm, "{}", im);
-				scn::scan(m_fineMovementZoom, "{}", zoom);
+				bool valid = true;
 
-				FRAC_LOG(fmt::format("Received Real Part: {}", re));
+				auto reScan	  = scn::scan(m_fineMovementRe, "{}", re);
+				auto imScan	  = scn::scan(m_fineMovementIm, "{}", im);
+				auto zoomScan = scn::scan(m_fineMovementZoom, "{}", zoom);
 
-				sizeRe = config.originalFracSize.x() / zoom;
-				sizeIm = config.originalFracSize.y() / zoom;
-				moveFractalCenter(lrc::Vec<HighPrecision, 2>(re, im),
-								  lrc::Vec<HighPrecision, 2>(sizeRe, sizeIm));
-				renderFractal();
+				if (!reScan) {
+					FRAC_ERROR(fmt::format("Invalid Real Part: {}", m_fineMovementRe));
+					valid = false;
+				}
+
+				if (!imScan) {
+					FRAC_ERROR(
+					  fmt::format("Invalid Imaginary Part: {}", m_fineMovementIm));
+					valid = false;
+				}
+
+				if (!zoomScan || zoom <= 0) {
+					FRAC_ERROR(fmt::format("Invalid Zoom: {}", m_fineMovementZoom));
+					valid = false;
+				}
+
+				if (!valid) {
+					FRAC_ERROR(fmt::format("Invalid input: {}, {}, {}",
+										   m_fineMovementRe,
+										   m_fineMovementIm,
+										   m_fineMovementZoom));
+				} else {
+					FRAC_LOG(fmt::format("Received Real Part: {}", re));
+
+					sizeRe = config.originalFracSize.x() / zoom;
+					sizeIm = config.originalFracSize.y() / zoom;
+					moveFractalCenter(lrc::Vec<HighPrecision, 2>(re, im),
+									  lrc::Vec<HighPrecision, 2>(sizeRe, sizeIm));
+					renderFractal();
+				}
 			}
 		}
 		ImGui::End();
@@ -317,6 +416,181 @@ namespace frac {
 						lrc::formatTime(stats.remainingTime).c_str());
 		}
 		ImGui::End();
+
+		json fractalMenu = settings["menus"]["fractalSettings"];
+		ImGui::SetNextWindowPos({(float)fractalMenu["posX"], (float)fractalMenu["posY"]},
+								ImGuiCond_Once);
+		ImGui::SetNextWindowSize(
+		  {(float)fractalMenu["width"], (float)fractalMenu["height"]}, ImGuiCond_Once);
+
+		ImGui::Begin("Fractal Settings");
+		{
+			// Helper function for ImGui::Combo
+			static auto getter = [](void *vec, int idx, const char **out_text) {
+				auto &vector = *static_cast<std::vector<std::string> *>(vec);
+				if (idx < 0 || idx >= static_cast<int>(vector.size())) { return false; }
+				*out_text = vector.at(idx).c_str();
+				return true;
+			};
+
+			// -------------------- Fractal Type --------------------
+			{
+				static int currentFractalType		  = 0;
+				std::vector<std::string> fractalNames = {
+				  "Mandelbrot",		 // 0
+				  "Julia Set",		 // 1
+				  "Newton's Fractal" // 2
+				};
+
+				ImGui::PushItemWidth(labelledItemWidth);
+				if (ImGui::Combo("Fractal",
+								 &currentFractalType,
+								 +getter,
+								 &fractalNames,
+								 fractalNames.size())) {
+					setFractalType(fractalNames[currentFractalType]);
+					renderFractal();
+				}
+			}
+
+			// -------------------- Coloring Algorithm --------------------
+			{
+				static int currentColoringFunc		   = 0;
+				std::vector<std::string> coloringFuncs = m_renderer.getColorFuncs();
+
+				ImGui::PushItemWidth(labelledItemWidth);
+				if (ImGui::Combo("Colouring Algorithm",
+								 &currentColoringFunc,
+								 +getter,
+								 &coloringFuncs,
+								 coloringFuncs.size())) {
+					stopRender();
+					m_renderer.setColorFunc(coloringFuncs[currentColoringFunc]);
+					renderFractal();
+				}
+			}
+
+			// -------------------- Color Palette --------------------
+			{
+				static int currentPalette			  = 0;
+				std::vector<std::string> paletteNames = m_renderer.getPaletteNames();
+
+				ImGui::PushItemWidth(labelledItemWidth);
+				if (ImGui::Combo("Colour Palette",
+								 &currentPalette,
+								 +getter,
+								 &paletteNames,
+								 paletteNames.size())) {
+					stopRender();
+					m_renderer.setPaletteName(paletteNames[currentPalette]);
+					renderFractal();
+				}
+			}
+
+			// -------------------- Reset Fractal --------------------
+			{
+				if (ImGui::Button("Reset Fractal")) {
+					stopRender();
+					const std::string &fractalName = m_renderer.getFractalName();
+					const auto &fractalSettings =
+					  m_renderer.settings()["renderConfig"]["fractals"][fractalName];
+					float bail = fractalSettings["bail"];
+					HighVec2 topLeft, size;
+
+					topLeft.x(fractalSettings["fracTopLeft"]["Re"].get<double>());
+					topLeft.y(fractalSettings["fracTopLeft"]["Im"].get<double>());
+
+					size.x(fractalSettings["fracSize"]["Re"].get<double>());
+					size.y(fractalSettings["fracSize"]["Im"].get<double>());
+
+					config.bail		   = bail;
+					config.fracTopLeft = topLeft;
+					config.fracSize	   = size;
+					renderFractal();
+				}
+			}
+
+			// ------------------ Reset Image Size --------------------
+			{
+				ImGui::SameLine();
+				if (ImGui::Button("Reset Image Size")) {
+					stopRender();
+					config.imageSize = imageToScreenSpace(config.imageSize);
+					m_renderer.regenerateSurface();
+					renderFractal();
+				}
+			}
+		}
+		ImGui::End();
+
+		json exportMenu = settings["menus"]["exportSettings"];
+		ImGui::SetNextWindowPos({(float)exportMenu["posX"], (float)exportMenu["posY"]},
+								ImGuiCond_Once);
+		ImGui::SetNextWindowSize(
+		  {(float)fractalMenu["width"], (float)fractalMenu["height"]}, ImGuiCond_Once);
+
+		ImGui::Begin("Import/Export Options");
+		{
+			static std::string filePath;
+			const std::array<std::string, 4> imgExtensions = {
+			  ".png", ".jpg", ".jpeg", ".bmp"};
+			const std::array<std::string, 2> settingsExtensions = {".json", ".txt"};
+
+			ImGui::InputTextWithHint("File Path", "Enter a file path", &filePath);
+
+			// Used once, and only here, so it's simpler to make this a lambda and avoid
+			// confusion
+			auto endsWith = [](const std::string &str, const std::string &suffix) {
+				if (suffix.size() > str.size()) { return false; }
+				for (int64_t i = 0; i < suffix.size(); ++i) {
+					if (str[str.size() - suffix.size() + i] != suffix[i]) {
+						return false;
+					}
+				}
+				return true;
+			};
+
+			bool isValidImagePath = false;
+			for (const auto &ext : imgExtensions) {
+				if (endsWith(filePath, ext)) {
+					isValidImagePath = true;
+					break;
+				}
+			}
+
+			bool isValidSettingsPath = false;
+			for (const auto &ext : settingsExtensions) {
+				if (endsWith(filePath, ext)) {
+					isValidSettingsPath = true;
+					break;
+				}
+			}
+
+			if (!filePath.empty() && isValidImagePath && ImGui::Button("Export Image")) {
+				m_renderer.exportImage(filePath);
+			}
+
+			if (!filePath.empty() && isValidSettingsPath &&
+				ImGui::Button("Export Settings")) {
+				m_renderer.exportSettings(filePath);
+			}
+
+			if (!filePath.empty() && isValidSettingsPath &&
+				ImGui::Button("Import Settings")) {
+				std::fstream settingsFile(filePath, std::ios::in);
+				if (settingsFile.is_open()) {
+					m_renderer.setConfig(json::parse(settingsFile));
+					m_history.first()->killChildren();
+					m_history.append(m_renderer.config(), m_renderer.surface());
+					m_historyNode = m_history.first();
+					configureFractalDefault();
+					renderFractal();
+				} else {
+					FRAC_ERROR("Failed to open settings file");
+				}
+			}
+		}
+		ImGui::End();
 	}
 
 	void MainWindow::drawHistory() {
@@ -327,45 +601,37 @@ namespace frac {
 		const auto windowWidth	   = (float)getWindowWidth();
 		const auto windowHeight	   = (float)getWindowHeight();
 		const RenderConfig &config = m_renderer.config();
-		size_t historySize		   = m_history.size();
-		HistoryNode *node		   = m_history.first();
-		int64_t index			   = 0;
-		int64_t totalHeight		   = 0;
+		const std::vector<std::tuple<lrc::Vec2f, lrc::Vec2f, HistoryNode *>> frames =
+		  getHistoryFrameLocations();
+
+		int64_t totalHeight = 0;
 
 		// Draw a bounding box for the frames to sit within
 		float boxLeft = windowWidth - historyFrameWidth - historyFrameSep * 2;
 		ci::gl::color(ci::ColorA(0.15, 0.15, 0.3, 1));
 		ci::gl::drawSolidRect(ci::Rectf(boxLeft, 0, windowWidth, windowHeight));
 
-		while (node) {
-			auto texture = ci::gl::Texture2d::create(node->surface());
-			float aspect = (float)config.imageSize.x() / (float)config.imageSize.y();
-			lrc::Vec2f renderSize(historyFrameWidth, historyFrameWidth / aspect);
-			lrc::Vec2f drawPos(windowWidth - historyFrameWidth - historyFrameSep,
-							   (renderSize.y() + historyFrameSep) *
-								   (float)(historySize - index - 1) +
-								 historyFrameSep);
+		for (const auto &frame : frames) {
+			const lrc::Vec2f framePos  = std::get<0>(frame);
+			const lrc::Vec2f frameSize = std::get<1>(frame);
+			const HistoryNode *node	   = std::get<2>(frame);
 
-			totalHeight += (int64_t)(renderSize.y() + historyFrameSep);
-			drawPos.y(drawPos.y() + m_historyScrollTarget);
+			auto texture = ci::gl::Texture2d::create(node->surface());
+			totalHeight += (int64_t)(frameSize.y() + historyFrameSep);
 
 			// Don't draw the frame if it's not visible on the screen
-			if (drawPos.y() > windowHeight || drawPos.y() + renderSize.y() < 0) goto skip;
+			if (framePos.y() > windowHeight || framePos.y() + frameSize.y() < 0) continue;
 
 			ci::gl::color(ci::ColorA(1, 1, 1, 1));
-			ci::gl::draw(texture, ci::Rectf(drawPos, drawPos + renderSize));
+			ci::gl::draw(texture, ci::Rectf(framePos, framePos + frameSize));
 			ci::gl::color(ci::ColorA(0, 0, 0, 1));
-			glu::drawStrokedRectangle(drawPos, drawPos + renderSize, 3);
+			glu::drawStrokedRectangle(framePos, framePos + frameSize, 3);
 
 			if (node == m_historyNode) {
 				// If this frame is selected, outline it gold
 				ci::gl::color(ci::ColorA(1, 1, 0, 1));
-				glu::drawStrokedRectangle(drawPos, drawPos + renderSize, 4);
+				glu::drawStrokedRectangle(framePos, framePos + frameSize, 4);
 			}
-
-		skip:
-			node = node->next();
-			index++;
 		}
 
 		if (windowHeight < (float)totalHeight) {
@@ -394,16 +660,28 @@ namespace frac {
 
 		FRAC_LOG("Moving Fractal...");
 		FRAC_LOG(fmt::format("Pixel Coordinates: {} -> {}", pixTopLeft, pixBottomRight));
+
+		// Calculate image-space coordinates (allows for resizing the window)
+		// It is known that the image is drawn at (0, 0) and that the aspect ratio remains
+		// constant, so it is safe to multiply by a scaling factor. It is also known that
+		// the image is drawn to the full height of the window.
+
 		updateHistoryItem();
 
 		RenderConfig &config = m_renderer.config();
 		ci::Surface &surface = m_renderer.surface();
 
+		lrc::Vec2i imagePixTopLeft	   = screenToImageSpace(pixTopLeft);
+		lrc::Vec2i imagePixBottomRight = screenToImageSpace(pixBottomRight);
+
+		FRAC_LOG(fmt::format(
+		  "Image Coordinates: {} -> {}", imagePixTopLeft, imagePixBottomRight));
+
 		// Resize the fractal area
 		HighVec2 imageSize	= config.imageSize;
-		HighVec2 pixelDelta = pixBottomRight - pixTopLeft;
+		HighVec2 pixelDelta = imagePixBottomRight - imagePixTopLeft;
 
-		HighVec2 newFracPos = lrc::map(HighVec2(pixTopLeft),
+		HighVec2 newFracPos = lrc::map(HighVec2(imagePixTopLeft),
 									   HighVec2(0, 0),
 									   imageSize,
 									   config.fracTopLeft,
@@ -416,26 +694,19 @@ namespace frac {
 		// A temporary buffer is required here because, at some point, the loop
 		// would be writing to the same pixels it is reading from, resulting in
 		// strange visual glitches.
+
 		int64_t imgWidth  = config.imageSize.x();
 		int64_t imgHeight = config.imageSize.y();
 		int64_t index	  = 0;
 		std::vector<ci::ColorA> newPixels(imgWidth * imgHeight);
-		auto mouseStartInImageLow =
-		  pixTopLeft - lrc::Vec2i {0, getWindowHeight() - config.imageSize.y()};
 		for (int64_t y = 0; y < imgHeight; ++y) {
 			for (int64_t x = 0; x < imgWidth; ++x) {
-				int64_t pixX = lrc::map(x,
-										0.f,
-										imgWidth,
-										mouseStartInImageLow.x(),
-										mouseStartInImageLow.x() + (float)pixelDelta.x());
-				int64_t pixY = lrc::map(y,
-										0.f,
-										imgHeight,
-										mouseStartInImageLow.y(),
-										mouseStartInImageLow.y() + (float)pixelDelta.y());
-
-				newPixels[index++] = surface.getPixel({pixX, pixY});
+				lrc::Vec2i pixPos  = lrc::map(lrc::Vec2f(x, y),
+											  lrc::Vec2f(0, 0),
+											  lrc::Vec2f(imgWidth, imgHeight),
+											  lrc::Vec2f(imagePixTopLeft),
+											  lrc::Vec2f(imagePixBottomRight));
+				newPixels[index++] = surface.getPixel(pixPos);
 			}
 		}
 
@@ -455,8 +726,6 @@ namespace frac {
 
 	void MainWindow::renderFractal(bool amendHistory) {
 		m_renderer.renderFractal();
-
-		// m_history.append(m_renderer.config(), m_renderer.surface());
 		if (amendHistory) appendConfigToHistory();
 	}
 
@@ -477,11 +746,11 @@ namespace frac {
 		m_mouseDown	   = true;
 		m_mouseDownPos = event.getPos();
 
+		lrc::Vec2i imageSpacePos = imageToScreenSpace(m_renderer.config().imageSize);
+
 		// Ensure mouse is within the image
-		if (m_mouseDownPos.x() >= 0 &&
-			m_mouseDownPos.x() < m_renderer.config().imageSize.x() &&
-			m_mouseDownPos.y() >= 0 &&
-			m_mouseDownPos.y() < m_renderer.config().imageSize.y()) {
+		if (m_mouseDownPos.x() >= 0 && m_mouseDownPos.x() < imageSpacePos.x() &&
+			m_mouseDownPos.y() >= 0 && m_mouseDownPos.y() < imageSpacePos.y()) {
 			// Check if mouse is inside the box (and it is being shown)
 			if (m_showZoomBox && m_mouseDownPos.x() > m_zoomBoxStart.x() &&
 				m_mouseDownPos.x() < m_zoomBoxEnd.x() &&
@@ -491,6 +760,34 @@ namespace frac {
 			} else {
 				m_drawingZoomBox = true;
 				m_showZoomBox	 = false;
+			}
+		}
+
+		// See if mouse is in the history buffer section
+		const json &settings		  = m_renderer.settings();
+		const float historyFrameWidth = settings["menus"]["history"]["frameWidth"];
+		const float historyFrameSep	  = settings["menus"]["history"]["frameSep"];
+		const std::vector<std::tuple<lrc::Vec2f, lrc::Vec2f, HistoryNode *>> frames =
+		  getHistoryFrameLocations();
+		const auto windowWidth	= (float)getWindowWidth();
+		const auto windowHeight = (float)getWindowHeight();
+		float boxLeft			= windowWidth - historyFrameWidth - historyFrameSep * 2;
+		if (m_mouseDownPos.x() > boxLeft && m_mouseDownPos.x() < windowWidth) {
+			// Iterate over frames to see if any contain the mouse
+			for (const auto &frame : frames) {
+				const lrc::Vec2i framePos  = std::get<0>(frame);
+				const lrc::Vec2i frameSize = std::get<1>(frame);
+				HistoryNode *node		   = std::get<2>(frame);
+
+				if (m_mouseDownPos.x() >= framePos.x() &&
+					m_mouseDownPos.x() < framePos.x() + frameSize.x() &&
+					m_mouseDownPos.y() >= framePos.y() &&
+					m_mouseDownPos.y() < framePos.y() + frameSize.y()) {
+					// Mouse was within this frame, so set it as current
+					m_historyNode		= node;
+					m_renderer.config() = node->config();
+					renderFractal(false); // Re-render the fractal
+				}
 			}
 		}
 	}

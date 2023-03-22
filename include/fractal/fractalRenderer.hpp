@@ -1,6 +1,10 @@
 #pragma once
 
 namespace frac {
+	namespace optimisations {
+		constexpr size_t OUTLINE_OPTIMISATION = 0x000000000000001;
+	}
+
 	class FractalRenderer {
 	public:
 		FractalRenderer() = default;
@@ -45,6 +49,27 @@ namespace frac {
 		/// \param boxIndex Box ID (for updating states)
 		void renderBox(const RenderBox &box, int64_t boxIndex = -1);
 
+		/// Render a single edge of a RenderBox's bounding area. This is used internally
+		/// inside the renderBox method.
+		///
+		/// Edge:
+		///  - 0 -> Top
+		///  - 1 -> Right
+		///  - 2 -> Bottom
+		///  - 3 -> Left
+		///
+		/// \param box
+		/// \param fractalOrigin
+		/// \param aliasFactor
+		/// \param step
+		/// \param aliasStepCorrect
+		/// \param inc
+		/// \param edge
+		/// \return
+		bool renderEdge(const RenderBox &box, const HighVec2 &fractalOrigin,
+						int64_t aliasFactor, const HighVec2 &step,
+						const HighVec2 &aliasStepCorrect, int64_t inc, int64_t edge);
+
 		/// Calculate the colour of a pixel at standard-precision. This implements
 		/// anti-aliasing as well
 		/// \param pixPos Pixel-space coordinate
@@ -68,6 +93,8 @@ namespace frac {
 		/// Update the render configuration of the internal fractal pointer
 		void updateRenderConfig();
 
+		void updateFractalType(const std::shared_ptr<Fractal> &fractal);
+
 		/// Ensure all values are using the highest precision possible
 		void updateConfigPrecision();
 
@@ -78,6 +105,16 @@ namespace frac {
 		/// \return Statistics
 		LIBRAPID_NODISCARD RenderBoxTimeStats boxTimeStats() const;
 
+		LIBRAPID_NODISCARD std::string getFractalName() const {
+			return m_fractal->name();
+		}
+
+		LIBRAPID_NODISCARD std::vector<std::string> getColorFuncs() const;
+		void setColorFunc(const std::string &func);
+
+		LIBRAPID_NODISCARD std::vector<std::string> getPaletteNames() const;
+		void setPaletteName(const std::string &palette);
+
 		/// Constant getter method for the render configuration
 		/// \return Render configuration
 		LIBRAPID_NODISCARD const RenderConfig &config() const;
@@ -85,6 +122,8 @@ namespace frac {
 		/// Non-const getter method for the render configuration
 		/// \return Render configuration
 		LIBRAPID_NODISCARD RenderConfig &config();
+
+		LIBRAPID_NODISCARD const std::string &paletteName() const;
 
 		/// Constant getter method for the internal render box vector
 		/// \return Render box vector
@@ -110,12 +149,21 @@ namespace frac {
 		/// \return Surface
 		LIBRAPID_NODISCARD ci::Surface &surface();
 
+		void exportImage(const std::string &path) const;
+		void exportSettings(const std::string &path) const;
+
 	private:
 		RenderConfig m_renderConfig;		// The settings for the fractal renderer
 		ci::Surface m_fractalSurface;		// The surface that the fractal is rendered to
 		json m_settings;					// The settings for the fractal
-		std::unique_ptr<Fractal> m_fractal; // The fractal to render
+		std::shared_ptr<Fractal> m_fractal; // The fractal to render
 		ThreadPool m_threadPool;			// Pool for render threads
+
+		// Colouring functions for the fractal
+		coloring::ColorFuncLow m_colorFuncLow;
+		coloring::ColorFuncHigh m_colorFuncHigh;
+		std::string m_paletteName;
+		std::string m_colorFuncName;
 
 		std::vector<RenderBox> m_renderBoxes; // The state of each render box
 

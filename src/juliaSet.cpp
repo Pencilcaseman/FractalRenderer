@@ -1,25 +1,17 @@
 #include <fractal/fractal.hpp>
 
 namespace frac {
-	Mandelbrot::Mandelbrot(const RenderConfig &config) : Fractal(config) {}
+	JuliaSet::JuliaSet(const RenderConfig &config) : Fractal(config) {}
 
-	/*
-	 * Note that, since this class will be used polymorphically with other classes,
-	 * these two functions must be implemented separately and cannot be templated, as the
-	 * compiler would error when trying to identify which function to call. Additionally,
-	 * splitting the functions in this way allows for more targeted optimisations to be
-	 * made in some cases.
-	 */
-
-	size_t Mandelbrot::supportedOptimisations() const {
+	size_t JuliaSet::supportedOptimisations() const {
 		// Outlining is proven for the Mandelbrot set
 		return optimisations::OUTLINE_OPTIMISATION;
 	}
 
-	std::string Mandelbrot::name() const { return "Mandelbrot"; }
+	std::string JuliaSet::name() const { return "Julia Set"; }
 
 	std::unordered_map<std::string, coloring::ColorFuncLow>
-	Mandelbrot::getLowPrecColoringAlgorithms() const {
+	JuliaSet::getLowPrecColoringAlgorithms() const {
 		return {{"Logarithmic Scaling",
 				 std::function([](const lrc::Complex<LowPrecision> &coord,
 								  int64_t iters,
@@ -47,7 +39,7 @@ namespace frac {
 	}
 
 	std::unordered_map<std::string, coloring::ColorFuncHigh>
-	Mandelbrot::getHighPrecColoringAlgorithms() const {
+	JuliaSet::getHighPrecColoringAlgorithms() const {
 		return {{"Logarithmic Scaling",
 				 std::function([](const lrc::Complex<HighPrecision> &coord,
 								  int64_t iters,
@@ -75,50 +67,40 @@ namespace frac {
 	}
 
 	std::pair<int64_t, lrc::Complex<LowPrecision>>
-	Mandelbrot::iterCoordLow(const lrc::Complex<LowPrecision> &coord) const {
-		LowPrecision re_0 = lrc::real(coord); // Real component (initial)
-		LowPrecision im_0 = lrc::imag(coord); // Imaginary component (initial)
-		LowPrecision re = 0, im = 0;
-		LowPrecision tmp; // Temporary variable for use in the calculation
+	JuliaSet::iterCoordLow(const lrc::Complex<LowPrecision> &coord) const {
+		lrc::Complex<LowPrecision> c(-0.8, 0.156); // Julia set constant
+		auto z			  = coord;
 		int64_t iteration = 0;
 
 		// Bail when larger than this
 		double bailout = Fractal::m_renderConfig.bail;
 
-		while (re * re + im * im <= bailout &&
+		while (z.real() * z.real() + z.imag() * z.imag() <= bailout &&
 			   iteration < Fractal::m_renderConfig.maxIters) {
-			tmp = re * re - im * im + re_0;
-			im	= 2 * re * im + im_0;
-			re	= tmp;
+			z = z * z + c;
 			++iteration;
 		}
-
-		return {iteration, lrc::Complex<LowPrecision>(re, im)};
+		return {iteration, z};
 	}
 
 	std::pair<int64_t, lrc::Complex<HighPrecision>>
-	Mandelbrot::iterCoordHigh(const lrc::Complex<HighPrecision> &coord) const {
-		HighPrecision re_0 = lrc::real(coord); // Real component (initial)
-		HighPrecision im_0 = lrc::imag(coord); // Imaginary component (initial)
-		HighPrecision re = 0, im = 0;
-		HighPrecision tmp; // Temporary variable for use in the calculation
+	JuliaSet::iterCoordHigh(const lrc::Complex<HighPrecision> &coord) const {
+		lrc::Complex<HighPrecision> c(-0.8, 0.156); // Julia set constant
+		auto z			  = coord;
 		int64_t iteration = 0;
 
 		// Bail when larger than this
-		double bailout = 1 << 16;
+		double bailout = Fractal::m_renderConfig.bail;
 
-		while (re * re + im * im <= bailout &&
+		while (z.real() * z.real() + z.imag() * z.imag() <= bailout &&
 			   iteration < Fractal::m_renderConfig.maxIters) {
-			tmp = re * re - im * im + re_0;
-			im	= 2 * re * im + im_0;
-			re	= tmp;
+			z = z * z + c;
 			++iteration;
 		}
-
-		return {iteration, lrc::Complex<HighPrecision>(re, im)};
+		return {iteration, z};
 	}
 
-	ci::ColorA Mandelbrot::getColorLow(
+	ci::ColorA JuliaSet::getColorLow(
 	  const lrc::Complex<LowPrecision> &coord, int64_t iters, const ColorPalette &palette,
 	  const std::function<ci::ColorA(const lrc::Complex<LowPrecision> &, int64_t,
 									 const ColorPalette &)> &colorFunc) const {
@@ -127,7 +109,7 @@ namespace frac {
 		return colorFunc(coord, iters, palette);
 	}
 
-	ci::ColorA Mandelbrot::getColorHigh(
+	ci::ColorA JuliaSet::getColorHigh(
 	  const lrc::Complex<HighPrecision> &coord, int64_t iters,
 	  const ColorPalette &palette,
 	  const std::function<ci::ColorA(const lrc::Complex<HighPrecision> &, int64_t,

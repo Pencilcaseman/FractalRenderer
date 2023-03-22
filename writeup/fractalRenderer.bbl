@@ -1,4 +1,4 @@
-\begin{thebibliography}{8}
+\begin{thebibliography}{10}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -41,5 +41,17 @@ Cinder Developers and Toby Davis.
 Toby Davis.
 \newblock {LibRapid: Optimised Mathematics for C++}, 1 2023.
 \newblock URL \url{https://github.com/LibRapid/librapid}.
+
+\bibitem[Lohmann(2022)]{Lohmann_JSON_for_Modern_2022}
+Niels Lohmann.
+\newblock {JSON for Modern C++}, 8 2022.
+\newblock URL \url{https://github.com/nlohmann}.
+
+\bibitem[Shoshany(2021)]{Shoshany_A_C_17_Thread_2021}
+Barak Shoshany.
+\newblock {A C++17 Thread Pool for High-Performance Scientific Computing}.
+\newblock \emph{arXiv}, 5 2021.
+\newblock \doi{10.5281/zenodo.4742687}.
+\newblock URL \url{https://arxiv.org/abs/2105.00613}.
 
 \end{thebibliography}

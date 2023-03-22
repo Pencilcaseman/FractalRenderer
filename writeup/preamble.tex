@@ -24,14 +24,14 @@
 \usepackage{blindtext}
 \usepackage{multicol}
 \usepackage[breakable,
-			skins]{tcolorbox}
+skins]{tcolorbox}
 \usepackage[protrusion=true,
-			activate={true,nocompatibility},
-			final,
-			tracking=true,
-			kerning=true,
-			spacing=true,
-			factor=1100]{microtype}
+activate={true,nocompatibility},
+final,
+tracking=true,
+kerning=true,
+spacing=true,
+factor=1100]{microtype}
 \usepackage{fontawesome}
 \usepackage{notoccite}
 \usepackage[numbers,sort&compress]{natbib}
@@ -41,7 +41,7 @@
 \usepackage{zref-totpages}
 \usepackage{tablefootnote}
 
-\usetikzlibrary{shapes, decorations, calc, arrows}
+\usetikzlibrary{shapes, decorations, calc, arrows, arrows.meta}
 \usetikzlibrary{3d,fit,backgrounds, decorations.text}
 \usetikzlibrary{positioning, shapes.symbols}
 \usetikzlibrary{decorations.pathreplacing, calligraphy}
@@ -92,16 +92,16 @@
 \usepackage{intcalc}
 
 \def\getnumdigitsaux #1{%
-    \ifx#1\quark
-    \expandafter\relax
-    \else
-    +1\expandafter\getnumdigitsaux
-    \fi
+	\ifx#1\quark
+	\expandafter\relax
+	\else
+	+1\expandafter\getnumdigitsaux
+	\fi
 }
 
 \def\quark{\quark}
 \newcommand\getnumdigits[1]{%
-    \the\numexpr\getnumdigitsaux #1\quark
+	\the\numexpr\getnumdigitsaux #1\quark
 }
 
 \newcounter{lstuniquenumber}
@@ -126,7 +126,7 @@
 	keywordstyle=\color{bluekeywords},
 	stringstyle=\color{redstrings},
 	% prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
-    numberstyle=\color{graynumbers}\ttfamily\boxeddecimalnum,
+	numberstyle=\color{graynumbers}\ttfamily\boxeddecimalnum,
 	morekeywords={psrotate},
 	basicstyle=\ttfamily\footnotesize,
 	frame=1,
@@ -134,7 +134,7 @@
 	framesep=22pt,
 	tabsize=4,
 	captionpos=b,
-    xleftmargin=5.5ex
+	xleftmargin=5.5ex
 }
 
 % \definecolor{bluekeywords}{rgb}{0.13, 0.13, 1}

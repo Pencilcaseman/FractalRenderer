@@ -16,7 +16,7 @@ namespace frac {
 			  m_settings["renderConfig"]["numThreads"].get<int64_t>(),
 			  m_settings["renderConfig"]["maxIters"].get<int64_t>(),
 			  m_settings["renderConfig"]["precision"].get<int64_t>(),
-			  m_settings["renderConfig"]["bail"].get<LowPrecision>(),
+			  0, // Bailout value -- Defaults set below. Can be reset from the GUI
 			  m_settings["renderConfig"]["antiAlias"].get<int>(),
 
 			  lrc::Vec2i(
@@ -25,31 +25,57 @@ namespace frac {
 			  lrc::Vec2i(m_settings["renderConfig"]["boxSize"]["width"].get<int64_t>(),
 						 m_settings["renderConfig"]["boxSize"]["height"].get<int64_t>()),
 
-			  lrc::Vec<HighPrecision, 2>(
-				m_settings["renderConfig"]["fracTopLeft"]["Re"].get<float>(),
-				m_settings["renderConfig"]["fracTopLeft"]["Im"].get<float>()),
-			  lrc::Vec<HighPrecision, 2>(
-				m_settings["renderConfig"]["fracSize"]["Re"].get<float>(),
-				m_settings["renderConfig"]["fracSize"]["Im"].get<float>()),
+			  {0, 0}, // Null coordinates and dimensions -- Defaults are set below and
+			  {0, 0}, // can be reset from the GUI
+
 			  lrc::Vec<HighPrecision, 2>(0, 0),
 
-			  ColorPalette(), // Default for now -- colors added later
+			  {}, // Default for now -- colors added later
 
 			  m_settings["renderConfig"]["draftRender"].get<bool>(),
 			  m_settings["renderConfig"]["draftInc"].get<int64_t>()};
 
+			std::string fractalOriginReStr =
+			  m_settings["renderConfig"]["fractalOrigin"]["Re"];
+			std::string fractalOriginImStr =
+			  m_settings["renderConfig"]["fractalOrigin"]["Im"];
+
+			std::string fractalSizeReStr =
+			  m_settings["renderConfig"]["fractalSize"]["Re"];
+			std::string fractalSizeImStr =
+			  m_settings["renderConfig"]["fractalSize"]["Im"];
+
+			HighPrecision fractalOriginRe, fractalOriginIm, fractalSizeRe, fractalSizeIm;
+
+			scn::scan(fractalOriginReStr, "{}", fractalOriginRe);
+			scn::scan(fractalOriginImStr, "{}", fractalOriginIm);
+
+			scn::scan(fractalSizeReStr, "{}", fractalSizeRe);
+			scn::scan(fractalSizeImStr, "{}", fractalSizeIm);
+
+			HighVec2 fracOrigin(fractalOriginRe, fractalOriginIm);
+			HighVec2 fracSize(fractalSizeRe, fractalSizeIm);
+
+			m_renderConfig.fracTopLeft = fracOrigin - fracSize / 2;
+			m_renderConfig.fracSize	   = fracSize;
+
 			m_renderConfig.originalFracSize = m_renderConfig.fracSize;
 
-			// Load the colour palette from the JSON object
-			for (const auto &color : m_settings["renderConfig"]["colorPalette"]) {
-				m_renderConfig.palette.addColor(
-				  ColorPalette::ColorType(color["red"].get<float>(),
-										  color["green"].get<float>(),
-										  color["blue"].get<float>(),
-										  color["alpha"].get<float>()));
-			}
+			// Load the colour palettes from the JSON object
+			for (const auto &palette : m_settings["renderConfig"]["colorPalettes"]) {
+				// If no palette name has been set, set it to the first palette in the
+				// list
+				if (m_paletteName.length() == 0) m_paletteName = palette["name"];
 
-			m_fractal = std::make_unique<Mandelbrot>(m_renderConfig);
+				ColorPalette tmp;
+				for (const auto &color : palette["colors"]) {
+					tmp.addColor(ColorPalette::ColorType(color["red"].get<float>(),
+														 color["green"].get<float>(),
+														 color["blue"].get<float>(),
+														 color["alpha"].get<float>()));
+				}
+				m_renderConfig.palettes[palette["name"]] = tmp;
+			}
 		} catch (std::exception &e) {
 			FRAC_LOG(fmt::format("Failed to load settings: {}", e.what()));
 			stopRender();
@@ -66,7 +92,7 @@ namespace frac {
 											const lrc::Vec<HighPrecision, 2> &size) {
 		m_renderConfig.fracTopLeft = topLeft;
 		m_renderConfig.fracSize	   = size;
-		m_fractal->updateRenderConfig(m_renderConfig);
+		if (m_fractal) m_fractal->updateRenderConfig(m_renderConfig);
 	}
 
 	void FractalRenderer::moveFractalCenter(const lrc::Vec<HighPrecision, 2> &center,
@@ -147,6 +173,10 @@ namespace frac {
 		  HighPrecision(1) / static_cast<HighPrecision>(aliasFactor);
 		HighVec2 aliasStepCorrect(scaleFactor, scaleFactor);
 
+		const size_t supportedOptimisations = m_fractal->supportedOptimisations();
+		const bool supportsOutlining =
+		  supportedOptimisations & optimisations::OUTLINE_OPTIMISATION;
+
 		bool blackEdges = true; // Assume edges are black to begin with
 
 		if (m_haltRender) return;
@@ -163,103 +193,14 @@ namespace frac {
 			}
 		}
 
-		// Render the top edge
-		for (int64_t px = box.topLeft.x(); px < box.topLeft.x() + box.dimensions.x();
-			 px += inc) {
-			// Anti-aliasing
-			auto pixPos = fractalOrigin + step * HighVec2(px - box.topLeft.x(), 0);
-
-			ci::ColorA pix;
-
-			if (m_renderConfig.precision <= 64) {
-				pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
-			} else {
-				pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
+		if (supportsOutlining) {
+			for (int64_t i = 0; i < 4; ++i) {
+				blackEdges &= renderEdge(
+				  box, fractalOrigin, aliasFactor, step, aliasStepCorrect, inc, i);
 			}
-
-			if (blackEdges && (pix.r != 0 && pix.g != 0 && pix.b != 0)) {
-				blackEdges = false;
-			}
-
-			m_fractalSurface.setPixel(lrc::Vec2i(px, box.topLeft.y()), pix);
 		}
 
-		if (m_haltRender) return;
-
-		// Render the right edge
-		for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y();
-			 py += inc) {
-			// Anti-aliasing
-			auto pixPos =
-			  fractalOrigin + step * HighVec2(box.dimensions.x(), py - box.topLeft.y());
-
-			ci::ColorA pix;
-
-			if (m_renderConfig.precision <= 64) {
-				pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
-			} else {
-				pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
-			}
-
-			if (blackEdges && (pix.r != 0 && pix.g != 0 && pix.b != 0)) {
-				blackEdges = false;
-			}
-
-			m_fractalSurface.setPixel(
-			  lrc::Vec2i(box.topLeft.x() + box.dimensions.x() - 1, py), pix);
-		}
-
-		if (m_haltRender) return;
-
-		// Render the bottom edge
-		for (int64_t px = box.topLeft.x(); px < box.topLeft.x() + box.dimensions.x();
-			 px += inc) {
-			// Anti-aliasing
-			auto pixPos = fractalOrigin +
-						  step * HighVec2(px - box.topLeft.x(), box.dimensions.y() - 1);
-
-			ci::ColorA pix;
-
-			if (m_renderConfig.precision <= 64) {
-				pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
-			} else {
-				pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
-			}
-
-			if (blackEdges && (pix.r != 0 && pix.g != 0 && pix.b != 0)) {
-				blackEdges = false;
-			}
-
-			m_fractalSurface.setPixel(
-			  lrc::Vec2i(px, box.topLeft.y() + box.dimensions.y() - 1), pix);
-		}
-
-		if (m_haltRender) return;
-
-		// Render the left edge
-		for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y();
-			 py += inc) {
-			// Anti-aliasing
-			auto pixPos =
-			  fractalOrigin +
-			  step * HighVec2(box.topLeft.x() - box.topLeft.x(), py - box.topLeft.y());
-
-			ci::ColorA pix;
-
-			if (m_renderConfig.precision <= 64) {
-				pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
-			} else {
-				pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
-			}
-
-			if (blackEdges && (pix.r != 0 && pix.g != 0 && pix.b != 0)) {
-				blackEdges = false;
-			}
-
-			m_fractalSurface.setPixel(lrc::Vec2i(box.topLeft.x(), py), pix);
-		}
-
-		if (blackEdges) {
+		if (supportsOutlining && blackEdges) {
 			for (int64_t py = box.topLeft.y() + 1;
 				 py < box.topLeft.y() + box.dimensions.y() - 1;
 				 py += inc) {
@@ -271,18 +212,21 @@ namespace frac {
 				}
 			}
 		} else {
+			int64_t offset = 0;
+			if (supportsOutlining) offset = 1;
+
 			// Make the primary axis of iteration the x-axis to improve cache
 			// efficiency and increase performance.
-			for (int64_t py = box.topLeft.y() + 1;
-				 py < box.topLeft.y() + box.dimensions.y() - 1;
+			for (int64_t py = box.topLeft.y() + offset;
+				 py < box.topLeft.y() + box.dimensions.y() - offset;
 				 py += inc) {
 				// Quick return if required. Without this, the
 				// render threads will continue running after the
 				// application is closed, leading to weird behaviour.
 				if (m_haltRender) return;
 
-				for (int64_t px = box.topLeft.x() + 1;
-					 px < box.topLeft.x() + box.dimensions.x() - 1;
+				for (int64_t px = box.topLeft.x() + offset;
+					 px < box.topLeft.x() + box.dimensions.x() - offset;
 					 px += inc) {
 					// Anti-aliasing
 					auto pixPos = fractalOrigin + step * HighVec2(px - box.topLeft.x(),
@@ -306,25 +250,70 @@ namespace frac {
 		m_renderBoxes[boxIndex].renderTime = lrc::now() - start;
 	}
 
+	bool FractalRenderer::renderEdge(const RenderBox &box, const HighVec2 &fractalOrigin,
+									 int64_t aliasFactor, const HighVec2 &step,
+									 const HighVec2 &aliasStepCorrect, int64_t inc,
+									 int64_t edge) {
+		bool edgesInSet = true;
+		if (edge & 1) { // Edge is 1 or 3 -> Right or left
+			int64_t px = 0;
+			if (edge == 3) px = box.dimensions.x() - 1;
+
+			for (int64_t py = box.topLeft.y(); py < box.topLeft.y() + box.dimensions.y();
+				 py += inc) {
+				// Anti-aliasing
+				auto pixPos = fractalOrigin + step * HighVec2(px, py - box.topLeft.y());
+
+				ci::ColorA pix;
+
+				if (m_renderConfig.precision <= 64) {
+					pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
+				} else {
+					pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
+				}
+
+				if (pix.r != 0 || pix.g != 0 || pix.b != 0) edgesInSet = false;
+
+				m_fractalSurface.setPixel(lrc::Vec2i(box.topLeft.x() + px, py), pix);
+			}
+		} else { // Edge is 0 or 2 -> Top or bottom
+			int64_t py = 0;
+			if (edge == 2) py = box.dimensions.y() - 1;
+
+			for (int64_t px = box.topLeft.x(); px < box.topLeft.x() + box.dimensions.x();
+				 px += inc) {
+				// Anti-aliasing
+				auto pixPos = fractalOrigin + step * HighVec2(px - box.topLeft.x(), py);
+
+				ci::ColorA pix;
+
+				if (m_renderConfig.precision <= 64) {
+					pix = pixelColorLow(pixPos, aliasFactor, step, aliasStepCorrect);
+				} else {
+					pix = pixelColorHigh(pixPos, aliasFactor, step, aliasStepCorrect);
+				}
+
+				if (pix.r != 0 || pix.g != 0 || pix.b != 0) edgesInSet = false;
+
+				m_fractalSurface.setPixel(lrc::Vec2i(px, box.topLeft.y() + py), pix);
+			}
+		}
+		return edgesInSet;
+	}
+
 	ci::ColorA FractalRenderer::pixelColorLow(const LowVec2 &pixPos, int64_t aliasFactor,
 											  const LowVec2 &step,
 											  const LowVec2 &aliasStepCorrect) {
 		ci::ColorA pix(0, 0, 0, 1);
 
+		const ColorPalette &palette = m_renderConfig.palettes[m_paletteName];
+
 		for (int64_t aliasY = 0; aliasY < aliasFactor; ++aliasY) {
 			for (int64_t aliasX = 0; aliasX < aliasFactor; ++aliasX) {
 				auto pos = pixPos + step * LowVec2(aliasX, aliasY) * aliasStepCorrect;
-
 				auto [iters, endPoint] =
 				  m_fractal->iterCoordLow(lrc::Complex<LowPrecision>(pos.x(), pos.y()));
-				if (endPoint.real() * endPoint.real() +
-					  endPoint.imag() * endPoint.imag() <
-					4) {
-					pix += ci::ColorA(0, 0, 0, 1); // Probably in the set
-				} else {
-					pix +=
-					  m_fractal->getColorLow(endPoint, iters); // Probably not in the set
-				}
+				pix += m_fractal->getColorLow(endPoint, iters, palette, m_colorFuncLow);
 			}
 		}
 
@@ -336,20 +325,14 @@ namespace frac {
 											   const HighVec2 &aliasStepCorrect) {
 		ci::ColorA pix(0, 0, 0, 1);
 
+		const ColorPalette &palette = m_renderConfig.palettes[m_paletteName];
+
 		for (int64_t aliasY = 0; aliasY < aliasFactor; ++aliasY) {
 			for (int64_t aliasX = 0; aliasX < aliasFactor; ++aliasX) {
 				auto pos = pixPos + step * HighVec2(aliasX, aliasY) * aliasStepCorrect;
-
 				auto [iters, endPoint] =
 				  m_fractal->iterCoordHigh(lrc::Complex<HighPrecision>(pos.x(), pos.y()));
-				if (endPoint.real() * endPoint.real() +
-					  endPoint.imag() * endPoint.imag() <
-					4) {
-					pix += ci::ColorA(0, 0, 0, 1); // Probably in the set
-				} else {
-					pix +=
-					  m_fractal->getColorHigh(endPoint, iters); // Probably not in the set
-				}
+				pix += m_fractal->getColorHigh(endPoint, iters, palette, m_colorFuncHigh);
 			}
 		}
 
@@ -366,6 +349,11 @@ namespace frac {
 		int64_t h		 = m_renderConfig.imageSize.y();
 		m_fractalSurface = ci::Surface((int32_t)w, (int32_t)h, true);
 		FRAC_LOG("Surface regenerated");
+	}
+
+	void FractalRenderer::updateFractalType(const std::shared_ptr<Fractal> &fractal) {
+		m_fractal = fractal;
+		m_fractal->updateRenderConfig(m_renderConfig);
 	}
 
 	void FractalRenderer::updateConfigPrecision() {
@@ -408,8 +396,35 @@ namespace frac {
 		return {min, max, average, remainingTime};
 	}
 
+	std::vector<std::string> FractalRenderer::getColorFuncs() const {
+		const auto &colorFuncs = m_fractal->getLowPrecColoringAlgorithms();
+		std::vector<std::string> ret;
+		for (const auto &[name, palette] : colorFuncs) { ret.push_back(name); }
+		return ret;
+	}
+
+	void FractalRenderer::setColorFunc(const std::string &name) {
+		m_colorFuncName = name;
+		m_colorFuncLow	= m_fractal->getLowPrecColoringAlgorithms().at(name);
+		m_colorFuncHigh = m_fractal->getHighPrecColoringAlgorithms().at(name);
+	}
+
+	std::vector<std::string> FractalRenderer::getPaletteNames() const {
+		std::vector<std::string> ret;
+		for (const auto &[name, palette] : m_renderConfig.palettes) {
+			ret.push_back(name);
+		}
+		return ret;
+	}
+
+	void FractalRenderer::setPaletteName(const std::string &name) {
+		m_paletteName = name;
+	}
+
 	const RenderConfig &FractalRenderer::config() const { return m_renderConfig; }
 	RenderConfig &FractalRenderer::config() { return m_renderConfig; }
+
+	const std::string &FractalRenderer::paletteName() const { return m_paletteName; }
 
 	const std::vector<RenderBox> &FractalRenderer::renderBoxes() const {
 		return m_renderBoxes;
@@ -421,4 +436,44 @@ namespace frac {
 
 	const ci::Surface &FractalRenderer::surface() const { return m_fractalSurface; }
 	ci::Surface &FractalRenderer::surface() { return m_fractalSurface; }
+
+	void FractalRenderer::exportImage(const std::string &path) const {
+		ci::writeImage(path, m_fractalSurface);
+	}
+
+	void FractalRenderer::exportSettings(const std::string &path) const {
+		// All updates to the render configuration must be copied to the settings
+		json settings = m_settings;
+
+		settings["renderConfig"]["numThreads"] = m_renderConfig.numThreads;
+		settings["renderConfig"]["maxIters"]   = m_renderConfig.maxIters;
+		settings["renderConfig"]["precision"]  = m_renderConfig.precision;
+		settings["renderConfig"]["antiAlias"]  = m_renderConfig.antiAlias;
+
+		settings["renderConfig"]["imageSize"]["width"]	= m_renderConfig.imageSize.x();
+		settings["renderConfig"]["imageSize"]["height"] = m_renderConfig.imageSize.y();
+
+		settings["renderConfig"]["boxSize"]["width"]  = m_renderConfig.boxSize.x();
+		settings["renderConfig"]["boxSize"]["height"] = m_renderConfig.boxSize.y();
+
+		settings["renderConfig"]["draftRender"] = m_renderConfig.draftRender;
+		settings["renderConfig"]["draftInc"]	= m_renderConfig.draftInc;
+
+		HighVec2 size	= m_renderConfig.fracSize;
+		HighVec2 origin = m_renderConfig.fracTopLeft + size / 2;
+		settings["renderConfig"]["fractalOrigin"]["Re"] = fmt::format("{}", origin.x());
+		settings["renderConfig"]["fractalOrigin"]["Im"] = fmt::format("{}", origin.y());
+
+		settings["renderConfig"]["fractalSize"]["Re"] = fmt::format("{}", size.x());
+		settings["renderConfig"]["fractalSize"]["Im"] = fmt::format("{}", size.y());
+
+		settings["renderConfig"]["bail"]		 = m_renderConfig.bail;
+		settings["renderConfig"]["fractalType"]	 = m_fractal->name();
+		settings["renderConfig"]["colorFunc"]	 = m_colorFuncName;
+		settings["renderConfig"]["colorPalette"] = m_paletteName;
+
+		std::fstream file(path, std::ios::out);
+		file << settings.dump(4);
+		file.close();
+	}
 } // namespace frac

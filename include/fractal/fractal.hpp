@@ -25,10 +25,13 @@ namespace frac {
 
 #include <fractal/debug.hpp>
 #include <fractal/colorPalette.hpp>
+#include <fractal/coloringAlgorithms.hpp>
 #include <fractal/openglUtils.hpp>
 #include <fractal/renderConfig.hpp>
 #include <fractal/genericFractal.hpp>
 #include <fractal/mandelbrot.hpp>
+#include <fractal/juliaSet.hpp>
+#include <fractal/newton.hpp>
 #include <fractal/fractalRenderer.hpp>
 #include <fractal/history.hpp>
 #include <fractal/mainWindow.hpp>

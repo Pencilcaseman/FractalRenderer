@@ -8,17 +8,17 @@ namespace frac {
 	 * class and does not implement any novel functions.
 	 */
 
-	class Mandelbrot : public Fractal {
+	class JuliaSet : public Fractal {
 	public:
 		/// Constructor taking a RenderConfig object
 		/// \param config RenderConfig object
-		explicit Mandelbrot(const RenderConfig &config);
-		Mandelbrot(const Mandelbrot &)			  = delete;
-		Mandelbrot(Mandelbrot &&)				  = delete;
-		Mandelbrot &operator=(const Mandelbrot &) = delete;
-		Mandelbrot &operator=(Mandelbrot &&)	  = delete;
+		explicit JuliaSet(const RenderConfig &config);
+		JuliaSet(const JuliaSet &)			  = delete;
+		JuliaSet(JuliaSet &&)				  = delete;
+		JuliaSet &operator=(const JuliaSet &) = delete;
+		JuliaSet &operator=(JuliaSet &&)	  = delete;
 
-		~Mandelbrot() override = default;
+		~JuliaSet() override = default;
 
 		LIBRAPID_NODISCARD size_t supportedOptimisations() const override;
 
