@@ -15,6 +15,8 @@ namespace frac {
 		/// Configure ImGui, setting up the style and enabling docking
 		void configureImGui();
 
+		void configureFractalDefault();
+
 		/// Set up the window, configure ImGui and initialize the fractal rendering
 		/// surfaces
 		void setup() override;

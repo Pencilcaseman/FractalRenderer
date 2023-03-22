@@ -47,7 +47,7 @@ namespace frac {
 		configureSettings();
 		configureWindow();
 		configureImGui();
-
+		configureFractalDefault();
 		m_renderer.regenerateSurface();
 		renderFractal();
 
@@ -55,6 +55,21 @@ namespace frac {
 	}
 
 	void MainWindow::stopRender() { m_renderer.stopRender(); }
+
+	void MainWindow::configureFractalDefault() {
+		// Configure the FractalRenderer's default fractal type
+		json renderConfig		= m_renderer.settings()["renderConfig"];
+		std::string fractalType = renderConfig["fractalType"];
+		std::string colorFunc	= renderConfig["colorFunc"];
+		std::string palette		= renderConfig["colorPalette"];
+		float bailoutVal		= renderConfig["fractals"][fractalType]["bail"];
+		setFractalType(fractalType);
+		m_renderer.setColorFunc(colorFunc);
+		m_renderer.setPaletteName(palette);
+		m_renderer.config().bail = bailoutVal;
+		m_renderer.updateConfigPrecision();
+		m_renderer.updateRenderConfig();
+	}
 
 	void MainWindow::appendConfigToHistory() {
 		FRAC_LOG("Appending to history");
@@ -81,7 +96,7 @@ namespace frac {
 			newFracPtr = std::make_shared<Mandelbrot>(m_renderer.config());
 		}
 
-		// If changing the fractal, clear the hisotry, since it is no longer
+		// If changing the fractal, clear the history, since it is no longer
 		// valid
 		m_history.first()->killChildren();
 		m_historyNode = m_history.first();
@@ -552,16 +567,24 @@ namespace frac {
 				m_renderer.exportImage(filePath);
 			}
 
-			ImGui::SameLine();
 			if (!filePath.empty() && isValidSettingsPath &&
 				ImGui::Button("Export Settings")) {
 				m_renderer.exportSettings(filePath);
 			}
 
-			ImGui::SameLine();
 			if (!filePath.empty() && isValidSettingsPath &&
 				ImGui::Button("Import Settings")) {
-				// m_renderer.importSettings(filePath);
+				std::fstream settingsFile(filePath, std::ios::in);
+				if (settingsFile.is_open()) {
+					m_renderer.setConfig(json::parse(settingsFile));
+					m_history.first()->killChildren();
+					m_history.append(m_renderer.config(), m_renderer.surface());
+					m_historyNode = m_history.first();
+					configureFractalDefault();
+					renderFractal();
+				} else {
+					FRAC_ERROR("Failed to open settings file");
+				}
 			}
 		}
 		ImGui::End();

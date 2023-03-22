@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.4.27)  21 MAR 2023 12:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.4.27)  22 MAR 2023 09:07
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1594,19 +1594,6 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 
 {C:/Users/penci/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
 (fractalRenderer.toc
-LaTeX Font Info:    Trying to load font information for OT1+zi4 on input line 5
-1.
-
-(C:\Users\penci\AppData\Local\Programs\MiKTeX\tex/latex/inconsolata\ot1zi4.fd
-File: ot1zi4.fd 2018/01/14 OT1/zi4 (Inconsolata)
-)
-LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
-(Font)              scaled to size 12.0pt on input line 51.
-Package microtype Info: Loading generic protrusion settings for font family
-(microtype)             `zi4' (encoding: OT1).
-(microtype)             For optimal results, create family-specific settings.
-(microtype)             See the microtype manual for details.
-
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1615,10 +1602,22 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[2])
+[2]
+LaTeX Font Info:    Trying to load font information for OT1+zi4 on input line 5
+3.
+
+(C:\Users\penci\AppData\Local\Programs\MiKTeX\tex/latex/inconsolata\ot1zi4.fd
+File: ot1zi4.fd 2018/01/14 OT1/zi4 (Inconsolata)
+)
+LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
+(Font)              scaled to size 12.0pt on input line 53.
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `zi4' (encoding: OT1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+)
 \tf@toc=\write5
 \openout5 = `fractalRenderer.toc'.
-
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1629,7 +1628,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [3]) (projectAnalysis.tex
-<images//mandelbrot.jpg, id=355, 702.625pt x 562.1pt>
+<images//mandelbrot.jpg, id=365, 702.625pt x 562.1pt>
 File: images//mandelbrot.jpg Graphic file (type jpg)
 <use images//mandelbrot.jpg>
 Package pdftex.def Info: images//mandelbrot.jpg  used on input line 19.
@@ -1644,33 +1643,33 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [4 <./images//mandelbrot.jpg>]
-<images//MsetOrder3.jpg, id=371, 642.4pt x 481.8pt>
+<images//MsetOrder3.jpg, id=381, 642.4pt x 481.8pt>
 File: images//MsetOrder3.jpg Graphic file (type jpg)
 <use images//MsetOrder3.jpg>
 Package pdftex.def Info: images//MsetOrder3.jpg  used on input line 27.
 (pdftex.def)             Requested size: 117.00119pt x 87.74948pt.
-<images//MsetOrder4.jpg, id=372, 642.4pt x 481.8pt>
+<images//MsetOrder4.jpg, id=382, 642.4pt x 481.8pt>
 File: images//MsetOrder4.jpg Graphic file (type jpg)
 <use images//MsetOrder4.jpg>
 Package pdftex.def Info: images//MsetOrder4.jpg  used on input line 28.
 (pdftex.def)             Requested size: 117.00119pt x 87.74948pt.
-<images//MsetOrder20.jpg, id=373, 642.4pt x 481.8pt>
+<images//MsetOrder20.jpg, id=383, 642.4pt x 481.8pt>
 File: images//MsetOrder20.jpg Graphic file (type jpg)
 <use images//MsetOrder20.jpg>
 Package pdftex.def Info: images//MsetOrder20.jpg  used on input line 29.
 (pdftex.def)             Requested size: 117.00119pt x 87.74948pt.
-<images//sierpinski-triangle.png, id=374, 1204.5pt x 1042.89626pt>
+<images//sierpinski-triangle.png, id=384, 1204.5pt x 1042.89626pt>
 File: images//sierpinski-triangle.png Graphic file (type png)
 <use images//sierpinski-triangle.png>
 Package pdftex.def Info: images//sierpinski-triangle.png  used on input line 38
 .
 (pdftex.def)             Requested size: 117.00119pt x 101.28812pt.
-<images//mandelbrot-zoom.png, id=376, 803.0pt x 803.0pt>
+<images//mandelbrot-zoom.png, id=386, 803.0pt x 803.0pt>
 File: images//mandelbrot-zoom.png Graphic file (type png)
 <use images//mandelbrot-zoom.png>
 Package pdftex.def Info: images//mandelbrot-zoom.png  used on input line 39.
 (pdftex.def)             Requested size: 117.00119pt x 117.00177pt.
-<images//hilbert-curve.png, id=377, 496.85625pt x 496.85625pt>
+<images//hilbert-curve.png, id=387, 496.85625pt x 496.85625pt>
 File: images//hilbert-curve.png Graphic file (type png)
 <use images//hilbert-curve.png>
 Package pdftex.def Info: images//hilbert-curve.png  used on input line 40.
@@ -1798,12 +1797,12 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `\new@ifnextchar' on input line 115.
 
-<images//xaosArtefacting0.png, id=411, 115.93312pt x 133.24782pt>
+<images//xaosArtefacting0.png, id=421, 115.93312pt x 133.24782pt>
 File: images//xaosArtefacting0.png Graphic file (type png)
 <use images//xaosArtefacting0.png>
 Package pdftex.def Info: images//xaosArtefacting0.png  used on input line 123.
 (pdftex.def)             Requested size: 117.00119pt x 134.47755pt.
-<images//xaosArtefacting1.png, id=412, 127.22531pt x 94.10156pt>
+<images//xaosArtefacting1.png, id=422, 127.22531pt x 94.10156pt>
 File: images//xaosArtefacting1.png Graphic file (type png)
 <use images//xaosArtefacting1.png>
 Package pdftex.def Info: images//xaosArtefacting1.png  used on input line 124.
@@ -1817,7 +1816,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [9]
-<images//xaosImage.png, id=418, 167.62625pt x 116.435pt>
+<images//xaosImage.png, id=428, 167.62625pt x 116.435pt>
 File: images//xaosImage.png Graphic file (type png)
 <use images//xaosImage.png>
 Package pdftex.def Info: images//xaosImage.png  used on input line 139.
@@ -1881,12 +1880,12 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [15]
-<images//CinderLibraries.png, id=472, 637.38126pt x 379.91937pt>
+<images//CinderLibraries.png, id=482, 637.38126pt x 379.91937pt>
 File: images//CinderLibraries.png Graphic file (type png)
 <use images//CinderLibraries.png>
 Package pdftex.def Info: images//CinderLibraries.png  used on input line 26.
 (pdftex.def)             Requested size: 390.0pt x 232.4635pt.
-<images//LibRapidLibraries.png, id=473, 804.00375pt x 580.1675pt>
+<images//LibRapidLibraries.png, id=483, 804.00375pt x 580.1675pt>
 File: images//LibRapidLibraries.png Graphic file (type png)
 <use images//LibRapidLibraries.png>
 Package pdftex.def Info: images//LibRapidLibraries.png  used on input line 33.
@@ -1910,7 +1909,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [17 <./images//LibRapidLibraries.png>]
-<images//ClassDebugLogger.png, id=488, 523.9575pt x 211.28937pt>
+<images//ClassDebugLogger.png, id=498, 523.9575pt x 211.28937pt>
 File: images//ClassDebugLogger.png Graphic file (type png)
 <use images//ClassDebugLogger.png>
 Package pdftex.def Info: images//ClassDebugLogger.png  used on input line 44.
@@ -1925,7 +1924,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [18 <./images//ClassDebugLogger.png>]
-<images//ClassColourPalette.png, id=495, 478.78876pt x 250.43562pt>
+<images//ClassColourPalette.png, id=505, 478.78876pt x 250.43562pt>
 File: images//ClassColourPalette.png Graphic file (type png)
 <use images//ClassColourPalette.png>
 Package pdftex.def Info: images//ClassColourPalette.png  used on input line 103
@@ -1941,7 +1940,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [19 <./images//ClassColourPalette.png>]
-<images//ClassFractal.png, id=503, 811.53188pt x 471.26062pt>
+<images//ClassFractal.png, id=513, 811.53188pt x 471.26062pt>
 File: images//ClassFractal.png Graphic file (type png)
 <use images//ClassFractal.png>
 Package pdftex.def Info: images//ClassFractal.png  used on input line 122.
@@ -1986,13 +1985,13 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [22]
-<images//ClassFractalRenderer.png, id=579, 943.02313pt x 500.36937pt>
+<images//ClassFractalRenderer.png, id=589, 943.02313pt x 500.36937pt>
 File: images//ClassFractalRenderer.png Graphic file (type png)
 <use images//ClassFractalRenderer.png>
 Package pdftex.def Info: images//ClassFractalRenderer.png  used on input line 2
 25.
 (pdftex.def)             Requested size: 390.0pt x 206.93172pt.
-<images//ClassFractalRendererLeftSide.png, id=580, 497.35812pt x 632.3625pt>
+<images//ClassFractalRendererLeftSide.png, id=590, 497.35812pt x 632.3625pt>
 File: images//ClassFractalRendererLeftSide.png Graphic file (type png)
 <use images//ClassFractalRendererLeftSide.png>
 Package pdftex.def Info: images//ClassFractalRendererLeftSide.png  used on inpu
@@ -2017,7 +2016,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [24 <./images//ClassFractalRendererLeftSide.png>]
-<images//ClassFractalRendererTopRightSide.png, id=596, 662.97687pt x 569.62813p
+<images//ClassFractalRendererTopRightSide.png, id=606, 662.97687pt x 569.62813p
 t>
 File: images//ClassFractalRendererTopRightSide.png Graphic file (type png)
 <use images//ClassFractalRendererTopRightSide.png>
@@ -2037,7 +2036,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (C:\Users\penci\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
-<images//ClassFractalRendererBottomRightSide.png, id=604, 789.44937pt x 416.054
+<images//ClassFractalRendererBottomRightSide.png, id=614, 789.44937pt x 416.054
 38pt>
 File: images//ClassFractalRendererBottomRightSide.png Graphic file (type png)
 <use images//ClassFractalRendererBottomRightSide.png>
@@ -2072,7 +2071,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [28]
-<images//ClassMainWindow.png, id=647, 1050.17343pt x 837.88031pt>
+<images//ClassMainWindow.png, id=657, 1050.17343pt x 837.88031pt>
 File: images//ClassMainWindow.png Graphic file (type png)
 <use images//ClassMainWindow.png>
 Package pdftex.def Info: images//ClassMainWindow.png  used on input line 382.
@@ -2167,7 +2166,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[38])
+[38]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2176,7 +2175,16 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[39] (codeListing.tex
+[39])
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[40] (codeListing.tex
 LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
 (Font)              scaled to size 14.4pt on input line 3.
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
@@ -2190,7 +2198,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[40])
+[41])
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2199,7 +2207,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[41] (../src/colorPalette.cpp)
+[42] (../src/colorPalette.cpp)
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2208,7 +2216,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[42] (../include/fractal/debug.hpp
+[43] (../include/fractal/debug.hpp
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2217,7 +2225,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[43])
+[44])
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2226,7 +2234,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[44] (../src/debug.cpp
+[45] (../src/debug.cpp
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2235,7 +2243,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[45])
+[46])
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2244,7 +2252,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[46] (../include/fractal/fractal.hpp)
+[47] (../include/fractal/fractal.hpp)
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2253,16 +2261,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[47] (../include/fractal/fractalRenderer.hpp
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[48]
+[48] (../include/fractal/fractalRenderer.hpp
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2289,7 +2288,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[51])
+[51]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2298,7 +2297,16 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[52]
+[52])
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[53]
 Overfull \hbox (26.02869pt too wide) in paragraph at lines 33--33
 []\OT1/cmr/bx/n/14.4 (-20) Fractal Ren-derer Im-ple-men-ta-tion (\OT1/zi4/b/n/1
 4.4 fractalRenderer.cpp\OT1/cmr/bx/n/14.4 (-20) ) 
@@ -2342,42 +2350,27 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[53]
-Overfull \hbox (53.98346pt too wide) in paragraph at lines 51--52
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-]  
- []
-
-
-Overfull \hbox (37.38434pt too wide) in paragraph at lines 65--66
+[54]
+Overfull \hbox (37.38434pt too wide) in paragraph at lines 72--73
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
 ][][][][][]  
  []
 
 
-Overfull \hbox (28.88321pt too wide) in paragraph at lines 66--67
+Overfull \hbox (28.88321pt too wide) in paragraph at lines 73--74
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][]  
  []
 
 
-Overfull \hbox (23.88321pt too wide) in paragraph at lines 67--68
+Overfull \hbox (23.88321pt too wide) in paragraph at lines 74--75
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][]  
  []
 
 
-Overfull \hbox (39.98322pt too wide) in paragraph at lines 68--69
+Overfull \hbox (39.98322pt too wide) in paragraph at lines 75--76
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]  
  []
 
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[54]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2405,10 +2398,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [57]
-Overfull \hbox (35.48294pt too wide) in paragraph at lines 237--239
-[][][][][][][][][][][][][][][]  
- []
-
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2418,6 +2407,10 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [58]
+Overfull \hbox (35.48294pt too wide) in paragraph at lines 233--235
+[][][][][][][][][][][][][][][]  
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2436,15 +2429,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [60]
-Overfull \hbox (16.1344pt too wide) in paragraph at lines 323--324
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (26.1344pt too wide) in paragraph at lines 342--343
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2454,6 +2438,15 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [61]
+Overfull \hbox (16.1344pt too wide) in paragraph at lines 319--320
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (26.1344pt too wide) in paragraph at lines 338--339
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2471,7 +2464,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[63])
+[63]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2480,7 +2473,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[64] (../include/fractal/genericFractal.hpp
+[64]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2498,7 +2491,25 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[66]
+[66] (../include/fractal/genericFractal.hpp
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[67])
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[68]
 Overfull \hbox (8.7399pt too wide) in paragraph at lines 43--43
 []\OT1/cmr/bx/n/14.4 (-20) Generic Frac-tal Im-ple-men-ta-tion (\OT1/zi4/b/n/14
 .4 genericFractal.cpp\OT1/cmr/bx/n/14.4 (-20) ) 
@@ -2513,7 +2524,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[67] (../include/fractal/history.hpp
+[69] (../include/fractal/history.hpp
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2522,7 +2533,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[68]
+[70]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2531,7 +2542,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[69]
+[71]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2540,7 +2551,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[70])
+[72])
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2549,7 +2560,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[71] (../src/history.cpp
+[73] (../src/history.cpp
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2558,7 +2569,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[72]
+[74]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2567,7 +2578,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[73])
+[75])
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2576,25 +2587,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[74] (../include/fractal/mainWindow.hpp
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[75]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[76]
+[76] (../include/fractal/mainWindow.hpp
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2612,7 +2605,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[78])
+[78]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2621,7 +2614,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[79] (../src/mainWindow.cpp
+[79]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2630,7 +2623,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[80]
+[80])
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2639,7 +2632,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[81]
+[81] (../src/mainWindow.cpp
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2721,45 +2714,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [90]
-Overfull \hbox (23.48434pt too wide) in paragraph at lines 450--451
-[][][][][][][][][][][][][][][][][][][][][][][]  
- []
-
-
-Overfull \hbox (3.48434pt too wide) in paragraph at lines 467--468
-[][][][][][][][][][][][][][][][][][][][][][][]  
- []
-
-
-Overfull \hbox (47.48428pt too wide) in paragraph at lines 478--479
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- 
- []
-
-
-Overfull \hbox (33.48434pt too wide) in paragraph at lines 482--483
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][][][][][]  
- []
-
-
-Overfull \hbox (33.48434pt too wide) in paragraph at lines 483--485
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][][][][][]  
- []
-
-
-Overfull \hbox (3.48434pt too wide) in paragraph at lines 485--486
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][][][][][]  
- []
-
-
-Overfull \hbox (3.48434pt too wide) in paragraph at lines 486--488
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][][][][][]  
- []
-
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2778,6 +2732,15 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [92]
+Overfull \hbox (23.48434pt too wide) in paragraph at lines 465--466
+[][][][][][][][][][][][][][][][][][][][][][][]  
+ []
+
+
+Overfull \hbox (3.48434pt too wide) in paragraph at lines 482--483
+[][][][][][][][][][][][][][][][][][][][][][][]  
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2787,6 +2750,35 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [93]
+Overfull \hbox (47.48428pt too wide) in paragraph at lines 493--494
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ 
+ []
+
+
+Overfull \hbox (33.48434pt too wide) in paragraph at lines 497--498
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][]  
+ []
+
+
+Overfull \hbox (33.48434pt too wide) in paragraph at lines 498--500
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][]  
+ []
+
+
+Overfull \hbox (3.48434pt too wide) in paragraph at lines 500--501
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][]  
+ []
+
+
+Overfull \hbox (3.48434pt too wide) in paragraph at lines 501--503
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][]  
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2796,10 +2788,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [94]
-Overfull \hbox (5.48355pt too wide) in paragraph at lines 621--622
-[][][][][][][][][][][][][][][][][][][][]  
- []
-
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2836,6 +2824,10 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [98]
+Overfull \hbox (5.48355pt too wide) in paragraph at lines 705--706
+[][][][][][][][][][][][][][][][][][][][]  
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2844,7 +2836,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[99])
+[99]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2853,7 +2845,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[100] (../include/fractal/mandelbrot.hpp
+[100]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2862,7 +2854,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[101])
+[101]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2872,12 +2864,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [102]
-Overfull \hbox (15.612pt too wide) in paragraph at lines 73--73
-[]\OT1/cmr/bx/n/14.4 (-20) Mandelbrot Frac-tal Im-ple-men-ta-tion (\OT1/zi4/b/n
-/14.4 mandelbrot.cpp\OT1/cmr/bx/n/14.4 (-20) ) 
- []
-
-(../src/mandelbrot.cpp
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2886,7 +2872,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[103]
+[103])
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2895,7 +2881,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[104]
+[104] (../include/fractal/mandelbrot.hpp
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2913,7 +2899,13 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[106] (../include/fractal/juliaSet.hpp
+[106]
+Overfull \hbox (15.612pt too wide) in paragraph at lines 73--73
+[]\OT1/cmr/bx/n/14.4 (-20) Mandelbrot Frac-tal Im-ple-men-ta-tion (\OT1/zi4/b/n
+/14.4 mandelbrot.cpp\OT1/cmr/bx/n/14.4 (-20) ) 
+ []
+
+(../src/mandelbrot.cpp
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2922,7 +2914,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[107])
+[107]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2931,7 +2923,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[108] (../src/juliaSet.cpp
+[108]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2940,7 +2932,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[109]
+[109])
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2949,7 +2941,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[110]
+[110] (../include/fractal/juliaSet.hpp
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2967,7 +2959,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[112] (../include/fractal/newton.hpp
+[112] (../src/juliaSet.cpp
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2976,7 +2968,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[113])
+[113]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2985,7 +2977,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[114] (../src/newton.cpp
+[114]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2994,7 +2986,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[115]
+[115])
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -3003,7 +2995,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[116])
+[116] (../include/fractal/newton.hpp
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -3012,7 +3004,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[117] (../include/fractal/openglUtils.hpp)
+[117])
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -3021,7 +3013,43 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[118]
+[118] (../src/newton.cpp
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[119]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[120])
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[121] (../include/fractal/openglUtils.hpp)
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[122]
 Overfull \hbox (8.81836pt too wide) in paragraph at lines 103--103
 []\OT1/cmr/bx/n/14.4 (-20) OpenGL Util-i-ties Im-ple-men-ta-tion (\OT1/zi4/b/n/
 14.4 openglUtils.cpp\OT1/cmr/bx/n/14.4 (-20) ) 
@@ -3036,7 +3064,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[119])
+[123])
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -3045,7 +3073,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[120]
+[124]
 Overfull \hbox (5.52132pt too wide) in paragraph at lines 108--108
 []\OT1/cmr/bx/n/14.4 (-20) Render Con-fig-u-ra-tion Def-i-ni-tion (\OT1/zi4/b/n
 /14.4 renderConfig.hpp\OT1/cmr/bx/n/14.4 (-20) ) 
@@ -3060,7 +3088,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[121])
+[125])
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -3069,7 +3097,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[122]
+[126]
 Overfull \hbox (46.4109pt too wide) in paragraph at lines 113--113
 []\OT1/cmr/bx/n/14.4 (-20) Render Con-fig-u-ra-tion Im-ple-men-ta-tion (\OT1/zi
 4/b/n/14.4 renderConfig.cpp\OT1/cmr/bx/n/14.4 (-20) ) 
@@ -3084,7 +3112,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[123]
+[127]
 Overfull \hbox (49.23871pt too wide) in paragraph at lines 118--118
 []\OT1/cmr/bx/n/14.4 (-20) Colouring Al-go-rithm Def-i-ni-tions (\OT1/zi4/b/n/1
 4.4 coloringAlgorithms.hpp\OT1/cmr/bx/n/14.4 (-20) ) 
@@ -3099,7 +3127,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[124])
+[128])
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -3108,7 +3136,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[125]
+[129]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `\\' on input line 123.
@@ -3122,7 +3150,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[126] (../CMakeLists.txt
+[130] (../CMakeLists.txt
 LaTeX Font Info:    Trying to load font information for TS1+zi4 on input line 6
 .
 
@@ -3144,7 +3172,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[127] (../main.cpp)
+[131] (../main.cpp)
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -3153,43 +3181,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[128] (../settings/settings.json
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[129]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[130]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[131]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[132]
+[132] (../settings/settings.json
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -3252,7 +3244,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[139])
+[139]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -3261,7 +3253,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[140] (../.gitmodules)
+[140]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -3270,7 +3262,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[141] (../.gitignore))
+[141]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -3279,7 +3271,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[142] (fractalRenderer.bbl)
+[142]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -3288,18 +3280,63 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[143] (fractalRenderer.aux)
+[143]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[144])
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[145] (../.gitmodules)
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[146] (../.gitignore))
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[147] (fractalRenderer.bbl)
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[148] (fractalRenderer.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `fractalRenderer.out' has not changed.
-(rerunfilecheck)             Checksum: E04778C0B9AF2947187843FF7AE6AED1;14761.
+(rerunfilecheck)             Checksum: 0C82BA3FCE23B02C1A3AC7302E0F1FC8;15194.
  ) 
 Here is how much of TeX's memory you used:
- 59806 strings out of 478582
- 1361265 string characters out of 2844344
- 257909520 words of memory out of 259000000
- 72923 multiletter control sequences out of 15000+600000
+ 60017 strings out of 478582
+ 1364817 string characters out of 2844344
+ 257909521 words of memory out of 259000000
+ 72983 multiletter control sequences out of 15000+600000
  489731 words of font info for 181 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  105i,14n,115p,1039b,2628s stack positions out of 10000i,1000n,20000p,200000b,80000s
@@ -3325,9 +3362,9 @@ s/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb
 msy8.pfb><C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
 nts/cm/cmti12.pfb><C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1/pub
 lic/amsfonts/symbols/msbm10.pfb>
-Output written on fractalRenderer.pdf (143 pages, 3857306 bytes).
+Output written on fractalRenderer.pdf (148 pages, 3887795 bytes).
 PDF statistics:
- 5543 PDF objects out of 6186 (max. 8388607)
- 3888 named destinations out of 4296 (max. 500000)
- 52849 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 5752 PDF objects out of 6186 (max. 8388607)
+ 4039 named destinations out of 4296 (max. 500000)
+ 52865 words of extra memory for PDF output out of 61914 (max. 10000000)
 

@@ -35,22 +35,29 @@ namespace frac {
 			  m_settings["renderConfig"]["draftRender"].get<bool>(),
 			  m_settings["renderConfig"]["draftInc"].get<int64_t>()};
 
-			for (const auto &fractal : m_settings["renderConfig"]["fractals"]) {
-				if (m_renderConfig.fracSize.x() == 0 ||
-					m_renderConfig.fracSize.y() == 0) {
-					// Configure the default fractal to be the first one in the list
+			std::string fractalOriginReStr =
+			  m_settings["renderConfig"]["fractalOrigin"]["Re"];
+			std::string fractalOriginImStr =
+			  m_settings["renderConfig"]["fractalOrigin"]["Im"];
 
-					m_renderConfig.bail = fractal["bail"].get<float>();
+			std::string fractalSizeReStr =
+			  m_settings["renderConfig"]["fractalSize"]["Re"];
+			std::string fractalSizeImStr =
+			  m_settings["renderConfig"]["fractalSize"]["Im"];
 
-					m_renderConfig.fracTopLeft = lrc::Vec<HighPrecision, 2>(
-					  fractal["fracTopLeft"]["Re"].get<float>(),
-					  fractal["fracTopLeft"]["Im"].get<float>());
+			HighPrecision fractalOriginRe, fractalOriginIm, fractalSizeRe, fractalSizeIm;
 
-					m_renderConfig.fracSize =
-					  lrc::Vec<HighPrecision, 2>(fractal["fracSize"]["Re"].get<float>(),
-												 fractal["fracSize"]["Im"].get<float>());
-				}
-			}
+			scn::scan(fractalOriginReStr, "{}", fractalOriginRe);
+			scn::scan(fractalOriginImStr, "{}", fractalOriginIm);
+
+			scn::scan(fractalSizeReStr, "{}", fractalSizeRe);
+			scn::scan(fractalSizeImStr, "{}", fractalSizeIm);
+
+			HighVec2 fracOrigin(fractalOriginRe, fractalOriginIm);
+			HighVec2 fracSize(fractalSizeRe, fractalSizeIm);
+
+			m_renderConfig.fracTopLeft = fracOrigin - fracSize / 2;
+			m_renderConfig.fracSize	   = fracSize;
 
 			m_renderConfig.originalFracSize = m_renderConfig.fracSize;
 
@@ -69,17 +76,6 @@ namespace frac {
 				}
 				m_renderConfig.palettes[palette["name"]] = tmp;
 			}
-
-			m_fractal = std::make_unique<Mandelbrot>(m_renderConfig);
-			m_colorFuncLow =
-			  m_fractal->getLowPrecColoringAlgorithms()["Logarithmic Scaling"];
-			m_colorFuncHigh =
-			  m_fractal->getHighPrecColoringAlgorithms()["Logarithmic Scaling"];
-
-			// m_fractal = std::make_unique<NewtonFractal>(m_renderConfig);
-			// m_colorFuncLow = m_fractal->getLowPrecColoringAlgorithms()["Fixed
-			// Iteration Palette"]; m_colorFuncHigh =
-			// m_fractal->getHighPrecColoringAlgorithms()["Fixed Iteration Palette"];
 		} catch (std::exception &e) {
 			FRAC_LOG(fmt::format("Failed to load settings: {}", e.what()));
 			stopRender();
@@ -96,7 +92,7 @@ namespace frac {
 											const lrc::Vec<HighPrecision, 2> &size) {
 		m_renderConfig.fracTopLeft = topLeft;
 		m_renderConfig.fracSize	   = size;
-		m_fractal->updateRenderConfig(m_renderConfig);
+		if (m_fractal) m_fractal->updateRenderConfig(m_renderConfig);
 	}
 
 	void FractalRenderer::moveFractalCenter(const lrc::Vec<HighPrecision, 2> &center,
@@ -412,6 +408,7 @@ namespace frac {
 	}
 
 	void FractalRenderer::setColorFunc(const std::string &name) {
+		m_colorFuncName = name;
 		m_colorFuncLow	= m_fractal->getLowPrecColoringAlgorithms().at(name);
 		m_colorFuncHigh = m_fractal->getHighPrecColoringAlgorithms().at(name);
 	}
@@ -466,15 +463,18 @@ namespace frac {
 		settings["renderConfig"]["draftRender"] = m_renderConfig.draftRender;
 		settings["renderConfig"]["draftInc"]	= m_renderConfig.draftInc;
 
-		settings["renderConfig"]["fractalOrigin"]["Re"] =
-		  fmt::format("{}", m_renderConfig.fracTopLeft.x());
-		settings["renderConfig"]["fractalOrigin"]["Im"] =
-		  fmt::format("{}", m_renderConfig.fracTopLeft.y());
+		HighVec2 size	= m_renderConfig.fracSize;
+		HighVec2 origin = m_renderConfig.fracTopLeft + size / 2;
+		settings["renderConfig"]["fractalOrigin"]["Re"] = fmt::format("{}", origin.x());
+		settings["renderConfig"]["fractalOrigin"]["Im"] = fmt::format("{}", origin.y());
 
-		settings["renderConfig"]["fractalSize"]["Re"] =
-		  fmt::format("{}", m_renderConfig.fracSize.x());
-		settings["renderConfig"]["fractalSize"]["Im"] =
-		  fmt::format("{}", m_renderConfig.fracSize.y());
+		settings["renderConfig"]["fractalSize"]["Re"] = fmt::format("{}", size.x());
+		settings["renderConfig"]["fractalSize"]["Im"] = fmt::format("{}", size.y());
+
+		settings["renderConfig"]["bail"]		 = m_renderConfig.bail;
+		settings["renderConfig"]["fractalType"]	 = m_fractal->name();
+		settings["renderConfig"]["colorFunc"]	 = m_colorFuncName;
+		settings["renderConfig"]["colorPalette"] = m_paletteName;
 
 		std::fstream file(path, std::ios::out);
 		file << settings.dump(4);

@@ -1,16 +1,19 @@
 {
 	"renderConfig": {
+		"fractalType": "Mandelbrot",
+		"colorFunc": "Logarithmic Scaling",
+		"colorPalette": "Bright",
 		"numThreads": 8,
 		"maxIters": 500,
 		"precision": 64,
 		"antiAlias": 2,
 		"fractalOrigin": {
-			"Re": -0.75,
-			"Im": 0.0
+			"Re": "-0.75",
+			"Im": "0.0"
 		},
 		"fractalSize": {
-			"Re": 3.0625,
-			"Im": 3.5
+			"Re": "3.5",
+			"Im": "3.0625"
 		},
 		"imageSize": {
 			"width": 800,

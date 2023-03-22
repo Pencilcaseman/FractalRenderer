@@ -652,5 +652,21 @@ Resizing the image leads to additional aliasing in the rendering process since t
 Note that, in the above code snippet, the \codeword{imageToScreenSpace} function performs the inverse of the \codeword{screenToImageSpace} function described earlier (\ref{screenToImageSpace}).
 
 \begin{equation*}
-	\begin{bmatrix} x' \\ y' \end{bmatrix} = \frac{\text{Window Height}}{\text{Image Height}} \begin{bmatrix} x \\ y \end{bmatrix}
+	\begin{bmatrix} x \\ y \end{bmatrix} = \frac{\text{Window Height}}{\text{Image Height}} \begin{bmatrix} x' \\ y' \end{bmatrix}
 \end{equation*}
+
+\subsection{Importing and Exporting Configurations}
+
+Arguably the most crucial feature of this program is the ability to import and export detailed fractal configuration information. This enables users to share reproducible fractal locations, colouring algorithms and palettes.
+
+To export the settings, the current render configuration must be written back to the JSON object that was initially loaded. The JSON object can be dumped into a file when this is complete.
+
+Importing the settings JSON file is very easy, given the renderer already provides a method to open a JSON file, parse the input and initialize the renderer.
+
+Additionally, a GUI window is needed to allow the user to specify where to save the file. A text box is shown with a prompt for a file path, and the entered string is checked against a list of valid extensions. If the extension is valid, two buttons are shown -- one for exporting the configuration and one for importing it. If the file path was invalid or an error occurred at some point, the program will handle the error appropriately and log it using the \codeword{DebugLogger} class.
+
+\subsection{Saving Rendered Images}
+
+Saving the image is very simple since it is stored in the \codeword{FractalRenderer} instance of the \codeword{MainWindow}, and Cinder provides methods to save surfaces as image files.
+
+As with the configuration import and export, the input box checks for valid image extensions and only shows the export button if a valid path is entered. Similarly, the information is written to the log file if an error occurs, and the program will continue running.

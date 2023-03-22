@@ -163,6 +163,7 @@ namespace frac {
 		coloring::ColorFuncLow m_colorFuncLow;
 		coloring::ColorFuncHigh m_colorFuncHigh;
 		std::string m_paletteName;
+		std::string m_colorFuncName;
 
 		std::vector<RenderBox> m_renderBoxes; // The state of each render box
 
