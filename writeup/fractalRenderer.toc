@@ -92,6 +92,7 @@
 \contentsline {subsubsection}{\numberline {4.2.2}Fractal Render Configurations (2.2, 2.3, 2.4, 2.5)}{152}{subsubsection.4.2.2}%
 \contentsline {subsubsection}{\numberline {4.2.3}Image Resizing (2.6, 2.7)}{153}{subsubsection.4.2.3}%
 \contentsline {subsubsection}{\numberline {4.2.4}Colouring Algorithms (2.8)}{153}{subsubsection.4.2.4}%
+\contentsline {subsubsection}{\numberline {4.2.5}Default Settings (2.9)}{153}{subsubsection.4.2.5}%
 \contentsline {subsection}{\numberline {4.3}Interface and Movement (\ref {req_interface})}{154}{subsection.4.3}%
 \contentsline {subsection}{\numberline {4.4}Import and Export (\ref {req_import_export})}{154}{subsection.4.4}%
 \contentsline {subsection}{\numberline {4.5}Installation (\ref {req_install})}{154}{subsection.4.5}%

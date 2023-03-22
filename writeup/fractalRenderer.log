@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.4.27)  22 MAR 2023 21:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.4.27)  22 MAR 2023 23:12
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -3470,12 +3470,18 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package rerunfilecheck Info: File `fractalRenderer.out' has not changed.
-(rerunfilecheck)             Checksum: 4D8756DC89B46861F88305F7F0F318B1;18404.
+
+Package rerunfilecheck Warning: File `fractalRenderer.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `fractalRenderer.out':
+(rerunfilecheck)             Before: 4D8756DC89B46861F88305F7F0F318B1;18404
+(rerunfilecheck)             After:  E8643A17CBD74C0CA337A337E509CF0B;18594.
  ) 
 Here is how much of TeX's memory you used:
- 60256 strings out of 478582
- 1369983 string characters out of 2844344
+ 60257 strings out of 478582
+ 1370002 string characters out of 2844344
  257912252 words of memory out of 259000000
  73172 multiletter control sequences out of 15000+600000
  489731 words of font info for 181 fonts, out of 8000000 for 9000
@@ -3503,9 +3509,9 @@ s/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb
 msy8.pfb><C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
 nts/cm/cmti12.pfb><C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1/pub
 lic/amsfonts/symbols/msbm10.pfb>
-Output written on fractalRenderer.pdf (155 pages, 10834234 bytes).
+Output written on fractalRenderer.pdf (155 pages, 10834596 bytes).
 PDF statistics:
- 5914 PDF objects out of 6186 (max. 8388607)
- 4069 named destinations out of 4296 (max. 500000)
+ 5915 PDF objects out of 6186 (max. 8388607)
+ 4070 named destinations out of 4296 (max. 500000)
  53063 words of extra memory for PDF output out of 61914 (max. 10000000)
 
