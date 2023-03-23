@@ -1,30 +1,30 @@
 \contentsline {section}{\numberline {1}Project Analysis}{5}{section.1}%
 \contentsline {subsection}{\numberline {1.1}A Brief Introduction to Fractals}{5}{subsection.1.1}%
 \contentsline {subsection}{\numberline {1.2}Defining the Problem}{5}{subsection.1.2}%
-\contentsline {paragraph}{Technological Limitations}{6}{section*.5}%
-\contentsline {paragraph}{Program Limitations}{7}{section*.6}%
-\contentsline {paragraph}{Precision vs Performance}{7}{section*.7}%
+\contentsline {paragraph}{Technological Limitations}{6}{section*.6}%
+\contentsline {paragraph}{Program Limitations}{7}{section*.7}%
+\contentsline {paragraph}{Precision vs Performance}{7}{section*.8}%
 \contentsline {subsection}{\numberline {1.3}The End User}{7}{subsection.1.3}%
 \contentsline {subsection}{\numberline {1.4}Analysis of Existing Programs}{8}{subsection.1.4}%
 \contentsline {subsubsection}{\numberline {1.4.1}David J. Eck's Online Mandelbrot Renderer \cite {eck}}{8}{subsubsection.1.4.1}%
-\contentsline {paragraph}{Interface}{8}{section*.8}%
-\contentsline {paragraph}{Configuration}{8}{section*.9}%
-\contentsline {paragraph}{Render Quality}{8}{section*.10}%
+\contentsline {paragraph}{Interface}{8}{section*.9}%
+\contentsline {paragraph}{Configuration}{8}{section*.10}%
+\contentsline {paragraph}{Render Quality}{8}{section*.11}%
 \contentsline {subsubsection}{\numberline {1.4.2}XaoS.js Online Mandelbrot Renderer \cite {xaos.js}}{9}{subsubsection.1.4.2}%
 \contentsline {subsubsection}{\numberline {1.4.3}XaoS Offline Fractal Renderer \cite {fractalfoundation}}{9}{subsubsection.1.4.3}%
-\contentsline {paragraph}{Interface}{9}{section*.12}%
-\contentsline {paragraph}{Configuration}{9}{section*.13}%
-\contentsline {paragraph}{File Export}{9}{section*.14}%
-\contentsline {paragraph}{Supported Fractals}{10}{section*.16}%
-\contentsline {paragraph}{Precision}{10}{section*.17}%
+\contentsline {paragraph}{Interface}{9}{section*.13}%
+\contentsline {paragraph}{Configuration}{9}{section*.14}%
+\contentsline {paragraph}{File Export}{9}{section*.15}%
+\contentsline {paragraph}{Supported Fractals}{10}{section*.17}%
+\contentsline {paragraph}{Precision}{10}{section*.18}%
 \contentsline {subsection}{\numberline {1.5}Program Requirements}{10}{subsection.1.5}%
 \contentsline {section}{\numberline {2}Design Phase}{14}{section.2}%
 \contentsline {subsection}{\numberline {2.1}Third Party Libraries}{14}{subsection.2.1}%
-\contentsline {paragraph}{Cinder \cite {developers_davis}}{14}{section*.18}%
-\contentsline {paragraph}{LibRapid \cite {Davis_LibRapid_Optimised_Mathematics_2023}}{14}{section*.19}%
-\contentsline {paragraph}{Cinderbox}{14}{section*.20}%
-\contentsline {paragraph}{JSON for Modern C\nolinebreak [4]\hspace {-.05em}\raisebox {.4ex}{\relsize {-3}{\textbf {++}}}\cite {Lohmann_JSON_for_Modern_2022}}{14}{section*.21}%
-\contentsline {paragraph}{Thread-Pool \cite {Shoshany_A_C_17_Thread_2021}}{14}{section*.22}%
+\contentsline {paragraph}{Cinder \cite {developers_davis}}{14}{section*.19}%
+\contentsline {paragraph}{LibRapid \cite {Davis_LibRapid_Optimised_Mathematics_2023}}{14}{section*.20}%
+\contentsline {paragraph}{Cinderbox}{14}{section*.21}%
+\contentsline {paragraph}{JSON for Modern C\nolinebreak [4]\hspace {-.05em}\raisebox {.4ex}{\relsize {-3}{\textbf {++}}}\cite {Lohmann_JSON_for_Modern_2022}}{14}{section*.22}%
+\contentsline {paragraph}{Thread-Pool \cite {Shoshany_A_C_17_Thread_2021}}{14}{section*.23}%
 \contentsline {subsection}{\numberline {2.2}Library Heirarchy}{14}{subsection.2.2}%
 \contentsline {subsection}{\numberline {2.3}The Debug Logger}{16}{subsection.2.3}%
 \contentsline {subsection}{\numberline {2.4}Colour Palettes}{17}{subsection.2.4}%
@@ -115,6 +115,6 @@
 \contentsline {section}{\numberline {6}Reflections}{126}{section.6}%
 \contentsline {subsection}{\numberline {6.1}The User Interface}{126}{subsection.6.1}%
 \contentsline {subsection}{\numberline {6.2}Performance}{126}{subsection.6.2}%
-\contentsline {paragraph}{Templating}{126}{section*.49}%
-\contentsline {paragraph}{Curiously Recursive Template Parameter Pattern}{126}{section*.50}%
-\contentsline {paragraph}{Just In Time Compilation}{127}{section*.51}%
+\contentsline {paragraph}{Templating}{126}{section*.50}%
+\contentsline {paragraph}{Curiously Recursive Template Parameter Pattern}{126}{section*.51}%
+\contentsline {paragraph}{Just In Time Compilation}{127}{section*.52}%
