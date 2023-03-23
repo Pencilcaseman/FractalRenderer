@@ -1,0 +1,21 @@
+\section{Stakeholder Feedback}
+
+Having completed the program, I showed the final application to the potential users of the software and asked them for some feedback.
+
+People were very pleased with the quality of the renders and enjoyed being able to save images and share render configurations. A few people, however, said that they would have liked to be able to render higher-resolution images than their screen supports. This was mentioned earlier but did not fit the project's time frame. Adding a new window to enable this feature would not be difficult, though, since the image is not being drawn on the screen, there would be no qualitative information on the render's progress, which may put users off performing longer renders. Adding some form of progress bar is possible but would require a lot of new code in various places and would not be a trivial addition.
+
+Some users also reported the program becoming more ``laggy'' and ``stuttery'' after performing many moves. Without profiling and benchmarking the code, it is impossible to determine the root cause of this. However, given that this bug only occurs after making many moves, a good assumption is that this is caused by the history feature -- most likely from the rendering of the previous frames. One potential fix for this would be downsampling the frames before they are saved, meaning drawing them to the screen is much more efficient. Additionally, the use of a linked list is, in this case, unnecessary, and it might be more efficient to store the data in a \codeword{std::vector}, for example.
+
+\section{Reflections}
+
+\subsection{The User Interface}
+
+The user interface, while effective, is relatively primitive and could be improved upon. It would also be helpful for error messages to be printed on the screen as this would indicate to the user that something has gone wrong. Furthermore, the UI could be improved with a colour palette editor, more options to customise the renderer and information tooltips for the various controls.
+
+\subsection{Performance}
+
+\paragraph{Templating} The current code is split between header files and implementation files, meaning the code is faster to compile, more modular, and more difficult to optimise and contains unnecessary code duplication. Implementing everything in header files and templating functions would reduce the amount of code required and may allow the compiler to make more optimisations than it would otherwise be able to. Furthermore, it would enable more data types, such as 32-bit and 64-bit floats, and more optimised 128-bit floats on some machines. This could lead to better performance.
+
+\paragraph{Curiously Recursive Template Parameter Pattern} Currently, fractals are stored with a polymorphic inheritance scheme, which requires repeated heap allocation and runtime type detection, which are very slow. Since this occurs at a very low-level kernel, a small performance gain could lead to huge decreases in render times. Using a CRTPVisitor pattern would eliminate all heap allocation and removes much of the runtime type detection required with the previous method, potentially giving a significant kernel performance boost.
+
+\paragraph{Just In Time Compilation} In theory, it would be possible to implement a JIT compiler into the program, allowing users to compile custom kernels and colouring algorithms that will run at native speeds (or even faster). Unfortunately, there are very few JIT compilers for the \CPP language and those that do exist do not work across platforms, making them incredibly impractical.

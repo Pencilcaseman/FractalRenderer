@@ -121,8 +121,8 @@ The Fractal Foundation \textit{XaoS} fractal renderer is a much more advanced, o
 \begin{figure}[htp]
     \centering
     \includegraphics[width=0.3\textwidth]{xaosArtefacting0.png}
-    \includegraphics[width=0.3\textwidth]{xaosArtefacting1.png}
-    \caption{Artefacting in XaoS' renderer}
+    \includegraphics[width=0.4655\textwidth]{xaosArtefacting1.png}
+    \caption{Artefacting in the XaoS renderer}
 \end{figure}
 
 \FloatBarrier
@@ -165,7 +165,7 @@ The Fractal Foundation \textit{XaoS} fractal renderer is a much more advanced, o
 
 \begin{longtable}{||l|p{10cm}|c||}
     \hline
-    \text{ID} & \text{Description} & \text{Importance}  \\
+    \text{ID} & \text{Description} & \text{Priority}  \\
     \hline \hline
     1.1 \label{req_1_1} & The program can render a fractal correctly & \highPriority \\
     \hline
@@ -241,7 +241,7 @@ The Fractal Foundation \textit{XaoS} fractal renderer is a much more advanced, o
     \hline
     3.13 \label{req_3_13} & The fractal should be rendered progressively, allowing the user to see roughly what is being rendered without having to wait for the full image & \lowPriority \\
     \hline
-    3.14 \label{req_3_14} & The current location can be copied to the clipboard easily & \lowPriority \\
+    3.14 \label{req_3_14} & The maximum zoom factor possible with the given precision is shown & \lowPriority \\
     \hline
     3.15 \label{req_3_15} & Any numeric input fields should accept scientific input formats & \highPriority \\
     \hline
@@ -257,23 +257,17 @@ The Fractal Foundation \textit{XaoS} fractal renderer is a much more advanced, o
     \hline
     5.1 \label{req_5_1} & Program compiles on Windows & \highPriority \\
     \hline
-    5.2 \label{req_5_2} & Program compiles on MacOS & \highPriority \\
+    5.2 \label{req_5_2} & Program compiles on MacOS & \lowPriority \\
     \hline
-    5.3 \label{req_5_3} & Program compiles on Linux & \highPriority \\
+    5.3 \label{req_5_3} & Program compiles on Linux & \lowPriority \\
     \hline
     5.4 \label{req_5_4} & Program compiles with \texttt{msvc} & \highPriority \\
     \hline
-    5.5 \label{req_5_5} & Program compiles with \texttt{gcc/g++} & \highPriority \\
+    5.5 \label{req_5_5} & Program compiles with \texttt{gcc/g++} & \lowPriority \\
     \hline
-    5.6 \label{req_5_6} & Program compiles with \texttt{clang} & \highPriority \\
+    5.6 \label{req_5_6} & Program compiles with \texttt{clang} & \lowPriority \\
     \hline
     5.7 \label{req_5_7} & Program is easy to compile from source with CMake (i.e. \texttt{cmake --build . --config Release}) & \highPriority \\
-    \hline
-    5.8\label{req_5_8} & Prebuilt executable is available for Windows & \mediumPriority \\
-    \hline
-    5.9 \label{req_5_9} & Prebuilt executable is available for MacOS & \mediumPriority \\
-    \hline
-    5.10 \label{req_5_10} & Prebuilt executable is available for Linux & \mediumPriority \\
     \hline
     6.1 \label{req_6_1} & The program can render fractals in a reasonable time (under 2 seconds) on a single thread with machine word precision & \highPriority \\
     \hline

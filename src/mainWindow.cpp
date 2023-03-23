@@ -408,9 +408,11 @@ namespace frac {
 		RenderBoxTimeStats stats = m_renderer.boxTimeStats();
 		ImGui::Begin("Render Statistics", nullptr);
 		{
-			ImGui::Text("Pixels/s (min): %s", fmt::format("{:.3f}", stats.min).c_str());
-			ImGui::Text("Pixels/s (max): %s", fmt::format("{:.3f}", stats.max).c_str());
-			ImGui::Text("Pixels/s (avg): %s",
+			ImGui::Text("Seconds/Box (min): %s",
+						fmt::format("{:.3f}", stats.min).c_str());
+			ImGui::Text("Seconds/Box (max): %s",
+						fmt::format("{:.3f}", stats.max).c_str());
+			ImGui::Text("Seconds/Box (avg): %s",
 						fmt::format("{:.3f}", stats.average).c_str());
 			ImGui::Text("Estimated Time Remaining: %s",
 						lrc::formatTime(stats.remainingTime).c_str());
