@@ -21,9 +21,10 @@ namespace frac {
 
 	/// Information about the time taken to render a box
 	struct RenderBoxTimeStats {
-		double min	  = 0;
-		double max	  = 0;
-		double average = 0;
+		double min			 = 0;
+		double max			 = 0;
+		double average		 = 0;
+		double totalTime	 = 0;
 		double remainingTime = 0;
 	};
 

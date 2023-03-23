@@ -228,16 +228,22 @@ While it is essential to have a method of calculating the colour of a given poin
 
 This class implements many functions at various levels of abstraction, allowing performance-critical sections of the code to be run with efficient, parallelised algorithms. At the same time, the high-level interfaces are easy to interact with and use.
 
+% Padding
+\pagebreak
+
 \subsubsection{Configuration, Getters, Setters and Statistics}
 
 \FloatBarrier
 \begin{figure*}[htp]
 	\centering
-	\includegraphics[width=\textwidth]{ClassFractalRendererLeftSide.png}
+	\includegraphics[width=.5\textwidth]{ClassFractalRendererLeftSide.png}
 \end{figure*}
 \FloatBarrier
 
 These functions operate at a high level, allowing basic access to the information stored by the class. While simple, they are essential for the main program to function correctly, as there would be no way of accessing the rendered image, for example.
+
+% Padding
+\pagebreak
 
 \subsubsection{Constructors and Configurations}
 
@@ -373,6 +379,9 @@ To calculate the colour of each pixel, we first call the \codeword{iterCoord} me
 \vspace{0.5cm}
 
 The fractal renderer class also implements routines to change the fractal-space coordinates to render. This is used to move the fractal when zooming in or out. For different use cases, there are methods to set the top left coordinate or the image's centre.
+
+% Padding
+\pagebreak
 
 \subsection{The Main Window}
 
