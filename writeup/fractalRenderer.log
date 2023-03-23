@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.4.27)  23 MAR 2023 15:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.4.27)  23 MAR 2023 15:55
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1645,10 +1645,16 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (C:\Users\penci\AppData\Local\Programs\MiKTeX\tex/latex/microtype\mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
+<images//titlePageImage.png, id=410, 730.73pt x 351.3125pt>
+File: images//titlePageImage.png Graphic file (type png)
+<use images//titlePageImage.png>
+Package pdftex.def Info: images//titlePageImage.png  used on input line 13.
+(pdftex.def)             Requested size: 455.24411pt x 218.86752pt.
+
 [1
 
-{C:/Users/penci/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
-(fractalRenderer.toc
+{C:/Users/penci/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map} <./images//ti
+tlePageImage.png>] (fractalRenderer.toc
 LaTeX Font Info:    Trying to load font information for OT1+zi4 on input line 5
 3.
 
@@ -1693,38 +1699,38 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [4]) (projectAnalysis.tex
-<images//mandelbrot.jpg, id=555, 702.625pt x 562.1pt>
+<images//mandelbrot.jpg, id=557, 702.625pt x 562.1pt>
 File: images//mandelbrot.jpg Graphic file (type jpg)
 <use images//mandelbrot.jpg>
 Package pdftex.def Info: images//mandelbrot.jpg  used on input line 19.
 (pdftex.def)             Requested size: 316.17833pt x 252.94266pt.
-<images//MsetOrder3.jpg, id=558, 642.4pt x 481.8pt>
+<images//MsetOrder3.jpg, id=560, 642.4pt x 481.8pt>
 File: images//MsetOrder3.jpg Graphic file (type jpg)
 <use images//MsetOrder3.jpg>
 Package pdftex.def Info: images//MsetOrder3.jpg  used on input line 27.
 (pdftex.def)             Requested size: 136.57462pt x 102.43076pt.
-<images//MsetOrder4.jpg, id=559, 642.4pt x 481.8pt>
+<images//MsetOrder4.jpg, id=561, 642.4pt x 481.8pt>
 File: images//MsetOrder4.jpg Graphic file (type jpg)
 <use images//MsetOrder4.jpg>
 Package pdftex.def Info: images//MsetOrder4.jpg  used on input line 28.
 (pdftex.def)             Requested size: 136.57462pt x 102.43076pt.
-<images//MsetOrder20.jpg, id=560, 642.4pt x 481.8pt>
+<images//MsetOrder20.jpg, id=562, 642.4pt x 481.8pt>
 File: images//MsetOrder20.jpg Graphic file (type jpg)
 <use images//MsetOrder20.jpg>
 Package pdftex.def Info: images//MsetOrder20.jpg  used on input line 29.
 (pdftex.def)             Requested size: 136.57462pt x 102.43076pt.
-<images//sierpinski-triangle.png, id=561, 1204.5pt x 1042.89626pt>
+<images//sierpinski-triangle.png, id=563, 1204.5pt x 1042.89626pt>
 File: images//sierpinski-triangle.png Graphic file (type png)
 <use images//sierpinski-triangle.png>
 Package pdftex.def Info: images//sierpinski-triangle.png  used on input line 38
 .
 (pdftex.def)             Requested size: 136.57462pt x 118.2517pt.
-<images//mandelbrot-zoom.png, id=563, 803.0pt x 803.0pt>
+<images//mandelbrot-zoom.png, id=564, 803.0pt x 803.0pt>
 File: images//mandelbrot-zoom.png Graphic file (type png)
 <use images//mandelbrot-zoom.png>
 Package pdftex.def Info: images//mandelbrot-zoom.png  used on input line 39.
 (pdftex.def)             Requested size: 136.57462pt x 136.56946pt.
-<images//hilbert-curve.png, id=564, 496.85625pt x 496.85625pt>
+<images//hilbert-curve.png, id=565, 496.85625pt x 496.85625pt>
 File: images//hilbert-curve.png Graphic file (type png)
 <use images//hilbert-curve.png>
 Package pdftex.def Info: images//hilbert-curve.png  used on input line 40.
@@ -1852,12 +1858,12 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `\new@ifnextchar' on input line 115.
 
-<images//xaosArtefacting0.png, id=608, 115.93312pt x 133.24782pt>
+<images//xaosArtefacting0.png, id=609, 115.93312pt x 133.24782pt>
 File: images//xaosArtefacting0.png Graphic file (type png)
 <use images//xaosArtefacting0.png>
 Package pdftex.def Info: images//xaosArtefacting0.png  used on input line 123.
 (pdftex.def)             Requested size: 136.57462pt x 156.98503pt.
-<images//xaosArtefacting1.png, id=609, 127.22531pt x 94.10156pt>
+<images//xaosArtefacting1.png, id=610, 127.22531pt x 94.10156pt>
 File: images//xaosArtefacting1.png Graphic file (type png)
 <use images//xaosArtefacting1.png>
 Package pdftex.def Info: images//xaosArtefacting1.png  used on input line 124.
@@ -1871,7 +1877,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [9 <./images//xaosArtefacting0.png> <./images//xaosArtefacting1.png>]
-<images//xaosImage.png, id=620, 167.62625pt x 116.435pt>
+<images//xaosImage.png, id=621, 167.62625pt x 116.435pt>
 File: images//xaosImage.png Graphic file (type png)
 <use images//xaosImage.png>
 Package pdftex.def Info: images//xaosImage.png  used on input line 139.
@@ -1913,7 +1919,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [13] (design.tex
-<images//CinderLibraries.png, id=646, 637.38126pt x 379.91937pt>
+<images//CinderLibraries.png, id=647, 637.38126pt x 379.91937pt>
 File: images//CinderLibraries.png Graphic file (type png)
 <use images//CinderLibraries.png>
 Package pdftex.def Info: images//CinderLibraries.png  used on input line 26.
@@ -1928,7 +1934,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [14]
-<images//LibRapidLibraries.png, id=661, 804.00375pt x 580.1675pt>
+<images//LibRapidLibraries.png, id=662, 804.00375pt x 580.1675pt>
 File: images//LibRapidLibraries.png Graphic file (type png)
 <use images//LibRapidLibraries.png>
 Package pdftex.def Info: images//LibRapidLibraries.png  used on input line 33.
@@ -1943,7 +1949,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [15 <./images//CinderLibraries.png> <./images//LibRapidLibraries.png>]
-<images//ClassDebugLogger.png, id=670, 523.9575pt x 211.28937pt>
+<images//ClassDebugLogger.png, id=671, 523.9575pt x 211.28937pt>
 File: images//ClassDebugLogger.png Graphic file (type png)
 <use images//ClassDebugLogger.png>
 Package pdftex.def Info: images//ClassDebugLogger.png  used on input line 44.
@@ -1960,13 +1966,13 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 [16
 
  <./images//ClassDebugLogger.png>]
-<images//ClassColourPalette.png, id=677, 478.78876pt x 250.43562pt>
+<images//ClassColourPalette.png, id=678, 478.78876pt x 250.43562pt>
 File: images//ClassColourPalette.png Graphic file (type png)
 <use images//ClassColourPalette.png>
 Package pdftex.def Info: images//ClassColourPalette.png  used on input line 103
 .
 (pdftex.def)             Requested size: 455.24411pt x 238.12265pt.
-<images//ClassFractal.png, id=678, 811.53188pt x 471.26062pt>
+<images//ClassFractal.png, id=679, 811.53188pt x 471.26062pt>
 File: images//ClassFractal.png Graphic file (type png)
 <use images//ClassFractal.png>
 Package pdftex.def Info: images//ClassFractal.png  used on input line 122.
@@ -2011,7 +2017,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [19]
-<images//ClassFractalRenderer.png, id=753, 943.02313pt x 500.36937pt>
+<images//ClassFractalRenderer.png, id=754, 943.02313pt x 500.36937pt>
 File: images//ClassFractalRenderer.png Graphic file (type png)
 <use images//ClassFractalRenderer.png>
 Package pdftex.def Info: images//ClassFractalRenderer.png  used on input line 2
@@ -2032,7 +2038,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [20 <./images//ClassFractalRenderer.png>]
-<images//ClassFractalRendererLeftSide.png, id=767, 497.35812pt x 632.3625pt>
+<images//ClassFractalRendererLeftSide.png, id=768, 497.35812pt x 632.3625pt>
 File: images//ClassFractalRendererLeftSide.png Graphic file (type png)
 <use images//ClassFractalRendererLeftSide.png>
 Package pdftex.def Info: images//ClassFractalRendererLeftSide.png  used on inpu
@@ -2048,7 +2054,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [21 <./images//ClassFractalRendererLeftSide.png>]
-<images//ClassFractalRendererTopRightSide.png, id=774, 662.97687pt x 569.62813p
+<images//ClassFractalRendererTopRightSide.png, id=775, 662.97687pt x 569.62813p
 t>
 File: images//ClassFractalRendererTopRightSide.png Graphic file (type png)
 <use images//ClassFractalRendererTopRightSide.png>
@@ -2068,7 +2074,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [22 <./images//ClassFractalRendererTopRightSide.png>]
-<images//ClassFractalRendererBottomRightSide.png, id=789, 789.44937pt x 416.054
+<images//ClassFractalRendererBottomRightSide.png, id=790, 789.44937pt x 416.054
 38pt>
 File: images//ClassFractalRendererBottomRightSide.png Graphic file (type png)
 <use images//ClassFractalRendererBottomRightSide.png>
@@ -2103,7 +2109,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [25]
-<images//ClassMainWindow.png, id=825, 1050.17343pt x 837.88031pt>
+<images//ClassMainWindow.png, id=826, 1050.17343pt x 837.88031pt>
 File: images//ClassMainWindow.png Graphic file (type png)
 <use images//ClassMainWindow.png>
 Package pdftex.def Info: images//ClassMainWindow.png  used on input line 391.
@@ -2942,32 +2948,32 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [115] (programTesting.tex
-<images//requirement1.1.png, id=4904, 382.93062pt x 334.24875pt>
+<images//requirement1.1.png, id=4905, 382.93062pt x 334.24875pt>
 File: images//requirement1.1.png Graphic file (type png)
 <use images//requirement1.1.png>
 Package pdftex.def Info: images//requirement1.1.png  used on input line 12.
 (pdftex.def)             Requested size: 198.03008pt x 172.8566pt.
-<images//requirement1.1_2.png, id=4905, 142.03062pt x 134.5025pt>
+<images//requirement1.1_2.png, id=4906, 142.03062pt x 134.5025pt>
 File: images//requirement1.1_2.png Graphic file (type png)
 <use images//requirement1.1_2.png>
 Package pdftex.def Info: images//requirement1.1_2.png  used on input line 13.
 (pdftex.def)             Requested size: 182.09486pt x 172.46017pt.
-<images//requirement1.5.png, id=4906, 670.505pt x 587.19376pt>
+<images//requirement1.5.png, id=4907, 670.505pt x 587.19376pt>
 File: images//requirement1.5.png Graphic file (type png)
 <use images//requirement1.5.png>
 Package pdftex.def Info: images//requirement1.5.png  used on input line 24.
 (pdftex.def)             Requested size: 190.06247pt x 166.447pt.
-<images//requirement1.5_2.png, id=4907, 679.03688pt x 598.235pt>
+<images//requirement1.5_2.png, id=4908, 679.03688pt x 598.235pt>
 File: images//requirement1.5_2.png Graphic file (type png)
 <use images//requirement1.5_2.png>
 Package pdftex.def Info: images//requirement1.5_2.png  used on input line 25.
 (pdftex.def)             Requested size: 190.06247pt x 167.44075pt.
-<images//requirement1.6.png, id=4908, 611.78563pt x 533.49312pt>
+<images//requirement1.6.png, id=4909, 611.78563pt x 533.49312pt>
 File: images//requirement1.6.png Graphic file (type png)
 <use images//requirement1.6.png>
 Package pdftex.def Info: images//requirement1.6.png  used on input line 36.
 (pdftex.def)             Requested size: 190.06247pt x 165.73933pt.
-<images//requirement1.6_2.png, id=4909, 610.28pt x 533.49312pt>
+<images//requirement1.6_2.png, id=4910, 610.28pt x 533.49312pt>
 File: images//requirement1.6_2.png Graphic file (type png)
 <use images//requirement1.6_2.png>
 Package pdftex.def Info: images//requirement1.6_2.png  used on input line 37.
@@ -2983,7 +2989,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 [116 <./images//requirement1.1.png> <./images//requirement1.1_2.png> <./images/
 /requirement1.5.png> <./images//requirement1.5_2.png>]
-<images//requirement1.8.png, id=4920, 382.42876pt x 329.73187pt>
+<images//requirement1.8.png, id=4921, 382.42876pt x 329.73187pt>
 File: images//requirement1.8.png Graphic file (type png)
 <use images//requirement1.8.png>
 Package pdftex.def Info: images//requirement1.8.png  used on input line 48.
@@ -2999,17 +3005,17 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 [117 <./images//requirement1.6.png> <./images//requirement1.6_2.png> <./images/
 /requirement1.8.png>]
-<images//requirement1.9.png, id=4930, 501.875pt x 421.575pt>
+<images//requirement1.9.png, id=4931, 501.875pt x 421.575pt>
 File: images//requirement1.9.png Graphic file (type png)
 <use images//requirement1.9.png>
 Package pdftex.def Info: images//requirement1.9.png  used on input line 61.
 (pdftex.def)             Requested size: 190.06247pt x 159.65338pt.
-<images//requirement1.9_2.png, id=4931, 504.38437pt x 417.05812pt>
+<images//requirement1.9_2.png, id=4932, 504.38437pt x 417.05812pt>
 File: images//requirement1.9_2.png Graphic file (type png)
 <use images//requirement1.9_2.png>
 Package pdftex.def Info: images//requirement1.9_2.png  used on input line 62.
 (pdftex.def)             Requested size: 190.06247pt x 157.1537pt.
-<images//requirement2.2.png, id=4933, 200.24812pt x 74.77937pt>
+<images//requirement2.2.png, id=4934, 200.24812pt x 74.77937pt>
 File: images//requirement2.2.png Graphic file (type png)
 <use images//requirement2.2.png>
 Package pdftex.def Info: images//requirement2.2.png  used on input line 82.
@@ -3025,22 +3031,22 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 [118 <./images//requirement1.9.png> <./images//requirement1.9_2.png> <./images/
 /requirement2.2.png>]
-<images//requirement2.8.png, id=4943, 388.45125pt x 337.26pt>
+<images//requirement2.8.png, id=4944, 388.45125pt x 337.26pt>
 File: images//requirement2.8.png Graphic file (type png)
 <use images//requirement2.8.png>
 Package pdftex.def Info: images//requirement2.8.png  used on input line 97.
 (pdftex.def)             Requested size: 110.62259pt x 96.0429pt.
-<images//requirement2.8_2.png, id=4944, 384.43625pt x 335.75438pt>
+<images//requirement2.8_2.png, id=4945, 384.43625pt x 335.75438pt>
 File: images//requirement2.8_2.png Graphic file (type png)
 <use images//requirement2.8_2.png>
 Package pdftex.def Info: images//requirement2.8_2.png  used on input line 98.
 (pdftex.def)             Requested size: 110.62259pt x 96.61316pt.
-<images//requirement2.8_3.png, id=4945, 382.93062pt x 333.245pt>
+<images//requirement2.8_3.png, id=4946, 382.93062pt x 333.245pt>
 File: images//requirement2.8_3.png Graphic file (type png)
 <use images//requirement2.8_3.png>
 Package pdftex.def Info: images//requirement2.8_3.png  used on input line 99.
 (pdftex.def)             Requested size: 110.62259pt x 96.26736pt.
-<images//requirement2.8_4.png, id=4946, 384.43625pt x 334.75063pt>
+<images//requirement2.8_4.png, id=4947, 384.43625pt x 334.75063pt>
 File: images//requirement2.8_4.png Graphic file (type png)
 <use images//requirement2.8_4.png>
 Package pdftex.def Info: images//requirement2.8_4.png  used on input line 100.
@@ -3056,23 +3062,23 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 [119 <./images//requirement2.8.png> <./images//requirement2.8_2.png> <./images/
 /requirement2.8_3.png> <./images//requirement2.8_4.png>]
-<images//requirement2.10.png, id=4956, 80.3pt x 351.3125pt>
+<images//requirement2.10.png, id=4957, 80.3pt x 351.3125pt>
 File: images//requirement2.10.png Graphic file (type png)
 <use images//requirement2.10.png>
 Package pdftex.def Info: images//requirement2.10.png  used on input line 121.
 (pdftex.def)             Requested size: 68.28383pt x 298.75104pt.
-<images//requirement2.12.png, id=4957, 382.93062pt x 332.74312pt>
+<images//requirement2.12.png, id=4958, 382.93062pt x 332.74312pt>
 File: images//requirement2.12.png Graphic file (type png)
 <use images//requirement2.12.png>
 Package pdftex.def Info: images//requirement2.12.png  used on input line 138.
 (pdftex.def)             Requested size: 147.04295pt x 127.76884pt.
-<images//requirement2.12_2.png, id=4958, 397.98688pt x 346.79562pt>
+<images//requirement2.12_2.png, id=4959, 397.98688pt x 346.79562pt>
 File: images//requirement2.12_2.png Graphic file (type png)
 <use images//requirement2.12_2.png>
 Package pdftex.def Info: images//requirement2.12_2.png  used on input line 139.
 
 (pdftex.def)             Requested size: 147.04295pt x 128.12715pt.
-<images//requirement2.12_3.png, id=4959, 391.4625pt x 342.27875pt>
+<images//requirement2.12_3.png, id=4960, 391.4625pt x 342.27875pt>
 File: images//requirement2.12_3.png Graphic file (type png)
 <use images//requirement2.12_3.png>
 Package pdftex.def Info: images//requirement2.12_3.png  used on input line 140.
@@ -3095,12 +3101,12 @@ sin-gle JSON file ([]\OT1/zi4/m/n/12 settings/settings.json[]\OT1/cmr/m/n/12 (-
 20) )
  []
 
-<images//requirement3.1.png, id=4971, 426.09187pt x 251.43938pt>
+<images//requirement3.1.png, id=4972, 426.09187pt x 251.43938pt>
 File: images//requirement3.1.png Graphic file (type png)
 <use images//requirement3.1.png>
 Package pdftex.def Info: images//requirement3.1.png  used on input line 162.
 (pdftex.def)             Requested size: 455.24411pt x 268.65764pt.
-<images//requirement3.4.png, id=4972, 200.24812pt x 75.28125pt>
+<images//requirement3.4.png, id=4973, 200.24812pt x 75.28125pt>
 File: images//requirement3.4.png Graphic file (type png)
 <use images//requirement3.4.png>
 Package pdftex.def Info: images//requirement3.4.png  used on input line 172.
@@ -3114,7 +3120,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [121 <./images//requirement3.1.png>]
-<images//requirement3.7.png, id=4980, 136.00812pt x 120.45pt>
+<images//requirement3.7.png, id=4981, 136.00812pt x 120.45pt>
 File: images//requirement3.7.png Graphic file (type png)
 <use images//requirement3.7.png>
 Package pdftex.def Info: images//requirement3.7.png  used on input line 187.
@@ -3129,17 +3135,17 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [122 <./images//requirement3.4.png> <./images//requirement3.7.png>]
-<images//requirement3.10.png, id=4989, 204.765pt x 54.2025pt>
+<images//requirement3.10.png, id=4990, 204.765pt x 54.2025pt>
 File: images//requirement3.10.png Graphic file (type png)
 <use images//requirement3.10.png>
 Package pdftex.def Info: images//requirement3.10.png  used on input line 204.
 (pdftex.def)             Requested size: 227.62206pt x 60.25645pt.
-<images//requirement3.13.png, id=4990, 384.43625pt x 333.245pt>
+<images//requirement3.13.png, id=4991, 384.43625pt x 333.245pt>
 File: images//requirement3.13.png Graphic file (type png)
 <use images//requirement3.13.png>
 Package pdftex.def Info: images//requirement3.13.png  used on input line 219.
 (pdftex.def)             Requested size: 273.14923pt x 236.79373pt.
-<images//requirement3.15.png, id=4991, 200.75pt x 75.28125pt>
+<images//requirement3.15.png, id=4992, 200.75pt x 75.28125pt>
 File: images//requirement3.15.png Graphic file (type png)
 <use images//requirement3.15.png>
 Package pdftex.def Info: images//requirement3.15.png  used on input line 234.
@@ -3154,7 +3160,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [123 <./images//requirement3.10.png> <./images//requirement3.13.png>]
-<images//requirement4.1.png, id=5001, 200.75pt x 75.78313pt>
+<images//requirement4.1.png, id=5002, 200.75pt x 75.78313pt>
 File: images//requirement4.1.png Graphic file (type png)
 <use images//requirement4.1.png>
 Package pdftex.def Info: images//requirement4.1.png  used on input line 247.
@@ -3218,11 +3224,11 @@ Package rerunfilecheck Info: File `fractalRenderer.out' has not changed.
 (rerunfilecheck)             Checksum: CDE6ACC16283372D3A190A957C1D3149;22344.
  ) 
 Here is how much of TeX's memory you used:
- 60891 strings out of 478582
- 1381521 string characters out of 2844344
- 257924993 words of memory out of 259000000
- 73756 multiletter control sequences out of 15000+600000
- 489944 words of font info for 184 fonts, out of 8000000 for 9000
+ 60887 strings out of 478582
+ 1381611 string characters out of 2844344
+ 257925038 words of memory out of 259000000
+ 73759 multiletter control sequences out of 15000+600000
+ 489114 words of font info for 178 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  105i,14n,115p,1039b,2643s stack positions out of 10000i,1000n,20000p,200000b,80000s
 {C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/inconsolata/i4-
@@ -3230,26 +3236,24 @@ ts1.enc}{C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/inconsola
 ta/i4-ot1-0.enc}<C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1/publi
 c/inconsolata/Inconsolata-zi4b.pfb><C:/Users/penci/AppData/Local/Programs/MiKTe
 X/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb><C:/Users/penci/AppData/L
-ocal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/penci/
-AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Use
-rs/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx6.pfb
-><C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
-mbxti10.pfb><C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/am
-sfonts/cm/cmcsc10.pfb><C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1
-/public/amsfonts/cm/cmex10.pfb><C:/Users/penci/AppData/Local/Programs/MiKTeX/fo
-nts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/penci/AppData/Local/Programs/
-MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/penci/AppData/Local/P
-rograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/penci/AppData
-/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/penci
-/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/User
-s/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb
-><C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
-msy8.pfb><C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
-nts/cm/cmti12.pfb><C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1/pub
-lic/amsfonts/symbols/msbm10.pfb>
-Output written on fractalRenderer.pdf (128 pages, 11855967 bytes).
+ocal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/penci/
+AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx6.pfb><C:/User
+s/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbxti10.p
+fb><C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm
+/cmcsc10.pfb><C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
+msfonts/cm/cmex10.pfb><C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1
+/public/amsfonts/cm/cmmi12.pfb><C:/Users/penci/AppData/Local/Programs/MiKTeX/fo
+nts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/penci/AppData/Local/Programs/M
+iKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/penci/AppData/Local/Pr
+ograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/penci/AppData/L
+ocal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/penci/
+AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/User
+s/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb
+><C:/Users/penci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symb
+ols/msbm10.pfb>
+Output written on fractalRenderer.pdf (128 pages, 12359092 bytes).
 PDF statistics:
- 5961 PDF objects out of 6186 (max. 8388607)
- 4099 named destinations out of 4296 (max. 500000)
- 53270 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 5954 PDF objects out of 6186 (max. 8388607)
+ 4100 named destinations out of 4296 (max. 500000)
+ 49179 words of extra memory for PDF output out of 51595 (max. 10000000)
 
